@@ -1,0 +1,24 @@
+{{template "base" .}}
+
+{{define "content"}}
+    <h1>PAGE 2</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Golang Developer Courses</h1>
+                <h2>DS & ML Courses</h2>
+                <h2>Backend Development</h2>
+                <h3>Programming is Fun</h3>
+                <h2>Hello ,Everyone , this is {{index .StringData "Test"}}</h2>
+                <p>
+                    {{if ne (index .StringData "remote_ip") ""}}
+                        Your remote IP address is {{index .StringData "remote_ip"}}
+                        {{else}}
+                        I don't know your IP-Address yet. Visit the <a href ="/">home page</a>
+
+                            {{end}}
+                </p>
+            </div>
+        </div>
+    </div>
+{{end}}
