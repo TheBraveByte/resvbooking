@@ -1,9 +1,9 @@
 package config
 
 import (
+	"github.com/alexedwards/scs/v2"
 	"html/template"
 	"log"
-	"github.com/alexedwards/scs/v2"
 )
 
 //Avoiding creating templates cache all the time a page is display making sure

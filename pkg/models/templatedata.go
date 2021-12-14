@@ -10,4 +10,5 @@ type TemplateData struct {
 	popMessage string
 	Warning    string
 	Error      string
+	
 }

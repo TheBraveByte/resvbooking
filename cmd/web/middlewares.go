@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"github.com/justinas/nosurf"
+	"net/http"
 )
 
 // var app *config.AppConfig
