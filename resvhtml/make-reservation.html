@@ -2,269 +2,294 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-  <link href="bootstrap.min.css" rel="stylesheet" />
-  <script src="jquery-3.5.1.min.js"></script>
-  <script src="bootstrap.bundle.js"></script>
-  <style>
-    h3 {
-      color: goldenrod;
-      font-family: Ubuntu;
-      font-weight: light;
-    }
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
 
-    .bt {
-      background-color: goldenrod;
-      color: black;
-      font-family: Arial, Helvetica, sans-serif;
-      font-weight: bold;
-      border-radius: 0.55rem;
-    }
-
-    /* .form-control {
-      background-color: goldenrod;
-      font-size: 1.1rem;
-      max-width: 50%;
-      border-radius: 0.85rem;
-      border-color: goldenrod;
-      /* justify-content:center; */
-    /* } */
-
-    .navbar-dark .navbar-brand {
-      color: goldenrod;
-      font-family: Ubuntu;
-      font-size: 2rem;
-      font-weight: bolder;
-    }
-
-    .navbar-dark .navbar-toggler {
-      border-color: goldenrod;
-    }
-
-    .navbar-dark .navbar-toggler-icon {
-      border-color: goldenrod;
-    }
-
-    .nav-link {
-      color: goldenrod;
-    }
-
-    .dropdown-menu {
-      background-color: goldenrod;
-      color: white;
-    }
-
-    .checkbox {
-      width: 100%;
-      color: goldenrod;
-      padding-bottom: 1.5rem;
-      padding-top: 1rem;
-    }
-
-    #helpId{
-          color: goldenrod;
+    <link href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css"
+          rel="stylesheet">
+    <!--notie stylesheet-->
+    <link href="https://unpkg.com/notie/dist/notie.min.css" rel="stylesheet" type="text/css">
+    <!--sweetAlert stylesheet -->
+    <!--    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>-->
+    <!--    <link rel="stylesheet" href="sweetalert2.min.css">-->
+    <link href="bootstrap.min.css" rel="stylesheet"/>
+    <script src="jquery-3.5.1.min.js"></script>
+    <script src="bootstrap.bundle.js"></script>
+    <link rel="stylesheet" href="static/styles.css">
+    <style>
+        h3 {
+            color: goldenrod;
+            font-family: Ubuntu;
+            font-weight: light;
         }
-  </style>
+
+        .bt {
+            background-color: goldenrod;
+            color: black;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            border-radius: 0.55rem;
+        }
+
+        /* .form-control {
+          background-color: goldenrod;
+          font-size: 1.1rem;
+          max-width: 50%;
+          border-radius: 0.85rem;
+          border-color: goldenrod;
+          /* justify-content:center; */
+        /* } */
+
+        .navbar-dark .navbar-brand {
+            color: goldenrod;
+            font-family: Ubuntu;
+            font-size: 2rem;
+            font-weight: bolder;
+        }
+
+        .navbar-dark .navbar-toggler {
+            border-color: goldenrod;
+        }
+
+        .navbar-dark .navbar-toggler-icon {
+            border-color: goldenrod;
+        }
+
+        .nav-link {
+            color: goldenrod;
+        }
+
+        .dropdown-menu {
+            background-color: goldenrod;
+            color: white;
+        }
+
+        .checkbox {
+            width: 100%;
+            color: goldenrod;
+            padding-bottom: 1.5rem;
+            padding-top: 1rem;
+        }
+
+        #helpId {
+            color: goldenrod;
+        }
+    </style>
 </head>
 
-<body class="bg-dark">
-  <nav aria-label="Eighth navbar example" class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body class="">
+    <nav aria-label="Eighth navbar example" class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Rest</a>
+            <button aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler" data-bs-target="#navbarsExample07" data-bs-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExample07">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a aria-current="page" class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="resv.html">book now</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                            id="dropdown07">Rooms</a>
+                        <ul aria-labelledby="dropdown07" class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="junior.html">Junior Suite</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="premium.html">Premium Room</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="deluxe.html">Deluxe Suite</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/rooms/penthouse-suite">Penthouse Suite</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/rooms/executive-suite">Executive Suite</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <form>
+                    <input aria-label="Search" class="form-control" placeholder="Search" type="text" />
+                </form>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-      <a class="navbar-brand" href="index.html">Rest</a>
-      <button aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation"
-        class="navbar-toggler" data-bs-target="#navbarsExample07" data-bs-toggle="collapse" type="button">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <form action="reservation.html" class="needs-validation" method="get" novalidate>
+                    <h3 class="">Rest Tavern Reservation</h3>
+                    <div class="row g-2 mt-5">
+                        <div class="col-sm-12 col-lg-6 col-md-6">
+                            <small id="helpId" class="text-muted">Enter your first name</small>
+                            <!-- <label for="first-name" class="form-label">First name</label> -->
+                            <input required autocomplete="off" type="text" class="form-control" placeholder="First name"
+                                aria-label="First name" id="first-name" name="first-name">
+                        </div>
+                        <div class="col-sm-12 col-lg-6 col-md-6">
+                            <small id="helpId" class="text-muted">Enter your last name</small>
+                            <!-- <label for="last-name" class="form-label">Last name</label> -->
+                            <input required autocomplete="off" type="text" class="form-control" placeholder="Last name"
+                                aria-label="Last name" name="last-name" id="last-name">
+                        </div>
+                    </div>
 
-      <div class="collapse navbar-collapse" id="navbarsExample07">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a aria-current="page" class="nav-link active" href="index.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="about.html">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="contact.html">contact</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="resv.html">book now</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
-              id="dropdown07">Rooms</a>
-            <ul aria-labelledby="dropdown07" class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="junior.html">Junior Suite</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="premium.html">Premium Room</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="deluxe.html">Deluxe Suite</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/rooms/penthouse-suite">Penthouse Suite</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/rooms/executive-suite">Executive Suite</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <form>
-          <input aria-label="Search" class="form-control" placeholder="Search" type="text" />
-        </form>
-      </div>
+                    <div class="row g-1 mt-3">
+                        <div class="col-12">
+                            <small id="helpId" class="text-muted">Enter your phone number</small>
+                            <!-- <label for="phoneNumber" class="form-label">Phone number</label> -->
+                            <input type="text" class="form-control" id="phoneNumber" placeholder="(+234)9047583219"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="row g-1 mt-3">
+                        <div class="col">
+                            <small id="helpId" class="text-muted">Type-in your email</small>
+                            <!-- <label for="inputE" class="form-label">Email</label> -->
+                            <input required autocomplete="off" type="email" class="form-control" id="Email"
+                                placeholder="email" aria-label="Email">
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mt-3">
+                        <div class="col-md-6 col-sm-12 col-lg-6">
+                            <small id="helpId" class="text-muted">Enter strong password</small>
+                            <!-- <label for="inputPassword" class="form-label">Password</label> -->
+                            <input required autocomplete="off" type="password" class="form-control" id="inputPassword"
+                                placeholder="password">
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-lg-6">
+                            <small id="helpId" class="text-muted">confirm your password</small>
+                            <!-- <label for="inputPassword4" class="form-label">Password</label> -->
+                            <input required autocomplete="off" type="password" class="form-control" id="inputPassword4"
+                                placeholder="confirm password">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn w-45  btn-md btn-hover-light bt ">submit</button>
+                        </div>
+                    </div>
+                    <p class="mt-5text-muted text-center">
+                        powered by Rest Tavern 2021
+                    </p>
+
+                </form>
+            </div>
+        </div>
     </div>
-  </nav>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3"></div>
-      <div class="col-md-6">
-        <form action="reservation.html" method="get">
-          <h3 class="">Rest Tavern Reservation</h3>
-          <div class="row g-2 mt-5">
-            <div class="col-sm-12 col-lg-6 col-md-6">
-              <small id="helpId" class="text-muted">Enter your first name</small>
-              <label for="first-name" class="form-label">First name</label>
-              <input required  autocomplete="off" type="text" class="form-control" placeholder="First name" aria-label="First name" id="first-name" name="first-name">
-            </div>
-            <div class="col-sm-12 col-lg-6 col-md-6">
-              <small id="helpId" class="text-muted">Enter your last name</small>
-              <label for="last-name" class="form-label">Last name</label>
-              <input required  autocomplete="off" type="text" class="form-control" placeholder="Last name" aria-label="Last name" name="last-name" id="last-name">
-            </div>
-          </div>
+    <hr>
+    <div class="b-example-divider"></div>
+    <div class="text-light bg-dark text-center p-2 mt-2">
+        <footer class="py-3">
+            <div class="row">
+                <div class="col-4">
+                    <h5 class="ft">Rest Tavern Sections</h5>
+                    <ul class="nav flex-column navigate">
+                        <li class="nav-item mb-2">
+                            <a class="nav-link p-0 text-muted" href="#">Home</a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link p-0 text-muted" href="#">Book now</a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link p-0 text-muted" href="#">Rooms</a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link p-0 text-muted" href="#">Contact</a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link p-0 text-muted" href="#">About</a>
+                        </li>
+                    </ul>
+                </div>
 
-          <div class="row g-1 mt-3">
-            <div class="col-12">
-              <small id="helpId" class="text-muted">Enter your phone number</small>
-              <label for="phoneNumber" class="form-label">Phone number</label>
-              <input type="text" class="form-control" id="phoneNumber" placeholder="(+234)9047583219" required>
+                <div class="col-3">
+                    <h5 class="ft">Contact us on</h5>
+                    <ul class="nav flex-column social">
+                        <li class="nav-item mb-2">
+                            <a class="nav-link p-0 text-muted" href="www.dropbox.com"><img alt="" class="ico"
+                                                                                           src="icons/dropbox-32x32-675656.png"/></a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link p-0 text-muted" href="www.facebook.com"><img alt="" class="ico"
+                                                                                            src="icons/facebook-32x32-675666.png"/></a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link p-0 text-muted" href="www.github.com"><img alt="" class="ico"
+                                                                                          src="icons/github-32x32-675676.png"/></a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link p-0 text-muted" href="www.linkedin.com"><img alt="" class="ico"
+                                                                                            src="icons/linkedin-32x32-675695.png"/></a>
+                        </li>
+                        <!-- <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted"></a></li> -->
+                    </ul>
+                </div>
+                <div class="col-4 offset-1 newsletter">
+                    <form>
+                        <h5 class="ft">Subscribe to our newsletter</h5>
+                        <p>Monthly digest of whats new and exciting from us.</p>
+                        <div class="d-flex w-75 gap-2">
+                            <label class="visually-hidden" for="newsletter1">Email address</label>
+                            <input class="form-control" id="newsletter1" placeholder="Email address" type="text"/>
+                            <button class="sub" type="button">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </div>
 
-          <div class="row g-1 mt-3">
-            <div class="col">
-              <small id="helpId" class="text-muted">Type-in your email</small>
-              <label for="inputE" class="form-label">Email</label>
-              <input required  autocomplete="off" type="email" class="form-control" id="Email"  placeholder="email" aria-label="Email">
+            <div class="d-flex justify-content-between py-1 my-1 border-top">
+                <p class="ft">@Rest Tavern : 2021 Tech Inc. All rights reserved.</p>
+                <ul class="list-unstyled d-flex">
+                    <li class="ms-3">
+                        <a class="link-dark" href="#">
+                            <svg class="bi" height="24" width="24">
+                                <use xlink:href="#twitter"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="ms-3">
+                        <a class="link-dark" href="#">
+                            <svg class="bi" height="24" width="24">
+                                <use xlink:href="#instagram"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="ms-3">
+                        <a class="link-dark" href="#">
+                            <svg class="bi" height="24" width="24">
+                                <use xlink:href="#facebook"/>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
             </div>
-          </div>
-
-          <div class="row g-2 mt-3">
-            <div class="col-md-6 col-sm-12 col-lg-6">
-              <small id="helpId" class="text-muted">Enter strong password</small>
-              <label for="inputPassword" class="form-label">Password</label>
-              <input required autocomplete="off" type="password" class="form-control" id="inputPassword" placeholder="password">
-            </div>
-            <div class="col-md-6 col-sm-12 col-lg-6">
-              <small id="helpId" class="text-muted">confirm your password</small>
-              <label for="inputPassword4" class="form-label">Password</label>
-              <input required  autocomplete="off" type="password" class="form-control" id="inputPassword4" placeholder="confirm password">
-            </div>
-          </div>
-          
-          <div class="row">
-          <div class="col-12 mt-4">
-            <button type="submit" class="btn w-45  btn-md btn-hover-light bt ">submit</button>
-          </div>
-        </div>
-        <p class="mt-5text-muted text-center">
-          powered by Rest Tavern 2021
-        </p>
-    
-        </form>
-      </div>
+        </footer>
     </div>
-  </div>
-
-<br>
-  <div class="b-example-divider"></div>
-  <div class="container text-light bg-dark text-center p-5 mt-5">
-    <footer class="py-5">
-      <div class="row">
-        <div class="col-4">
-          <h5 class="ft">Rest Tavern Sections</h5>
-          <ul class="nav flex-column navigate">
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-muted">Home</a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-muted">Book now</a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-muted">Rooms</a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-muted">Contact</a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-muted">About</a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="col-3">
-          <h5 class="ft">Contact us on</h5>
-          <ul class="nav flex-column social">
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-muted"><img class="ico" src="icons/dropbox-32x32-675656.png"
-                  alt="" /></a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-muted"><img class="ico" src="icons/facebook-32x32-675666.png"
-                  alt="" /></a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-muted"><img class="ico" src="icons/github-32x32-675676.png"
-                  alt="" /></a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-muted"><img class="ico" src="icons/linkedin-32x32-675695.png"
-                  alt="" /></a>
-            </li>
-            <!-- <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted"></a></li> -->
-          </ul>
-        </div>
-        <div class="col-4 offset-1 newsletter">
-          <form>
-            <h5 class="ft">Subscribe to our newsletter</h5>
-            <p>Monthly digest of whats new and exciting from us.</p>
-            <div class="d-flex w-100 gap-2">
-              <label for="newsletter1" class="visually-hidden">Email address</label>
-              <input id="newsletter1" type="text" class="form-control" placeholder="Email address" />
-              <button class="sub" type="button">Subscribe</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div class="d-flex justify-content-between py-4 my-4 border-top">
-        <p class="ft">@Rest Tavern : 2021 Tech Inc. All rights reserved.</p>
-        <ul class="list-unstyled d-flex">
-          <li class="ms-3">
-            <a class="link-dark" href="#"><svg class="bi" width="24" height="24">
-                <use xlink:href="#twitter" /></svg></a>
-          </li>
-          <li class="ms-3">
-            <a class="link-dark" href="#"><svg class="bi" width="24" height="24">
-                <use xlink:href="#instagram" /></svg></a>
-          </li>
-          <li class="ms-3">
-            <a class="link-dark" href="#"><svg class="bi" width="24" height="24">
-                <use xlink:href="#facebook" /></svg></a>
-          </li>
-        </ul>
-      </div>
-    </footer>
-  </div>
 </body>
 
 </html>

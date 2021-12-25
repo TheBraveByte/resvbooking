@@ -1,109 +1,119 @@
-.intro{
-    /* font-family: Portchester; */
-    font-family:Ubuntu;
+
+/*index page*/
+.intro {
+
+    font-family: Ubuntu;
     font-weight: light;
-    margin-top:5px;
+    margin-top: 5px;
     font-size: 3rem;
     color: gold;
-    /* font-weight:bold; */
+
 
 
 }
-.main-offer{
-    font-family:Allura;
-    color:goldenrod;
+
+.main-offer {
+    font-family: Allura;
+    color: goldenrod;
     font-size: 1.3rem;
     text-align: center;
 }
 
-.navbar-brand{
+.navbar-brand {
     font-family: Ubuntu;
     color: gold;
 }
-.sub-intro{
-    font-family:MerriWeather;
+
+.sub-intro {
+    font-family: MerriWeather;
     font-size: 1.4rem;
     font-style: oblique;
     font-weight: lighter;
 
 }
-.offer1{
-    font-family:Monteserrat;
+
+.offer1 {
+    font-family: Monteserrat;
     margin-top: 1.4rem;
     font-size: 1.8rem;
     color: darkgoldenrod;
 
 }
 
-.offer2{
-    font-family:Arial, Helvetica, sans-serif;
+.offer2 {
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 1.3rem;;
-    color:whitesmoke;
+    color: whitesmoke;
     /* font-style: oblique; */
     font-weight: lighter;
 
 }
-.welcome{
-    font-family:Allura;
+
+.welcome {
+    font-family: Allura;
     /* padding-left: 20px; */
     font-size: 4rem;
-    margin-bottom:0;
+    margin-bottom: 0;
     color: goldenrod;
 }
-.offer3{
-    font-family:Monteserrat;
+
+.offer3 {
+    font-family: Monteserrat;
     margin-bottom: 1rem;
     font-size: 1.8rem;
-    color: darkgoldenrod;    
+    color: darkgoldenrod;
 }
 
-.ico{
+.ico {
     /* margin-top:9px; */
     padding-bottom: 1rem;
     margin-bottom: 2px;
 }
-.h5{
+
+.h5 {
     font-family: Consolas;
 }
-.globe{
-    font-family:Catamaran;
+
+.globe {
+    font-family: Catamaran;
     font-size: 1.5rem;
     color: darkgoldenrod;
     margin-left: 0;
 }
 
-.globe-con{
+.globe-con {
     font-family: Consolas;
 
 
 }
 
-.social{
-    font-family:Consolas;
-}
-.navigate{
-    font-family:Consolas;
-}
-.newsletter{
-    font-family:Consolas;
+.social {
+    font-family: Consolas;
 }
 
-.ft{
+.navigate {
+    font-family: Consolas;
+}
+
+.newsletter {
+    font-family: Consolas;
+}
+
+.ft {
     color: darkgoldenrod;
 }
 
-.sub{
+.sub {
     background-color: gold;
     border-radius: 1.5rem;
     border-color: gold;
 }
-.blue{
+
+.blue {
     padding-bottom: 5rem;
-    border-radius:50% ;
+    border-radius: 50%;
 }
 
-
-
-.carousel-caption{
-    color:yellow;
+.carousel-caption {
+    color: yellow;
 }
