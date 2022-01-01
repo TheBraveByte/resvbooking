@@ -1,0 +1,135 @@
+{{template "base" .}}
+
+
+{{define "css"}}
+    {{end}}
+<style>
+    h3 {
+        color: goldenrod;
+        font-family: Ubuntu;
+        font-weight: light;
+    }
+
+    .bt {
+        background-color: goldenrod;
+        color: black;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        border-radius: 0.55rem;
+    }
+
+    /* .form-control {
+      background-color: goldenrod;
+      font-size: 1.1rem;
+      max-width: 50%;
+      border-radius: 0.85rem;
+      border-color: goldenrod;
+      /* justify-content:center; */
+    /* } */
+
+    .navbar-dark .navbar-brand {
+        color: goldenrod;
+        font-family: Ubuntu;
+        font-size: 2rem;
+        font-weight: bolder;
+    }
+
+    .navbar-dark .navbar-toggler {
+        border-color: goldenrod;
+    }
+
+    .navbar-dark .navbar-toggler-icon {
+        border-color: goldenrod;
+    }
+
+    .nav-link {
+        color: goldenrod;
+    }
+
+    .dropdown-menu {
+        background-color: goldenrod;
+        color: white;
+    }
+
+    .checkbox {
+        width: 100%;
+        color: goldenrod;
+        padding-bottom: 1.5rem;
+        padding-top: 1rem;
+    }
+
+    #helpId {
+        color: goldenrod;
+    }
+</style>
+
+{{define "content"}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <form action="reservation.html" class="needs-validation" method="get" novalidate>
+                    <h3 class="">Rest Tavern Reservation</h3>
+                    <div class="row g-2 mt-5">
+                        <div class="col-sm-12 col-lg-6 col-md-6">
+                            <small id="helpId" class="text-muted">Enter your first name</small>
+                            <!-- <label for="first-name" class="form-label">First name</label> -->
+                            <input required autocomplete="off" type="text" class="form-control" placeholder="First name"
+                                   aria-label="First name" id="first-name" name="first-name">
+                        </div>
+                        <div class="col-sm-12 col-lg-6 col-md-6">
+                            <small id="helpId" class="text-muted">Enter your last name</small>
+                            <!-- <label for="last-name" class="form-label">Last name</label> -->
+                            <input required autocomplete="off" type="text" class="form-control" placeholder="Last name"
+                                   aria-label="Last name" name="last-name" id="last-name">
+                        </div>
+                    </div>
+
+                    <div class="row g-1 mt-3">
+                        <div class="col-12">
+                            <small id="helpId" class="text-muted">Enter your phone number</small>
+                            <!-- <label for="phoneNumber" class="form-label">Phone number</label> -->
+                            <input type="text" class="form-control" id="phoneNumber" placeholder="(+234)9047583219"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="row g-1 mt-3">
+                        <div class="col">
+                            <small id="helpId" class="text-muted">Type-in your email</small>
+                            <!-- <label for="inputE" class="form-label">Email</label> -->
+                            <input required autocomplete="off" type="email" class="form-control" id="Email"
+                                   placeholder="email" aria-label="Email">
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mt-3">
+                        <div class="col-md-6 col-sm-12 col-lg-6">
+                            <small id="helpId" class="text-muted">Enter strong password</small>
+                            <!-- <label for="inputPassword" class="form-label">Password</label> -->
+                            <input required autocomplete="off" type="password" class="form-control" id="inputPassword"
+                                   placeholder="password">
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-lg-6">
+                            <small id="helpId" class="text-muted">confirm your password</small>
+                            <!-- <label for="inputPassword4" class="form-label">Password</label> -->
+                            <input required autocomplete="off" type="password" class="form-control" id="inputPassword4"
+                                   placeholder="confirm password">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn w-45  btn-md btn-hover-light bt ">submit</button>
+                        </div>
+                    </div>
+                    <p class="mt-5text-muted text-center">
+                        powered by Rest Tavern 2021
+                    </p>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+{{end}}

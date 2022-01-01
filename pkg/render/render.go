@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Akinleye007/resvbooking/pkg/config"
 	"github.com/Akinleye007/resvbooking/pkg/models"
+	"github.com/justinas/nosurf"
 	"html/template"
 	"log"
 	"net/http"
@@ -26,12 +27,13 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+func AddDefaultData(td *models.TemplateData, rq *http.Request) *models.TemplateData {
+	td.CSRFToken = nosurf.Token(rq)
 	return td
 }
 
 // Template RenderTemplates rendering tmpl templates using the cache created
-func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData) {
+func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *http.Request) {
 	//Get the templates cache from the app config from the main.go file
 	tc := map[string]*template.Template{}
 
@@ -54,8 +56,7 @@ func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData) {
 	buf := new(bytes.Buffer)
 
 	// creating a buffer for  the template and execute
-	td = AddDefaultData(td) // use to pass default data to all templates
-
+	td = AddDefaultData(td, rq) // use to pass default data to all templates
 
 	_ = t.Execute(buf, td)
 
@@ -91,16 +92,16 @@ func TemplateCache() (map[string]*template.Template, error) {
 
 	//iterating through the pages files paths
 	for _, pg := range pages {
-		fmt.Println("Pages",pg)
+		fmt.Println("Pages", pg)
 
 		//get the base name of the files only
 		filename := filepath.Base(pg)
 		fmt.Printf("Loading %v currently\n", filename)
-		fmt.Println("Cache",cache)
+		fmt.Println("Cache", cache)
 
 		//create a templates set for all the pages except the layout
 		tpset, err := template.New(filename).Funcs(functions).ParseFiles(pg)
-		fmt.Println("templates set : ",tpset)
+		fmt.Println("templates set : ", tpset)
 
 		if err != nil {
 			return cache, err
@@ -112,7 +113,7 @@ func TemplateCache() (map[string]*template.Template, error) {
 
 		if len(matchTp) > 0 {
 			tpset, err = tpset.ParseGlob("./templates/*.layout.tmpl")
-			fmt.Println("Template ---->",tpset)
+			fmt.Println("Template ---->", tpset)
 
 			if err != nil {
 				return cache, err

@@ -1,0 +1,139 @@
+{{template "base" .}}
+
+{{define "css"}}
+
+{{end}}
+
+<style>
+
+    /*body{*/
+    /*    background: floralwhite;*/
+    /*}*/
+    .notie-container {
+        box-shadow: none;
+    }
+
+    .datepicker {
+        z-index: 10000;
+    }
+
+    .text {
+        color: red;
+    }
+
+    label {
+        color: goldenrod;
+    }
+
+    h3 {
+        color: goldenrod;
+        font-family: "Ubuntu";
+        font-weight: lighter;
+    }
+
+    .bt {
+        background-color: goldenrod;
+        color: black;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        border-radius: 0.55rem;
+
+    }
+
+    .navbar-dark .navbar-brand {
+        color: goldenrod;
+        font-family: Ubuntu, serif;
+        font-size: 2rem;
+        font-weight: bolder;
+    }
+
+    .navbar-dark .navbar-toggler {
+        border-color: goldenrod;
+    }
+
+    .navbar-dark .navbar-toggler-icon {
+        border-color: goldenrod;
+    }
+
+    .nav-link {
+        color: goldenrod;
+    }
+
+    .dropdown-menu {
+        background-color: goldenrod;
+        color: white;
+    }
+
+    .checkbox {
+        width: 100%;
+        color: goldenrod;
+        padding-bottom: 1.5rem;
+        padding-top: 1rem;
+    }
+
+    #helpId {
+        color: goldenrod;
+    }
+
+</style>
+
+{{define "content"}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <form action="/check-availability" class="needs-validation" method="post" novalidate>
+                    <div class="row g-2 mt-3">
+                        <div class="col g-2">
+                            <div class="row  g-2 " id="reservation-dates">
+                                <div class="col-md-6 col-sm-12 col-lg-6">
+                                    <input class="form-control" name="start" placeholder="Check-in date" required
+                                           type="text">
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-lg-6">
+                                    <input class="form-control" name="start" placeholder="Check-in date" required
+                                           type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row g-1">
+                        <div class="col-12 mt-4">
+                            <button class="btn w-45  btn-md btn-outline-secondary bt" type="submit">check for
+                                availability
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+                    <p class="mt-5text-muted text-center ">
+                        powered by Rest Tavern 2021
+                    </p>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {{/*    <div class="container row">*/}}
+    {{/*        <div class="col">*/}}
+    {{/*            <p id="name">Akinleye Yusuf</p>*/}}
+    {{/*            <p>*/}}
+    {{/*                <button class="btn btn-outline-secondary" id="colorButton">Add me</button>*/}}
+    {{/*            </p>*/}}
+    {{/*        </div>*/}}
+    {{/*    </div>*/}}
+
+{{end}}
+
+
+{{define "js"}}
+    <script>
+        //using vanilla date picker
+        const elem = document.getElementById('reservation-dates');
+        const rangepicker = new DateRangePicker(elem, {
+            format: "yyyy-mm-dd",
+        });
+    </script>
+{{end}}

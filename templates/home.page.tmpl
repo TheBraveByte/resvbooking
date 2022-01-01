@@ -1,16 +1,195 @@
 {{template "base" .}}
 
+
+{{define "css"}}
+
+    {{end}}
+
+
+
 {{define "content"}}
-    <h1>Akinleye Yusuf</h1>
-    <div class="container">
+    <div id="myCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"
+                    aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="img-fluid mx-auto d-block c-img" src="/static/images/outside.png" alt="ouside-bungalow">
+                <div class="container">
+                    <div class="carousel-caption text-start ">
+                        <h1>Your host from coast to coast</h1>
+                        <p>Experience like never before from seaside to lakeside</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <img class="img-fluid mx-auto d-block c-img" src="/static/images/pexels-mikhail-nilov-7820920.jpg"
+                     alt="pexels-mikhail-nilov-7820920.jpg">
+                <div class="container">
+                    <div class="carousel-caption">
+                        <h2>Better Memories start here</h2>
+                        <p>Come in as a guest. Leave as family</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="img-fluid mx-auto d-block c-img" src="/static/images/pexels-thanhhoa-tran-1488327.jpg"
+                     alt="pexels-thanhhoa-tran-1488327.jpg">
+                <div class="container">
+                    <div class="carousel-caption ">
+                        <h2>New dimension of luxury</h2>
+                        <p>Experience, Right where you need it</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="img-fluid mx-auto d-block c-img" src="/static/images/pexels-helena-lopes-3215519.jpg"
+                     alt="pexels-helena-lopes-3215519.jpg">
+                <div class="container">
+                    <div class="carousel-caption ">
+                        <h2>We put a smile back on your face</h2>
+                        <p>Feel welcome , feel like home</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="img-fluid mx-auto d-block c-img" src="/static/images/pexels-naim-benjelloun-2825525.jpg"
+                     alt="pexels-naim-benjelloun-2825525.jpg">
+                <div class="container">
+                    <div class="carousel-caption text-end">
+                        <h2>Enjoy and find your freedom.</h2>
+                        <p>Experience the passion of hospitality</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container bg-dark text-light p-5">
         <div class="row">
-            <div class="col">
-                <h1>Golang Developer</h1>
-                <h2>Data Science and Machine Learning Engineer</h2>
-                <!--<h2>Hello ,Everyone , this is {{index .StringData "Test"}}</h2>-->
-                 <img src="/static/images/macsetup.jpg" width="1200" height="678" alt="macPC.png">
+            <div class="col text-center">
+                <div>
+                    <p class="welcome">Welcome To</p>
+                    <p class="mt-4 intro">Rest Tavern Inn</p>
+                </div>
+
+                <p class="mt-2 sub-intro">
+                    Relax space for everyone,an ideal world if only for the night.
+                <p class="sub-intro">Enhance your life around great foods and get away from it all "it has been, and
+                    continue to be our
+                    responsiblity to
+                    fill the earth with the light and warmth of hospitality".Be whatever you want,whoever you
+                    are!!"
+                </p>
+                <p class="sub-intro">Enhance your life around great foods and get away from it all "it has been, and
+                    continue to
+                    be our responsiblity to
+                    fill the earth with the light and warmth of hospitality".
+                </p>
+                <p class="sub-intro">Be whatever you want,whoever you are!!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container bg-dark text-light advert">
+        <div class="container row">
+            <div class="col-lg-6 col-sm-12 col-md-6 mt-3">
+                <h4 class="main-offer">It All Began Here Way Back</h4>
+                <h4 class="text-center offer1" mt="20"><strong>Rest</strong> Bar,Pool,Grill & Luxury Reservation</h4>
+                <p class="offer2">Art of meeting your highest expectation from us.Rest assured we get you
+                    covered,Immerse yourself in the mind andsoul of <strong>REST</strong>:The foods.Delivering a very
+                    warm inviting
+                    breakfast,lunch and dinner for our guest both local and all around the world alike, create and
+                    prepared with
+                    fresh and seasonal product by our fervent team of chef
+                </p>
+                <p class="offer2">The <strong>REST</strong> bar and pool provide a world-class refined
+                    bar settings.You could try it out here and have your breakfast coffee and also bring
+                    along your teams at work to give them a very best experience
+                </p>
+                <p class="offer2">And enjoy lites bites with signature cocktail,Select from a lengthen
+                    range loop of original and classic.Take it with perfection
+                </p>
+            </div>
+
+            <div class="col-lg-6 col-sm-12 col-md-6 mt-3">
+                <h4 class="text-center offer3">Art of meeting your highest expectations from us.</h4>
+                <div class="blue row-cols-lg-2"><img class="border-2 img-fluid mx-auto d-block"
+                                                     src="static/images/pexels-pixabay-262978.jpg" alt=""></div>
+                <div class="blue row-cols-lg-2"><img class="border-2 img-fluid mx-auto d-block"
+                                                     src="static/images/pexels-kei-scampa-5514819.jpg" alt=""></div>
 
             </div>
         </div>
+        <div class=" row p-5">
+            <div class="row-cols-auto mt-4 col text-center"><a class="btn btn-outline-secondary" href="/check-availability">Make
+                    reservation now</a></div>
+        </div>
+    </div>
+    <div class="container bg-dark">
+        <div class="row">
+            <div id="myCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"
+                            aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="3"
+                            aria-label="Slide 4"></button>
+                </div>
+
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img class="img-fluid mx-auto d-block room-j"
+                             src="static/images/pexels-andrea-piacquadio-3771824.jpg"
+                             alt="pexels-mikhail-nilov-7820920.jpg">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img class="img-fluid mx-auto d-block room-j"
+                             src="static/images/pexels-rachel-claire-4846169.jpg" alt="ouside-bungalow">
+                    </div>
+                    <div class="carousel-item">
+                        <img class="img-fluid mx-auto d-block room-j"
+                             src="static/images/pexels-asad-photo-maldives-1268855.jpg"
+                             alt="pexels-mikhail-nilov-7820920.jpg">
+                    </div>
+                    <div class="carousel-item">
+                        <img class="img-fluid mx-auto d-block room-j"
+                             src="static/images/pexels-andrea-piacquadio-3769740.jpg"
+                             alt="pexels-naim-benjelloun-2825525.jpg"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-light bg-dark p-4">
+        <p class="globe">Our Tavern are all around the Globe</p>
+        <ul class="globe-con">
+            <l1>
+                <h5>London</h5>
+            </l1>
+            <l1>
+                <h5>Lagos</h5>
+            </l1>
+            <l1>
+                <h5>Philadelphia</h5>
+            </l1>
+            <l1>
+                <h5>Brasilia</h5>
+            </l1>
+            <l1>
+                <h5>Sydney</h5>
+            </l1>
+        </ul>
+
     </div>
 {{end}}

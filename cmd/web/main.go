@@ -44,7 +44,9 @@ func main() {
 
 	//authorize using cache
 	app.UseCache = false
+
 	//http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request)})
+
 	//Referencing the map store in the app AppConfig
 	repo := handlers.NewRepository(&app)
 	handlers.NewHandlers(repo)
