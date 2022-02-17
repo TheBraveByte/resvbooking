@@ -9,12 +9,6 @@ import (
 )
 
 func routes(app *config.AppConfig) http.Handler {
-	//	mux := pat.New()
-	//	mux.Get("/", http.HandlerFunc(handlers.Repo.HomePage))
-	//	mux.Get("/about", http.HandlerFunc(handlers.Repo.AboutPage))
-	//
-	//	return mux
-
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer)
 
@@ -32,14 +26,15 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/executive-suite", handlers.Repo.ExecutivePage)
 	mux.Get("/make-reservation", handlers.Repo.MakeReservationPage)
 
+	//mux.Get("/check-availability", handlers.Repo.CheckAvailabilityPage)
 	mux.Get("/check-availability", handlers.Repo.CheckAvailabilityPage)
-
 	mux.Post("/check-availability", handlers.Repo.PostCheckAvailabilityPage)
+	mux.Get("/json-availability", handlers.Repo.JsonAvailabilityPage)
+	mux.Post("/json-availability", handlers.Repo.JsonAvailabilityPage)
 
 	//This allows files static files like images and icon to display in the html
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 
 	return mux
-
 }

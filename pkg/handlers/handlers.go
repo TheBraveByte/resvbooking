@@ -1,9 +1,12 @@
 package handlers
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/Akinleye007/resvbooking/pkg/config"
 	"github.com/Akinleye007/resvbooking/pkg/models"
 	"github.com/Akinleye007/resvbooking/pkg/render"
+	"log"
 	"net/http"
 )
 
@@ -35,13 +38,6 @@ func (rp *Repository) HomePage(wr http.ResponseWriter, rq *http.Request) {
 
 // AboutPage about page  handler
 func (rp Repository) AboutPage(wr http.ResponseWriter, rq *http.Request) {
-	//stringMap := make(map[string]string)
-	//
-	//remoteIpAddr := rp.App.Session.GetString(rq.Context(), "remote_ip")
-	//
-	//stringMap["remote_ip"] = remoteIpAddr
-	//stringMap["Test"] = "Go Backend developments"
-
 	render.Template(wr, "about.page.tmpl", &models.TemplateData{}, rq)
 
 }
@@ -96,6 +92,38 @@ func (rp *Repository) CheckAvailabilityPage(wr http.ResponseWriter, rq *http.Req
 
 //PostCheckAvailabilityPage handler function
 func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http.Request) {
-	wr.Write([]byte("Hi Akinleye007"))
+	//getting the posted value from the form
+	checkIn := rq.Form.Get("check-in")
+	checkOut := rq.Form.Get("check-out")
+	wr.Write([]byte(fmt.Sprintf("Check-in date is %s\nCheck-out date is %s", checkIn, checkOut)))
 	//render.Template(wr, "check-availability.page.tmpl", &models.TemplateData{},rq)
+}
+
+//create a json struct interfaces
+
+type ResponseJSON struct {
+	Name    string `json:"name"`
+	Ok      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
+//CheckAvailabilityPage handler Function
+func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Request) {
+
+	myResp := ResponseJSON{
+		Name:    "Yusuf Akinleye",
+		Ok:      true,
+		Message: "Available for freelance",
+	}
+
+	output, err := json.MarshalIndent(myResp, "", "     ")
+	//check for errors
+	if err != nil {
+		log.Println(err)
+	}
+
+	//this type the browser the type of content it is getting
+	wr.Header().Set("Content-type", "application/json")
+	wr.Write(output)
+	//render.Template(wr, "check-availability.page.tmpl", &models.TemplateData{}, rq)
 }

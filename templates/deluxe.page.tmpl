@@ -4,6 +4,10 @@
 {{end}}
 
 <style>
+    .form-control {
+        background-color: darkgray;
+    }
+
     p {
         /* margin-left: 25px; */
         margin-bottom: 20px;
@@ -53,41 +57,10 @@
         padding-top: 20px;
     }
 
-    .ico {
-        padding-bottom: 1rem;
-        margin-bottom: 2px;
-    }
-
-    .ft {
-        color: darkgoldenrod;
-        font-family: Arial;
-    }
-
-
-    .sub {
-        background-color: gold;
-        border-radius: 1.5rem;
-        border-color: gold;
-        color: whitesmoke;
-    }
-
-    /* .container{
-          m
-      } */
     .sec {
         padding-right: 30px;
         padding-left: 30px;
         padding-top: 20px;
-    }
-
-    .j-room {
-        height: 200px;
-        padding-left: 300px;
-        text-align: right;
-        color: gold;
-        margin-bottom: 0;
-        padding-bottom: 30px;
-        font-family: Cairo;
     }
 
     .emp {
@@ -97,8 +70,8 @@
 
     .room-j {
         max-width: 100%;
-        border-radius: 10%;
-        padding-top: 20px;
+        border-radius: 3%;
+        /*padding-top: 10px;*/
     }
 
     .testimonials-img {
@@ -110,13 +83,6 @@
     .testimonials {
         text-align: center;
         padding-bottom: 20px;
-    }
-
-    .experience {
-        text-align: center;
-        padding-top: 30px;
-        font-size: 2rem;
-        font-family: Arial, Helvetica, sans-serif;
     }
 
     .user {
@@ -160,37 +126,13 @@
         font-style: italic;
     }
 
-    .navbar-dark .navbar-brand {
-        color: goldenrod;
-        font-family: Ubuntu;
-        font-size: 2rem;
-        font-weight: bolder;
-    }
-
-    .navbar-dark .navbar-toggler {
-        border-color: goldenrod;
-    }
-
-    .navbar-dark .navbar-toggler-icon {
-        border-color: goldenrod;
-    }
-
-    .nav-link {
-        color: goldenrod;
-    }
-
-    .dropdown-menu {
-        background-color: goldenrod;
-        color: white;
-    }
-
-    .form-control {
-        background-color: goldenrod;
-        font-size: 1.1rem;
-        max-width: 90%;
-        border-radius: 0.85rem;
-        border-color: goldenrod;
-    }
+    /*.form-control {*/
+    /*    background-color: goldenrod;*/
+    /*    font-size: 1.1rem;*/
+    /*    max-width: 90%;*/
+    /*    border-radius: 0.85rem;*/
+    /*    border-color: goldenrod;*/
+    /*}*/
 </style>
 
 {{define "content"}}
@@ -365,20 +307,62 @@
             // notifyUser.success({msg: "success"})
 
             let html =
-                `<form action="" method="get" novalidate class="needs-validation">
-                <div class="row g-2 mt-5" id="reservation-dates">
-                    <div class="col-md-4 col-sm-6 col-lg-4">
-                        <input disabled required type="text" name="check-in" id= "check-in" class="form-control" placeholder="Check-in date">
+                `<div class="row">
+            <div class="col">
+                <form id ="check-availability-id" action="/check-availability" method="post" novalidate class="needs-validation">
+                    <div class="col mt-1">
+                            <div class="row g-2" id="reservation-dates">
+                                <div class="col">
+                                    <input class="form-control" name="check-in" placeholder="Check-in date" required
+                                           type="text">
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" name="check-out" placeholder="Check-out date" required
+                                           type="text">
+                                </div>
+                            </div>
+                            <hr>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-lg-4">
-                        <input disabled required type="text" name="check-out" id= "check-out" class="form-control" placeholder="Check-out date">
-                    </div>
-                </div>
-            </form>`
+                </form>
+            </div>
+        </div>`
+
 
             notifyUser.customer({
                 msg: html,
                 title: "Select Your date",
+                willOpen: () => {
+                    const elem = document.getElementById('reservation-dates');
+                    const rangepicker = new DateRangePicker(elem, {
+                        format: "yyyy-mm-dd",
+                        showOnFocus: false,
+                    });
+                },
+                didOpen: () => {
+                    document.getElementById("check-in").removeAttribute("disabled")
+                    document.getElementById("check-out").removeAttribute("disabled")
+
+                },
+
+                //using Ajax to  get the date of check in / check-out
+                callback: function (formValues) {
+                    let form = document.getElementById("check-availability-id")
+                    let formData = new FormData(form)
+
+                    //adding a csrf token since we are using POST request
+                    formData.append("csrf_token", {{.CSRFToken}})
+
+
+                    // console.log("called values")
+                    fetch("/json-availability", {
+                        method: "post",
+                        body: formData,
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data)
+                        })
+                }
             })
         })
     </script>

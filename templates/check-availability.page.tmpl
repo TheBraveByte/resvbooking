@@ -5,20 +5,8 @@
 {{end}}
 
 <style>
-
-    /*body{*/
-    /*    background: floralwhite;*/
-    /*}*/
-    .notie-container {
-        box-shadow: none;
-    }
-
-    .datepicker {
-        z-index: 10000;
-    }
-
-    .text {
-        color: red;
+    body {
+        background-color: ghostwhite;
     }
 
     label {
@@ -40,41 +28,6 @@
 
     }
 
-    .navbar-dark .navbar-brand {
-        color: goldenrod;
-        font-family: Ubuntu, serif;
-        font-size: 2rem;
-        font-weight: bolder;
-    }
-
-    .navbar-dark .navbar-toggler {
-        border-color: goldenrod;
-    }
-
-    .navbar-dark .navbar-toggler-icon {
-        border-color: goldenrod;
-    }
-
-    .nav-link {
-        color: goldenrod;
-    }
-
-    .dropdown-menu {
-        background-color: goldenrod;
-        color: white;
-    }
-
-    .checkbox {
-        width: 100%;
-        color: goldenrod;
-        padding-bottom: 1.5rem;
-        padding-top: 1rem;
-    }
-
-    #helpId {
-        color: goldenrod;
-    }
-
 </style>
 
 {{define "content"}}
@@ -82,17 +35,19 @@
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
-                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-                <form action="/check-availability" class="needs-validation" method="post" novalidate>
+{{/*                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">*/}}
+                <hr>
+                <form action="/check-availability" method="post" novalidate class="needs-validation">
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                     <div class="row g-2 mt-3">
                         <div class="col g-2">
-                            <div class="row  g-2 " id="reservation-dates">
-                                <div class="col-md-6 col-sm-12 col-lg-6">
-                                    <input class="form-control" name="start" placeholder="Check-in date" required
+                            <div class="row  g-3 " id="reservation-dates">
+                                <div class="col-md-12 col-sm-12 col-lg-6">
+                                    <input class="form-control" name="check-in" placeholder="Check-in date" required
                                            type="text">
                                 </div>
-                                <div class="col-md-6 col-sm-12 col-lg-6">
-                                    <input class="form-control" name="start" placeholder="Check-in date" required
+                                <div class="col-md-12 col-sm-12 col-lg-6">
+                                    <input class="form-control" name="check-out" placeholder="Check-in date" required
                                            type="text">
                                 </div>
                             </div>
@@ -116,14 +71,6 @@
         </div>
     </div>
 
-    {{/*    <div class="container row">*/}}
-    {{/*        <div class="col">*/}}
-    {{/*            <p id="name">Akinleye Yusuf</p>*/}}
-    {{/*            <p>*/}}
-    {{/*                <button class="btn btn-outline-secondary" id="colorButton">Add me</button>*/}}
-    {{/*            </p>*/}}
-    {{/*        </div>*/}}
-    {{/*    </div>*/}}
 
 {{end}}
 
