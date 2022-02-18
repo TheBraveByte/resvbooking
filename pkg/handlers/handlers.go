@@ -86,6 +86,7 @@ func (rp *Repository) MakeReservationPage(wr http.ResponseWriter, rq *http.Reque
 	data["reservationData"] = newReservation
 	render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
 		Form: forms.NewForm(nil),
+		Data: data,
 	}, rq)
 }
 
@@ -105,7 +106,11 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 
 	form := forms.NewForm(rq.PostForm)
 
-	form.HasForm("first-name", rq)
+	form.Require("first-name", "last-name", "phoneNumber", "Email", "inputPassword4")
+	form.ValidLenCharacter("first-name", 3, rq)
+	form.ValidLenCharacter("last-name", 3, rq)
+	form.ValidEmail("Email")
+
 	//form.HasForm("last-name",rq)
 	//form.HasForm("phoneNumber",rq)
 	//form.HasForm("Email",rq)

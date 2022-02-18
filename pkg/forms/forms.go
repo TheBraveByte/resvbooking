@@ -1,6 +1,8 @@
 package forms
 
 import (
+	"fmt"
+	"github.com/asaskevich/govalidator"
 	"net/http"
 	"net/url"
 	"strings"
@@ -44,4 +46,23 @@ func (f *Form) Require(field ...string) {
 			f.Error.Add(afield, "This field cant be blank")
 		}
 	}
+}
+
+// ValidLenCharacter This check for valid minimum length of input character in the form field
+func (f *Form) ValidLenCharacter(field string, CharLen int, rq *http.Request) bool {
+	fd := rq.Form.Get(field)
+	if len(fd) < CharLen {
+		f.Error.Add(field, fmt.Sprintf("This field must have at least %d character long", CharLen))
+		return false
+	}
+	return true
+}
+
+func (f *Form) ValidEmail(field string) bool {
+	checkEMail := f.Get(field)
+	if !govalidator.IsEmail(checkEMail) {
+		f.Error.Add(field, "Invalid Email Address")
+		return false
+	}
+	return true
 }
