@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Akinleye007/resvbooking/pkg/config"
+	"github.com/Akinleye007/resvbooking/pkg/forms"
 	"github.com/Akinleye007/resvbooking/pkg/models"
 	"github.com/Akinleye007/resvbooking/pkg/render"
 	"log"
@@ -80,8 +81,45 @@ func (rp *Repository) ExecutivePage(wr http.ResponseWriter, rq *http.Request) {
 
 //MakeReservationPage handlers function
 func (rp *Repository) MakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
+	var newReservation models.ReservationData
+	data := make(map[string]interface{})
+	data["reservationData"] = newReservation
+	render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
+		Form: forms.NewForm(nil),
+	}, rq)
+}
 
-	render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{}, rq)
+func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
+	err := rq.ParseForm()
+	if err != nil {
+		log.Println(err)
+	}
+
+	reservationData := models.ReservationData{
+		FirstName:   rq.Form.Get("first-name"),
+		LastName:    rq.Form.Get("last-name"),
+		Email:       rq.Form.Get("Email"),
+		PhoneNumber: rq.Form.Get("phoneNumber"),
+		Password:    rq.Form.Get("inputPassword4"),
+	}
+
+	form := forms.NewForm(rq.PostForm)
+
+	form.HasForm("first-name", rq)
+	//form.HasForm("last-name",rq)
+	//form.HasForm("phoneNumber",rq)
+	//form.HasForm("Email",rq)
+	//form.HasForm("inputPassword4",rq)
+
+	if !form.FormValid() {
+		data := make(map[string]interface{})
+		data["reservationData"] = reservationData
+		render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
+			Form: form,
+			Data: data,
+		}, rq)
+		return
+	}
 }
 
 //CheckAvailabilityPage handler Function
@@ -96,7 +134,6 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 	checkIn := rq.Form.Get("check-in")
 	checkOut := rq.Form.Get("check-out")
 	wr.Write([]byte(fmt.Sprintf("Check-in date is %s\nCheck-out date is %s", checkIn, checkOut)))
-	//render.Template(wr, "check-availability.page.tmpl", &models.TemplateData{},rq)
 }
 
 //create a json struct interfaces

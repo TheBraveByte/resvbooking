@@ -1,5 +1,7 @@
 package models
 
+import "github.com/Akinleye007/resvbooking/pkg/forms"
+
 //TemplateData  holds data sent from handlers to templates
 type TemplateData struct {
 	StringData map[string]string
@@ -10,4 +12,5 @@ type TemplateData struct {
 	popMessage string
 	Warning    string
 	Error      string
+	Form       *forms.Form
 }

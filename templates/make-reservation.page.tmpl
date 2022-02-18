@@ -38,53 +38,77 @@
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
-                <form action="" class="needs-validation" method="get" novalidate>
+                {{$resv := index .Data "reservationData"}}
+                <form action="" method="get" novalidate>
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                     <h3 class="">Rest Tavern Reservation</h3>
+
                     <div class="row g-2 mt-5">
+
                         <div class="col-sm-12 col-lg-6 col-md-6">
-                            <small id="helpId" class="text-muted">Enter your first name</small>
-                            <!-- <label for="first-name" class="form-label">First name</label> -->
-                            <input required autocomplete="off" type="text" class="form-control" placeholder="First name"
-                                   aria-label="First name" id="first-name" name="first-name">
+                            {{with .Form.Error.Get "first-name"}}
+                                <label class="text-danger">{{.}}</label>
+                            {{end}}
+                            <input required autocomplete="off" type="text" class="form-control
+                            {{with .Form.Error.Get "first-name"}} is-invalid {{end}}" placeholder="First name"
+                                   aria-label="First name" id="first-name" name="first-name" value="{{$resv.FirstName}}">
                         </div>
+
                         <div class="col-sm-12 col-lg-6 col-md-6">
-                            <small id="helpId" class="text-muted">Enter your last name</small>
-                            <!-- <label for="last-name" class="form-label">Last name</label> -->
-                            <input required autocomplete="off" type="text" class="form-control" placeholder="Last name"
-                                   aria-label="Last name" name="last-name" id="last-name">
+                            {{with .Form.Error.Get "last-name"}}
+                                <label class="text-danger">{{.}}</label>
+                            {{end}}
+                            <input required autocomplete="off" type="text"
+                                   class="form-control {{with .Form.Error.Get "last-name"}} is-invalid {{end}}"
+                                   placeholder="Last name"
+                                   aria-label="Last name" name="last-name" id="last-name" value="{{$resv.LastName}}">
                         </div>
+
                     </div>
 
                     <div class="row g-1 mt-3">
+
                         <div class="col-12">
-                            <small id="helpId" class="text-muted">Enter your phone number</small>
-                            <!-- <label for="phoneNumber" class="form-label">Phone number</label> -->
-                            <input type="text" class="form-control" id="phoneNumber" placeholder="(+234)9047583219"
-                                   required>
+                            {{with .Form.Error.Get "phoneNumber"}}
+                                <label class="text-danger">{{.}}</label>
+                            {{end}}
+                            <input type="text"
+                                   class="form-control {{with .Form.Error.Get "phoneNumber"}} is-invalid {{end}}"
+                                   id="phoneNumber" placeholder="(+234)9047583219"
+                                   required autocomplete="off" value="{{$resv.PhoneNumber}}">
                         </div>
+
                     </div>
 
                     <div class="row g-1 mt-3">
                         <div class="col">
-                            <small id="helpId" class="text-muted">Type-in your email</small>
-                            <!-- <label for="inputE" class="form-label">Email</label> -->
-                            <input required autocomplete="off" type="email" class="form-control" id="Email"
-                                   placeholder="email" aria-label="Email">
+                            {{with .Form.Error.Get "Email"}}
+                                <label class="text-danger">{{.}}</label>
+                            {{end}}
+                            <input required autocomplete="off" type="email"
+                                   class="form-control {{with .Form.Error.Get "Email"}} is-invalid {{end}}" id="Email"
+                                   placeholder="email" aria-label="Email" value="{{$resv.Email}}">
                         </div>
                     </div>
 
                     <div class="row g-2 mt-3">
                         <div class="col-md-6 col-sm-12 col-lg-6">
-                            <small id="helpId" class="text-muted">Enter strong password</small>
-                            <!-- <label for="inputPassword" class="form-label">Password</label> -->
-                            <input required autocomplete="off" type="password" class="form-control" id="inputPassword"
-                                   placeholder="password">
+                            {{/*                            <small id="helpId" class="text-muted">Enter strong password</small>*/}}
+                            {{with .Form.Error.Get "inputPassword4"}}
+                                <label class="text-danger">{{.}}</label>
+                            {{end}}
+                            <input required autocomplete="off" type="password"
+                                   class="form-control {{with .Form.Error.Get "inputPassword4"}} is-invalid {{end}}"
+                                   id="inputPassword" placeholder="password" value="{{$resv.Password}}">
                         </div>
                         <div class="col-md-6 col-sm-12 col-lg-6">
-                            <small id="helpId" class="text-muted">confirm your password</small>
-                            <!-- <label for="inputPassword4" class="form-label">Password</label> -->
-                            <input required autocomplete="off" type="password" class="form-control" id="inputPassword4"
-                                   placeholder="confirm password">
+                            {{/*                            <small id="helpId" class="text-muted">confirm your password</small>*/}}
+                            {{with .Form.Error.Get "inputPassword4"}}
+                                <label class="text-danger">{{.}}</label>
+                            {{end}}
+                            <input required autocomplete="off" type="password"
+                                   class="form-control {{with .Form.Error.Get "inputPassword4"}} is-invalid {{end}}"
+                                   id="inputPassword4" placeholder="confirm password" value="{{$resv.Password}}">
                         </div>
                     </div>
 

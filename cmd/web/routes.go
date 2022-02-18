@@ -24,11 +24,14 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/deluxe-suite", handlers.Repo.DeluxeSuitePage)
 	mux.Get("/penthouse-suite", handlers.Repo.PenthousePage)
 	mux.Get("/executive-suite", handlers.Repo.ExecutivePage)
+
 	mux.Get("/make-reservation", handlers.Repo.MakeReservationPage)
+	mux.Post("/make-reservation", handlers.Repo.PostMakeReservationPage)
 
 	//mux.Get("/check-availability", handlers.Repo.CheckAvailabilityPage)
 	mux.Get("/check-availability", handlers.Repo.CheckAvailabilityPage)
 	mux.Post("/check-availability", handlers.Repo.PostCheckAvailabilityPage)
+
 	mux.Get("/json-availability", handlers.Repo.JsonAvailabilityPage)
 	mux.Post("/json-availability", handlers.Repo.JsonAvailabilityPage)
 
