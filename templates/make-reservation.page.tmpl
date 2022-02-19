@@ -39,22 +39,25 @@
             <div class="col-md-3"></div>
             <div class="col-md-6">
                 {{$resv := index .Data "reservationData"}}
-                <form action="" method="get" novalidate>
+                <form action="/make-reservation" method="post" class="" novalidate>
                     <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                     <h3 class="">Rest Tavern Reservation</h3>
 
                     <div class="row g-2 mt-5">
 
                         <div class="col-sm-12 col-lg-6 col-md-6">
+                            <label for="first-name">First Name: </label>
                             {{with .Form.Error.Get "first-name"}}
                                 <label class="text-danger">{{.}}</label>
                             {{end}}
                             <input required autocomplete="off" type="text" class="form-control
                             {{with .Form.Error.Get "first-name"}} is-invalid {{end}}" placeholder="First name"
-                                   aria-label="First name" id="first-name" name="first-name" value="{{$resv.FirstName}}">
+                                   aria-label="First name" id="first-name" name="first-name"
+                                   value="{{$resv.FirstName}}">
                         </div>
 
                         <div class="col-sm-12 col-lg-6 col-md-6">
+                            <label for="last-name">Last Name: </label>
                             {{with .Form.Error.Get "last-name"}}
                                 <label class="text-danger">{{.}}</label>
                             {{end}}
@@ -69,6 +72,7 @@
                     <div class="row g-1 mt-3">
 
                         <div class="col-12">
+                            <label for="phoneNumber">Phone Number: </label>
                             {{with .Form.Error.Get "phoneNumber"}}
                                 <label class="text-danger">{{.}}</label>
                             {{end}}
@@ -82,27 +86,29 @@
 
                     <div class="row g-1 mt-3">
                         <div class="col">
+                            <label for="Email">Email: </label>
                             {{with .Form.Error.Get "Email"}}
                                 <label class="text-danger">{{.}}</label>
                             {{end}}
                             <input required autocomplete="off" type="email"
                                    class="form-control {{with .Form.Error.Get "Email"}} is-invalid {{end}}" id="Email"
-                                   placeholder="email" aria-label="Email" value="{{$resv.Email}}">
+                                   placeholder="Email" aria-label="Email" value="{{$resv.Email}}">
                         </div>
                     </div>
 
                     <div class="row g-2 mt-3">
                         <div class="col-md-6 col-sm-12 col-lg-6">
-                            {{/*                            <small id="helpId" class="text-muted">Enter strong password</small>*/}}
-                            {{with .Form.Error.Get "inputPassword4"}}
+                            <label for="inputPassword">Password: </label>
+                            {{with .Form.Error.Get "inputPassword"}}
                                 <label class="text-danger">{{.}}</label>
                             {{end}}
                             <input required autocomplete="off" type="password"
-                                   class="form-control {{with .Form.Error.Get "inputPassword4"}} is-invalid {{end}}"
-                                   id="inputPassword" placeholder="password" value="{{$resv.Password}}">
+                                   class="form-control {{with .Form.Error.Get "inputPassword"}} is-invalid {{end}}"
+                                   id="inputPassword" placeholder="Password" value="{{$resv.Password}}">
                         </div>
                         <div class="col-md-6 col-sm-12 col-lg-6">
-                            {{/*                            <small id="helpId" class="text-muted">confirm your password</small>*/}}
+                            <label for="inputPassword4">Confirm Password: </label>
+
                             {{with .Form.Error.Get "inputPassword4"}}
                                 <label class="text-danger">{{.}}</label>
                             {{end}}
@@ -114,9 +120,10 @@
 
                     <div class="row">
                         <div class="col-12 mt-4">
-                            <button type="submit" class="btn w-45  btn-md btn-hover-light bt ">submit</button>
+                            <button type="submit" class="btn w-45  btn-md btn-hover-light bt">Make Reservation</button>
                         </div>
                     </div>
+                    <hr>
                     <p class="mt-5text-muted text-center">
                         powered by Rest Tavern 2021
                     </p>

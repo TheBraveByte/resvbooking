@@ -60,8 +60,7 @@ func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *
 	td = AddDefaultData(td, rq)
 	_ = t.Execute(buf, td)
 	_, err := buf.WriteTo(wr)
-	if err !=
-		nil {
+	if err != nil {
 		fmt.Println("Error writing Templates to browsers")
 	}
 
@@ -86,6 +85,7 @@ func TemplateCache() (map[string]*template.Template, error) {
 	check if the templates matches any layout in the templates directory */
 
 	for _, pg := range pages {
+		//fmt.Println(pg)
 		filename := filepath.Base(pg)
 		tmp, err := template.New(filename).Funcs(functions).ParseFiles(pg)
 
@@ -101,6 +101,7 @@ func TemplateCache() (map[string]*template.Template, error) {
 			}
 		}
 		cache[filename] = tmp
+		//fmt.Println(cache)
 	}
 	return cache, nil
 

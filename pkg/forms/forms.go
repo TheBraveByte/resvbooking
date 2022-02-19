@@ -35,6 +35,7 @@ func (f *Form) HasForm(field string, rq *http.Request) bool {
 
 // FormValid Validate the forms values
 func (f *Form) FormValid() bool {
+
 	return len(f.Error) == 0
 }
 
@@ -42,7 +43,6 @@ func (f *Form) Require(field ...string) {
 	for _, afield := range field {
 		value := f.Get(afield)
 		if strings.TrimSpace(value) == "" {
-
 			f.Error.Add(afield, "This field cant be blank")
 		}
 	}
@@ -58,6 +58,7 @@ func (f *Form) ValidLenCharacter(field string, CharLen int, rq *http.Request) bo
 	return true
 }
 
+// ValidEmail check for valid email
 func (f *Form) ValidEmail(field string) bool {
 	checkEMail := f.Get(field)
 	if !govalidator.IsEmail(checkEMail) {

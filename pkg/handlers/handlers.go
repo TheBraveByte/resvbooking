@@ -97,16 +97,17 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	}
 
 	reservationData := models.ReservationData{
-		FirstName:   rq.Form.Get("first-name"),
-		LastName:    rq.Form.Get("last-name"),
-		Email:       rq.Form.Get("Email"),
-		PhoneNumber: rq.Form.Get("phoneNumber"),
-		Password:    rq.Form.Get("inputPassword4"),
+		FirstName:       rq.Form.Get("first-name"),
+		LastName:        rq.Form.Get("last-name"),
+		Email:           rq.Form.Get("Email"),
+		PhoneNumber:     rq.Form.Get("phoneNumber"),
+		Password:        rq.Form.Get("inputPassword"),
+		ConfirmPassword: rq.Form.Get("inputPassword4"),
 	}
 
 	form := forms.NewForm(rq.PostForm)
 
-	form.Require("first-name", "last-name", "phoneNumber", "Email", "inputPassword4")
+	form.Require("first-name", "last-name", "phoneNumber", "Email", "inputPassword4", "inputPassword")
 	form.ValidLenCharacter("first-name", 3, rq)
 	form.ValidLenCharacter("last-name", 3, rq)
 	form.ValidEmail("Email")
@@ -122,20 +123,24 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	}
 
 	rp.App.Session.Put(rq.Context(), "reservationData", reservationData)
-	//redirect the data back
-	http.Redirect(wr, rq, "reservationData", http.StatusSeeOther)
+	//redirect the data back to avoid submitting the form more than onece
+	http.Redirect(wr, rq, "/make-reservation", http.StatusSeeOther)
 }
 
 func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Request) {
 
 	reservationData, ok := rp.App.Session.Get(rq.Context(), "reservationData").(models.ReservationData)
 	if !ok {
+		fmt.Println(ok)
+		rp.App.Session.Put(rq.Context(), "error", "session has not reservation")
+		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
 		log.Println("Error transferring Data")
 		return
 	}
 	data := make(map[string]interface{})
 	data["reservationData"] = reservationData
 
+	rp.App.Session.Remove(rq.Context(), "reservationData")
 	render.Template(wr, "reservation-summary.page.tmpl", &models.TemplateData{
 		Data: data,
 	}, rq)
@@ -165,7 +170,7 @@ type ResponseJSON struct {
 	Message string `json:"message"`
 }
 
-//CheckAvailabilityPage handler Function
+// JsonAvailabilityPage  handler Function
 func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Request) {
 
 	myResp := ResponseJSON{
@@ -183,5 +188,5 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 	//this type the browser the type of content it is getting
 	wr.Header().Set("Content-type", "application/json")
 	wr.Write(output)
-	//render.Template(wr, "check-availability.page.tmpl", &models.TemplateData{}, rq)
+	//render.Template(wr, "check-availability.page.tmpl", &models.TemplateData{}, rq
 }

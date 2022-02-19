@@ -259,6 +259,26 @@
 
         let notifyUser = promptAlert()
 
+        function Notie(msg, msgType) {
+            notie.alert({
+                type:msgType,
+                text: msg,
+            })
+        }
+
+        function NotieModal(title, text, html, icon, confirmationButton) {
+            Swal.fire({
+                title: title,
+                html : text,
+                icon: icon,
+                confirmationButton:confirmationButton
+            })
+        }
+
+        {{with .Error}}
+        Notie("{{.}}","error")
+        {{end}}
+
         function promptAlert() {
             let toast = function (notify) {
                 const {
