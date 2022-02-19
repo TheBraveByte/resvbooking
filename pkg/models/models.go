@@ -4,9 +4,10 @@ package models
 
 // hold th reservation data
 type ReservationData struct {
-	FirstName   string
-	LastName    string
-	Email       string
-	PhoneNumber string
-	Password    string
+	FirstName       string
+	LastName        string
+	Email           string
+	PhoneNumber     string
+	Password        string
+	ConfirmPassword string
 }

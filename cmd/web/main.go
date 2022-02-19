@@ -3,15 +3,14 @@ package main
 import (
 	"encoding/gob"
 	"fmt"
+	"github.com/Akinleye007/resvbooking/pkg/config"
+	"github.com/Akinleye007/resvbooking/pkg/handlers"
 	"github.com/Akinleye007/resvbooking/pkg/models"
+	"github.com/Akinleye007/resvbooking/pkg/render"
+	"github.com/alexedwards/scs/v2"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/Akinleye007/resvbooking/pkg/config"
-	"github.com/Akinleye007/resvbooking/pkg/handlers"
-	"github.com/Akinleye007/resvbooking/pkg/render"
-	"github.com/alexedwards/scs/v2"
 )
 
 const portNumber = ":8080"
@@ -23,9 +22,10 @@ var session *scs.SessionManager
 
 func main() {
 
-	app.InProduction = false
 	//Using session to keep track of data store from the form
 	gob.Register(models.ReservationData{})
+
+	app.InProduction = false
 
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
@@ -35,6 +35,7 @@ func main() {
 
 	//Getting the templates cache
 	tc, err := render.TemplateCache()
+	fmt.Println(tc, err)
 	if err != nil {
 		log.Fatal("Cannot create template cache")
 	}

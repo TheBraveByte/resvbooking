@@ -26,7 +26,7 @@
 
                   <tr>
                       <td>phone Number : </td>
-                      <td>{{resv.PhoneNumber}}</td>
+                      <td>{{$resv.PhoneNumber}}</td>
                   </tr>
 
                   <tr>
@@ -43,5 +43,14 @@
           </div>
       </div>
   </div>
+
+{{end}}
+
+{{define "js"}}
+    <script>
+        notifyUser.error({msg: "error"})
+
+    </script>
+
 
 {{end}}
