@@ -111,11 +111,6 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	form.ValidLenCharacter("last-name", 3, rq)
 	form.ValidEmail("Email")
 
-	//form.HasForm("last-name",rq)
-	//form.HasForm("phoneNumber",rq)
-	//form.HasForm("Email",rq)
-	//form.HasForm("inputPassword4",rq)
-
 	if !form.FormValid() {
 		data := make(map[string]interface{})
 		data["reservationData"] = reservationData
@@ -125,6 +120,26 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 		}, rq)
 		return
 	}
+
+	rp.App.Session.Put(rq.Context(), "reservationData", reservationData)
+	//redirect the data back
+	http.Redirect(wr, rq, "reservationData", http.StatusSeeOther)
+}
+
+func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Request) {
+
+	reservationData, ok := rp.App.Session.Get(rq.Context(), "reservationData").(models.ReservationData)
+	if !ok {
+		log.Println("Error transferring Data")
+		return
+	}
+	data := make(map[string]interface{})
+	data["reservationData"] = reservationData
+
+	render.Template(wr, "reservation-summary.page.tmpl", &models.TemplateData{
+		Data: data,
+	}, rq)
+
 }
 
 //CheckAvailabilityPage handler Function
@@ -138,6 +153,7 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 	//getting the posted value from the form
 	checkIn := rq.Form.Get("check-in")
 	checkOut := rq.Form.Get("check-out")
+
 	wr.Write([]byte(fmt.Sprintf("Check-in date is %s\nCheck-out date is %s", checkIn, checkOut)))
 }
 

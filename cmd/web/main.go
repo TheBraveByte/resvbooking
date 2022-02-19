@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
+	"github.com/Akinleye007/resvbooking/pkg/models"
 	"log"
 	"net/http"
 	"time"
@@ -22,6 +24,8 @@ var session *scs.SessionManager
 func main() {
 
 	app.InProduction = false
+	//Using session to keep track of data store from the form
+	gob.Register(models.ReservationData{})
 
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
