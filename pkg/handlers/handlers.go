@@ -13,7 +13,7 @@ import (
 
 var Repo *Repository
 
-// Repository struct to store the app
+// Repository struct to store the app Config
 type Repository struct {
 	App *config.AppConfig // a struct
 

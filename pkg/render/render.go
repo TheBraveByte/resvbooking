@@ -43,8 +43,14 @@ func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *
 	tc := map[string]*template.Template{}
 
 	if app.UseCache {
+		/*this is used to prevent creating a templates cache of a particular templates
+		when Request for
+		*/
 		tc = app.TempCache
 	} else {
+		/*this is first created when our application start running at first
+		storing the valid templates, since the App.configure is a pointer the templates is permanently
+		store in it feature know as app.UseCache*/
 		tc, _ = TemplateCache()
 	}
 	//check if the template exist in the cache15
@@ -57,6 +63,8 @@ func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *
 	buf := new(bytes.Buffer)
 
 	// creating a buffer for  the template and execute
+
+	//td holds the default data we want to pass to a template
 	td = AddDefaultData(td, rq)
 	_ = t.Execute(buf, td)
 	_, err := buf.WriteTo(wr)
@@ -86,6 +94,7 @@ func TemplateCache() (map[string]*template.Template, error) {
 
 	for _, pg := range pages {
 		//fmt.Println(pg)
+		//filePath.Base return the last element of the path i.e "*.page.tmpl"
 		filename := filepath.Base(pg)
 		tmp, err := template.New(filename).Funcs(functions).ParseFiles(pg)
 
