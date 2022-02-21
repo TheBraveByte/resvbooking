@@ -13,7 +13,7 @@ import (
 type AppConfig struct {
 	UseCache     bool
 	TempCache    map[string]*template.Template
-	infoLog      *log.Logger
+	InfoLog      *log.Logger
 	InProduction bool
 	Session      *scs.SessionManager
 }

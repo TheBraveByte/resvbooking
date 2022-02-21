@@ -261,7 +261,7 @@
 
         function Notie(msg, msgType) {
             notie.alert({
-                type:msgType,
+                type: msgType,
                 text: msg,
             })
         }
@@ -269,14 +269,22 @@
         function NotieModal(title, text, html, icon, confirmationButton) {
             Swal.fire({
                 title: title,
-                html : text,
+                html: text,
                 icon: icon,
-                confirmationButton:confirmationButton
+                confirmationButton: confirmationButton
             })
         }
 
         {{with .Error}}
-        Notie("{{.}}","error")
+        Notie("{{.}}", "error")
+        {{end}}
+
+        {{with .Error}}
+        Notie("{{.}}", "flash")
+        {{end}}
+
+        {{with .Error}}
+        Notie("{{.}}", "warning")
         {{end}}
 
         function promptAlert() {

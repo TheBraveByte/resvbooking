@@ -31,8 +31,8 @@ func NewHandlers(r *Repository) {
 // HomePage home page handlers & give the handlers a receiver
 func (rp *Repository) HomePage(wr http.ResponseWriter, rq *http.Request) {
 
-	remoteIpAddr := rq.RemoteAddr
-	rp.App.Session.Put(rq.Context(), "remote_ip", remoteIpAddr)
+	//remoteIpAddr := rq.RemoteAddr
+	//rp.App.Session.Put(rq.Context(), "remote_ip", remoteIpAddr)
 
 	render.Template(wr, "home.page.tmpl", &models.TemplateData{}, rq)
 }
@@ -91,6 +91,7 @@ func (rp *Repository) MakeReservationPage(wr http.ResponseWriter, rq *http.Reque
 }
 
 func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
+	/*Clients and Server-side Form Validation is process*/
 	err := rq.ParseForm()
 	if err != nil {
 		log.Println(err)
@@ -155,7 +156,7 @@ func (rp *Repository) CheckAvailabilityPage(wr http.ResponseWriter, rq *http.Req
 
 //PostCheckAvailabilityPage handler function
 func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http.Request) {
-	//getting the posted value from the form
+	//getting the posted value from the form with respect to the field
 	checkIn := rq.Form.Get("check-in")
 	checkOut := rq.Form.Get("check-out")
 
@@ -179,6 +180,7 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 		Message: "Available for freelance",
 	}
 
+	//Creating a Json file from struct type
 	output, err := json.MarshalIndent(myResp, "", "     ")
 	//check for errors
 	if err != nil {

@@ -22,7 +22,25 @@ var session *scs.SessionManager
 
 func main() {
 
+	err := run()
+	if err != nil {
+		log.Fatal("Failed to run the Application........")
+	}
 	//Using session to keep track of data store from the form
+
+	fmt.Println("Starting the Server :8080")
+
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+	err = srv.ListenAndServe()
+	log.Fatal(err)
+
+}
+
+func run() error {
+
 	gob.Register(models.ReservationData{})
 
 	app.InProduction = false
@@ -37,6 +55,7 @@ func main() {
 	tc, err := render.TemplateCache()
 	fmt.Println(tc, err)
 	if err != nil {
+		fmt.Println(err)
 		log.Fatal("Cannot create template cache")
 	}
 
@@ -53,13 +72,6 @@ func main() {
 
 	render.NewTemplates(&app)
 
-	fmt.Println("Starting the Server :8080")
-
-	srv := &http.Server{
-		Addr:    portNumber,
-		Handler: routes(&app),
-	}
-	err = srv.ListenAndServe()
-	log.Fatal(err)
+	return nil
 
 }

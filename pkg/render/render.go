@@ -61,10 +61,9 @@ func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *
 
 	// how to use the right template hold bytes
 	buf := new(bytes.Buffer)
+	/*creating a buffer for  the template and execute
 
-	// creating a buffer for  the template and execute
-
-	//td holds the default data we want to pass to a template
+	td holds the default data we want to pass to a template*/
 	td = AddDefaultData(td, rq)
 	_ = t.Execute(buf, td)
 	_, err := buf.WriteTo(wr)

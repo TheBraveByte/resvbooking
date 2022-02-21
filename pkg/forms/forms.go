@@ -19,6 +19,7 @@ func NewForm(data url.Values) *Form {
 		data,
 		errors(map[string][]string{}),
 	}
+
 }
 
 //HasForm to check if the form is not empty
@@ -61,6 +62,7 @@ func (f *Form) ValidLenCharacter(field string, CharLen int, rq *http.Request) bo
 // ValidEmail check for valid email
 func (f *Form) ValidEmail(field string) bool {
 	checkEMail := f.Get(field)
+	//use Govalidator for email
 	if !govalidator.IsEmail(checkEMail) {
 		f.Error.Add(field, "Invalid Email Address")
 		return false
