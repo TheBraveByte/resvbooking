@@ -46,10 +46,10 @@ func run() error {
 	app.InProduction = false
 
 	session = scs.New()
-	session.Lifetime = 24 * time.Hour
-	session.Cookie.Persist = true
-	session.Cookie.SameSite = http.SameSiteLaxMode
-	session.Cookie.Secure = app.InProduction
+	session.Lifetime = 24 * time.Hour // how to keep the session of users
+	session.Cookie.Persist = true //To keep cookies
+	session.Cookie.SameSite = http.SameSiteLaxMode //if the user visit the same sites again
+	session.Cookie.Secure = app.InProduction // is the application in production or development
 
 	//Getting the templates cache
 	tc, err := render.TemplateCache()

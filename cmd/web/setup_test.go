@@ -8,14 +8,11 @@ import (
 
 //setting up our http.Handler interfaces
 
-type ResvHandler struct {
-}
+type ResvHandler struct {}
+
 
 func TestMain(m *testing.M) {
-
 	os.Exit(m.Run())
 }
 
-func (rs *ResvHandler) ServeHTTP(wr http.ResponseWriter, rq *http.Request) {
-
-}
+func (rs *ResvHandler) ServeHTTP(wr http.ResponseWriter, rq *http.Request) {}

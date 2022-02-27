@@ -36,6 +36,7 @@ func AddDefaultData(td *models.TemplateData, rq *http.Request) *models.TemplateD
 }
 
 // Template RenderTemplates rendering tmpl templates using the cache created
+//{response, request, the templates, the data passed to the templates}
 func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *http.Request) {
 	/*Get the templates cache from the app config from the main.go file ,check if the template exist in the cache
 	how to use the right template hold bytes, creating a buffer for  the template and execute
