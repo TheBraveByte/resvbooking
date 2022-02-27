@@ -1,6 +1,6 @@
 package models
 
-import "github.com/Akinleye007/resvbooking/pkg/forms"
+import "github.com/dev-ayaa/resvbooking/pkg/forms"
 
 //TemplateData  holds data sent from handlers to templates
 type TemplateData struct {

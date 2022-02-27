@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/Akinleye007/resvbooking/pkg/config"
-	"github.com/Akinleye007/resvbooking/pkg/handlers"
+	"github.com/dev-ayaa/resvbooking/pkg/config"
+	"github.com/dev-ayaa/resvbooking/pkg/handlers"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"net/http"

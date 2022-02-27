@@ -51,7 +51,7 @@
                                 <label class="text-danger">{{.}}</label>
                             {{end}}
                             <input required autocomplete="off" type="text" class="form-control
-                            {{with .Form.Error.Get "first-name"}} is-invalid {{end}}" placeholder="First name"
+                            {{with .Form.Error.Get "first-name"}} is-invalid {{end}}" placeholder="Yousuff"
                                    aria-label="First name" id="first-name" name="first-name"
                                    value="{{$resv.FirstName}}">
                         </div>
@@ -63,7 +63,7 @@
                             {{end}}
                             <input required autocomplete="off" type="text"
                                    class="form-control {{with .Form.Error.Get "last-name"}} is-invalid {{end}}"
-                                   placeholder="Last name"
+                                   placeholder="Akinleye"
                                    aria-label="Last name" name="last-name" id="last-name" value="{{$resv.LastName}}">
                         </div>
 
@@ -92,7 +92,7 @@
                             {{end}}
                             <input required autocomplete="off" type="email"
                                    class="form-control {{with .Form.Error.Get "Email"}} is-invalid {{end}}" id="Email"
-                                   placeholder="Email" aria-label="Email" value="{{$resv.Email}}">
+                                   placeholder="planets456@gmail.com" aria-label="Email" value="{{$resv.Email}}">
                         </div>
                     </div>
 

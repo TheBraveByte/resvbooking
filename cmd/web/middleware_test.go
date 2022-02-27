@@ -15,7 +15,7 @@ func TestNoSurf(t *testing.T) {
 		break
 
 	default:
-		t.Errorf("Testing for NoSurf .....\n%v is not http Handler....", ts)
+		t.Errorf("Testing for NoSurf .....\n%vIs not an http Handler....", ts)
 	}
 
 }
@@ -29,6 +29,6 @@ func TestSessionLoad(t *testing.T) {
 		break
 
 	default:
-		t.Errorf("Testing for SessionLoad .....\n%v is not http Handler....", tsl)
+		t.Errorf("Testing for SessionLoad .....\n%v Is not an http Handler....", tsl)
 	}
 }

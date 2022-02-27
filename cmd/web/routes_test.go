@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Akinleye007/resvbooking/pkg/config"
+	"github.com/dev-ayaa/resvbooking/pkg/config"
 	"github.com/go-chi/chi"
 	"testing"
 )
@@ -14,6 +14,6 @@ func TestRoutes(t *testing.T) {
 	case *chi.Mux:
 		//test successful
 	default:
-		t.Errorf("Testing for Routes .....\n%v is not Chi Mux....", mux)
+		t.Errorf("Testing for Routes .....\n%vIs not a Chi httpHandler....", mux)
 	}
 }

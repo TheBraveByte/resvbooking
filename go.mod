@@ -1,4 +1,4 @@
-module github.com/Akinleye007/resvbooking
+module github.com/dev-ayaa/resvbooking
 
 go 1.17
 

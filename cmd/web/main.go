@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/gob"
 	"fmt"
-	"github.com/Akinleye007/resvbooking/pkg/config"
-	"github.com/Akinleye007/resvbooking/pkg/handlers"
-	"github.com/Akinleye007/resvbooking/pkg/models"
-	"github.com/Akinleye007/resvbooking/pkg/render"
 	"github.com/alexedwards/scs/v2"
+	"github.com/dev-ayaa/resvbooking/pkg/config"
+	"github.com/dev-ayaa/resvbooking/pkg/handlers"
+	"github.com/dev-ayaa/resvbooking/pkg/models"
+	"github.com/dev-ayaa/resvbooking/pkg/render"
 	"log"
 	"net/http"
 	"time"
@@ -46,10 +46,10 @@ func run() error {
 	app.InProduction = false
 
 	session = scs.New()
-	session.Lifetime = 24 * time.Hour // how to keep the session of users
-	session.Cookie.Persist = true //To keep cookies
+	session.Lifetime = 24 * time.Hour              // how to keep the session of users
+	session.Cookie.Persist = true                  //To keep cookies
 	session.Cookie.SameSite = http.SameSiteLaxMode //if the user visit the same sites again
-	session.Cookie.Secure = app.InProduction // is the application in production or development
+	session.Cookie.Secure = app.InProduction       // is the application in production or development
 
 	//Getting the templates cache
 	tc, err := render.TemplateCache()

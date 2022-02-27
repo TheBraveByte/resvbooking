@@ -3,21 +3,21 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Akinleye007/resvbooking/pkg/config"
-	"github.com/Akinleye007/resvbooking/pkg/forms"
-	"github.com/Akinleye007/resvbooking/pkg/models"
-	"github.com/Akinleye007/resvbooking/pkg/render"
+	"github.com/dev-ayaa/resvbooking/pkg/config"
+	"github.com/dev-ayaa/resvbooking/pkg/forms"
+	"github.com/dev-ayaa/resvbooking/pkg/models"
+	"github.com/dev-ayaa/resvbooking/pkg/render"
 	"log"
 	"net/http"
 )
-
-var Repo *Repository
 
 // Repository struct to store the app Config
 type Repository struct {
 	App *config.AppConfig // a struct
 
 }
+
+var Repo *Repository
 
 // NewRepository  create a new repository
 func NewRepository(a *config.AppConfig) *Repository {
