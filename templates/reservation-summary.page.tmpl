@@ -1,56 +1,45 @@
-{{template "base" .}}
+{{template "base" .}} {{define "content"}} {{$resv := index .Data "reservationData"}}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h3>Reservation Form values</h3>
+            <hr>
+            <table class="table table-responsive table-striped">
+                <thead>
 
-{{define "content"}}
-    {{$resv := index .Data "reservationData"}}
-    <div class="container">
-      <div class="row">
-          <div class="col">
-              <h3>Reservation Form values</h3>
-              <hr>
-              <table class="table table-responsive table-striped">
-                  <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name : </td>
+                        <td>{{$resv.FirstName}} {{$resv.LastName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Email : </td>
+                        <td>{{$resv.Email}}</td>
+                    </tr>
+                    <tr>
+                        <td>phone Number : </td>
+                        <td>{{$resv.PhoneNumber}}</td>
+                    </tr>
 
-                  </thead>
-                  <tbody>
-                  <tr>
-                      <td>Name : </td>
-                      <td>{{$resv.FirstName $resv.LastName}}</td>
-                  </tr>
+                    <tr>
+                        <td>Check-in Date : </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>check-out Date : </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-
-                  <tr>
-                      <td>Email : </td>
-                      <td>{{$resv.Email}}</td>
-                  </tr>
-
-
-                  <tr>
-                      <td>phone Number : </td>
-                      <td>{{$resv.PhoneNumber}}</td>
-                  </tr>
-
-                  <tr>
-                      <td>Check-in Date : </td>
-                      <td></td>
-                  </tr>
-
-                  <tr>
-                      <td>check-out Date : </td>
-                      <td></td>
-                  </tr>
-                  </tbody>
-              </table>
-          </div>
-      </div>
-  </div>
-
-{{end}}
-
-{{define "js"}}
-    <script>
-        notifyUser.error({msg: "error"})
-
-    </script>
-
-
+{{end}} {{define "js"}}
+<script>
+    notifyUser.error({
+        msg: "error"
+    })
+</script>
 {{end}}

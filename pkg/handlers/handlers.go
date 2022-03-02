@@ -100,18 +100,32 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	reservationData := models.ReservationData{
 		FirstName:       rq.Form.Get("first-name"),
 		LastName:        rq.Form.Get("last-name"),
-		Email:           rq.Form.Get("Email"),
-		PhoneNumber:     rq.Form.Get("phoneNumber"),
+		Email:           rq.Form.Get("email"),
+		PhoneNumber:     rq.Form.Get("phone-number"),
 		Password:        rq.Form.Get("inputPassword"),
 		ConfirmPassword: rq.Form.Get("inputPassword4"),
 	}
 
 	form := forms.NewForm(rq.PostForm)
 
-	form.Require("first-name", "last-name", "phoneNumber", "Email", "inputPassword4", "inputPassword")
+	form.Require("first-name", "last-name", "phone-number", "email", "inputPassword4", "inputPassword")
+	// form.ValidPassword("inputPassword", rq)
+	// form.ValidPassword("inputPassword4", rq)
+	/*form.HasForm("first_name", rq)
+	form.HasForm("last_name", rq)
+	form.HasForm("phone-number", rq)
+	form.HasForm("email", rq)
+	form.HasForm("inputPassword", rq)
+	form.HasForm("inputPassword4", rq)
+	*/
+
 	form.ValidLenCharacter("first-name", 3, rq)
 	form.ValidLenCharacter("last-name", 3, rq)
-	form.ValidEmail("Email")
+	form.ValidEmail("email")
+	if form.ValidPassword("inputPassword", 10, rq) != form.ValidPassword("inputPassword4", 10, rq) {
+		log.Fatal("Incorrect Password....")
+		form.Set("inputPassword", "Incorrect Password")
+	}
 
 	if !form.FormValid() {
 		data := make(map[string]interface{})
@@ -125,7 +139,7 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 
 	rp.App.Session.Put(rq.Context(), "reservationData", reservationData)
 	//redirect the data back to avoid submitting the form more than onece
-	http.Redirect(wr, rq, "/make-reservation", http.StatusSeeOther)
+	http.Redirect(wr, rq, "/make-reservation-data", http.StatusSeeOther)
 }
 
 func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Request) {

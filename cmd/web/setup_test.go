@@ -8,8 +8,7 @@ import (
 
 //setting up our http.Handler interfaces
 
-type ResvHandler struct {}
-
+type ResvHandler struct{}
 
 func TestMain(m *testing.M) {
 	os.Exit(m.Run())

@@ -22,6 +22,15 @@ func NewForm(data url.Values) *Form {
 
 }
 
+func (f *Form) Require(formField ...string) {
+	for _, field := range formField {
+		value := f.Get(field)
+		if strings.TrimSpace(value) == "" {
+			f.Error.Set(field, "This field can't be blank")
+		}
+	}
+}
+
 //HasForm to check if the form is not empty
 func (f *Form) HasForm(formField string, rq *http.Request) bool {
 	/*This to check if the form input has value or not*/
@@ -40,15 +49,6 @@ func (f *Form) FormValid() bool {
 	return len(f.Error) == 0
 }
 
-func (f *Form) Require(formField ...string) {
-	for _, field := range formField {
-		value := f.Get(field)
-		if strings.TrimSpace(value) == "" {
-			f.Error.Set(field, "This field can't be blank")
-		}
-	}
-}
-
 // ValidLenCharacter This check for valid minimum length of input character in the form field
 func (f *Form) ValidLenCharacter(formField string, CharLen int, rq *http.Request) bool {
 	fd := rq.Form.Get(formField)
@@ -59,7 +59,7 @@ func (f *Form) ValidLenCharacter(formField string, CharLen int, rq *http.Request
 	return true
 }
 
-// ValidEmail check for valid email
+//ValidEmail check for valid email
 func (f *Form) ValidEmail(formField string) bool {
 	checkEMail := f.Get(formField)
 	//use Govalidator for email
@@ -68,4 +68,32 @@ func (f *Form) ValidEmail(formField string) bool {
 		return false
 	}
 	return true
+}
+
+// func (f *Form) ValidPassword(formField1 string,formField2 string ,minLen int,rq *http.Request) bool {
+// 		checkPassword   := f.Get(formField1)
+// 		confirmPassword := f.Get(formField2)
+// 		if len(checkPassword) != minLen {
+// 			f.Error.Set(formField1,"Weak Password : Enter a Minimium of 10 character")
+// 			return false
+// 		}
+// 		if len(confirmPassword)  != minLen {
+// 			f.Error.Set(formField2,"Weak Password : Enter a Minimium of 10 character")
+// 			return false
+// 		}
+// 		if checkPassword  != confirmPassword{
+// 			f.Error.Set(formField2,"Invalid Password... Enter the correct password")
+// 			return false
+// 		}
+// 		return true
+// }
+
+func (f *Form) ValidPassword(formField string, minLen int, rq *http.Request) bool {
+	CheckPassword := f.Get(formField)
+	if len(CheckPassword) < minLen {
+		f.Error.Set(formField, "Weak Password : Enter a Minimium of 10 character")
+		return false
+	}
+	return true
+
 }

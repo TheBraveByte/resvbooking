@@ -1,13 +1,9 @@
-{{template "base" .}}
-
-{{define "css"}}
-{{end}}
-
+{{template "base" .}} {{define "css"}} {{ end }}
 <style>
     .form-control {
         background-color: darkgray;
     }
-
+    
     p {
         /* margin-left: 25px; */
         margin-bottom: 20px;
@@ -20,7 +16,7 @@
         text-align: center;
         color: black;
     }
-
+    
     h3 {
         text-align: left;
         color: black;
@@ -29,7 +25,7 @@
         font-family: Ubuntu;
         font-style: Ubuntu;
     }
-
+    
     .junior {
         background-color: white;
         padding-right: 30px;
@@ -38,14 +34,14 @@
         text-align: center;
         /* color: black; */
     }
-
+    
     .jun {
         color: goldenrod;
         font-family: Ubuntu;
         font-size: 1.5rem;
         font-style: italic;
     }
-
+    
     h4 {
         font-family: Ubuntu;
         font-size: 2rem;
@@ -56,76 +52,75 @@
         padding-left: 30px;
         padding-top: 20px;
     }
-
+    
     .sec {
         padding-right: 30px;
         padding-left: 30px;
         padding-top: 20px;
     }
-
+    
     .emp {
         /* font-family:Impact, Haettenschweiler, 'Arial Narrow', sans-serif; */
         font-size: 1.5rem;
     }
-
+    
     .room-j {
         max-width: 100%;
         border-radius: 3%;
         /*padding-top: 10px;*/
     }
-
+    
     .testimonials-img {
         max-width: 90%;
         border-radius: 10%;
         max-height: 70%;
     }
-
+    
     .testimonials {
         text-align: center;
         padding-bottom: 20px;
     }
-
+    
     .user {
         font-size: 1.4rem;
         font-weight: bold;
         color: goldenrod;
         /* font-family:B */
     }
-
+    
     .comf {
         max-width: 100%;
         max-height: 90%;
     }
-
+    
     .feel {
         padding-right: 50px;
         padding-left: 50px;
         padding-top: 40px;
     }
-
+    
     .feel2 {
         font-size: 2rem;
         font-family: Arial, Helvetica, sans-serif;
         color: black;
     }
-
+    
     .feel3 {
         font-family: Ubuntu;
         padding-bottom: 30px;
         text-align: center;
     }
-
+    
     .words {
         color: black;
         font-family: MerriWeather;
         font-style: oblique;
     }
-
+    
     .testimonial-text {
         padding-top: 40px;
         font-style: italic;
     }
-
     /*.form-control {*/
     /*    background-color: goldenrod;*/
     /*    font-size: 1.1rem;*/
@@ -136,234 +131,230 @@
 </style>
 
 {{define "content"}}
-  <div class="junior bg-light">
+<div class="junior bg-light">
     <div class="row text-light">
-      <div class="col sec">
-        <h3>Deluxe Quarters Reservation</h3>
-        <div id="myCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-          <div class="carousel-indicators">
-            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1"
-                    aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2"
-                    aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="3"
-                    aria-label="Slide 4"></button>
-          </div>
+        <div class="col sec">
+            <h3>Deluxe Quarters Reservation</h3>
+            <div id="myCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                </div>
 
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img class="img-fluid mx-auto d-block room-j"
-                   src="static/images/pexels-max-vakhtbovych-6970069.jpg"
-                   alt="pexels-mikhail-nilov-7820920.jpg" width="100%" height="80%"/>
-            </div>
-
-            <div class="carousel-item">
-              <img class="img-fluid mx-auto d-block room-j"
-                   src="static/images/pexels-max-vakhtbovych-6899433.jpg" alt="ouside-bungalow"
-                   width="100%" height="80%"/>
-            </div>
-            <div class="carousel-item">
-              <img class="img-fluid mx-auto d-block room-j"
-                   src="static/images/pexels-max-vakhtbovych-7031411.jpg"
-                   alt="pexels-mikhail-nilov-7820920.jpg" width="100%" height="80%"/>
-            </div>
-            <div class="carousel-item">
-              <img class="img-fluid mx-auto d-block room-j"
-                   src="static/images/pexels-max-vakhtbovych-6588582.jpg"
-                   alt="pexels-naim-benjelloun-2825525.jpg" width="100%" height="80%"/>
-            </div>
-          </div>
-        </div>
-        <div>
-          <p class="jun">
-            Our Deluxe Suites Rooms <span class="emp">at Rest Tavern</span>
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo
-            distinctio dolorum ut ad tempora, vero, doloremque temporibus
-            illum quo, deserunt similique tempore rem incidunt. Sequi adipisci
-            at ipsum porro possimus? Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Illo distinctio dolorum ut ad tempora, vero,
-            doloremque temporibus illum quo, deserunt similique tempore rem
-            incidunt. Sequi adipisci at ipsum porro possimus?
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="feel">
-    <div class="row">
-      <div class="col">
-        <p class="feel2">Feel Peace and Comfortable we offer.</p>
-        <h4 class="feel3">At Rest Tavern</h4>
-      </div>
-      <div class="row">
-        <div class="col-md-6 col-sm-12 col-lg-4">
-          <img class="img-fluid mx-auto d-block comf" src="static/images/pexels-recal-media-60217.jpg"
-               width="100%" height="80%"/>
-          <!-- <p>A magnificent hotel beach</p> -->
-        </div>
-        <div class="col-md-6 col-sm-12 col-lg-4">
-          <img class="img-fluid mx-auto d-block comf" src="static/images/pexels-andres-ayrton-6579100.jpg"
-               width="100%" height="80%"/>
-        </div>
-        <div class="col-md-6 col-sm-12 col-lg-4">
-          <img class="img-fluid mx-auto d-block comf" src="static/images/pexels-thorsten-technoman-338504.jpg"
-               width="100%" height="80%"/>
-        </div>
-        <div class="col-md-auto col-sm-12 col-lg-4">
-          <img class="img-fluid mx-auto d-block comf" src="static/images/pexels-naim-benjelloun-2287523.jpg"
-               alt="" width="100%" height="80%"/>
-        </div>
-        <p class="words">
-          We shall make you feel at house.we offer the best service you could
-          ever have in the whichever cities we are.Come along with your
-          families and friend and give them a taste of a worthy time spent
-          together.We shall make you feel at house.we offer the best service
-          you could ever have in the whichever cities we are.Come along with
-          your families and friend and give them a taste of a worthy time
-          spent together.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="container text-center">
-    <div class="row">
-      <div class="col">
-        <a id="book-now" href="#!" class=" w-50 btn btn-outline-secondary">Search for Availability</a>
-      </div>
-    </div>
-  </div>
-  <div class="testimonials">
-    <div class="row">
-      <div class="col">
-        <p class="feel2">Our Wonderful Experience at</p>
-        <h4 class="feel3">At Rest Tavern</h4>
-        <!-- <h3 class="experience">Our Wonderful Experience at Rest Tavern</h3> -->
-        <div id="myCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active container-fluid">
-              <!-- <h2 class="testimonial-text">I was served the best desert i ever had.</h2> -->
-              <img class="testimonials-img img-fluid mx-auto d-block"
-                   src="static/images/pexels-alex-green-5699508.jpg" alt="" width="100%" height="70%"/>
-              <h2 class="testimonial-text">
-                I was served the best desert i ever had.
-              </h2>
-              <em class="user">Leslie and Sandra</em>
-            </div>
-            <div class="carousel-item container-fluid">
-              <!-- <h2 class="testimonial-text">I was served the best desert i ever had.</h2> -->
-              <img class="testimonials-img img-fluid mx-auto d-block"
-                   src="static/images/pexels-andrea-piacquadio-3756452.jpg" alt="" width="100%"
-                   height="70%"/>
-              <h2 class="testimonial-text">
-                I was served the best desert i ever had.
-              </h2>
-              <em class="user">Linda & Hakeem </em>
-            </div>
-            <div class="carousel-item container-fluid">
-              <h2 class="testimonial-text"></h2>
-              <img class="testimonials-img img-fluid mx-auto d-block"
-                   src="static/images/pexels-asad-photo-maldives-1268855.jpg" width="100%" height="70%"/>
-              <h2 class="testimonial-text">
-                I was served the best desert i ever had.
-              </h2>
-              <em class="user">Steven & friends</em>
-            </div>
-            <div class="carousel-item container-fluid">
-              <h2 class="testimonial-text"></h2>
-              <img class="testimonials-img img-fluid mx-auto d-block"
-                   src="static/images/pexels-andrea-piacquadio-837129.jpg" width="100%" height="70%"/>
-              <h2 class="testimonial-text">
-                I was served the best desert i ever had.
-              </h2>
-              <em class="user">Katrina.</em>
-            </div>
-          </div>
-          <a class="carousel-control-prev" role="button" href="#myCarousel" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </a>
-
-          <a class="carousel-control-next" role="button" href="#myCarousel" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-{{end}}
-
-
-{{define "js"}}
-
-  <script>
-      document.getElementById("book-now").addEventListener("click", function () {
-          // notifyUser.success({msg: "success"})
-
-          let html =
-              `<div class="row">
-            <div class="col">
-                <form id ="check-availability-id" action="/check-availability" method="post" novalidate class="needs-validation">
-                    <div class="col mt-1">
-                            <div class="row g-2" id="reservation-dates">
-                                <div class="col">
-                                    <input class="form-control" name="check-in" placeholder="Check-in date" required
-                                           type="text">
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" name="check-out" placeholder="Check-out date" required
-                                           type="text">
-                                </div>
-                            </div>
-                            <hr>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img class="img-fluid mx-auto d-block room-j" src="static/images/pexels-max-vakhtbovych-6970069.jpg" alt="pexels-mikhail-nilov-7820920.jpg" width="100%" height="80%" />
                     </div>
-                </form>
+
+                    <div class="carousel-item">
+                        <img class="img-fluid mx-auto d-block room-j" src="static/images/pexels-max-vakhtbovych-6899433.jpg" alt="ouside-bungalow" width="100%" height="80%" />
+                    </div>
+                    <div class="carousel-item">
+                        <img class="img-fluid mx-auto d-block room-j" src="static/images/pexels-max-vakhtbovych-7031411.jpg" alt="pexels-mikhail-nilov-7820920.jpg" width="100%" height="80%" />
+                    </div>
+                    <div class="carousel-item">
+                        <img class="img-fluid mx-auto d-block room-j" src="static/images/pexels-max-vakhtbovych-6588582.jpg" alt="pexels-naim-benjelloun-2825525.jpg" width="100%" height="80%" />
+                    </div>
+                </div>
             </div>
-        </div>`
+            <div>
+                <p class="jun">
+                    Our Deluxe Suites Rooms <span class="emp">at Rest Tavern</span>
+                </p>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo distinctio dolorum ut ad tempora, vero, doloremque temporibus illum quo, deserunt similique tempore rem incidunt. Sequi adipisci at ipsum porro possimus? Lorem ipsum dolor sit amet consectetur
+                    adipisicing elit. Illo distinctio dolorum ut ad tempora, vero, doloremque temporibus illum quo, deserunt similique tempore rem incidunt. Sequi adipisci at ipsum porro possimus?
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="feel">
+    <div class="row">
+        <div class="col">
+            <p class="feel2">Feel Peace and Comfortable we offer.</p>
+            <h4 class="feel3">At Rest Tavern</h4>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-lg-4">
+                <img class="img-fluid mx-auto d-block comf" src="static/images/pexels-recal-media-60217.jpg" width="100%" height="80%" />
+                <!-- <p>A magnificent hotel beach</p> -->
+            </div>
+            <div class="col-md-6 col-sm-12 col-lg-4">
+                <img class="img-fluid mx-auto d-block comf" src="static/images/pexels-andres-ayrton-6579100.jpg" width="100%" height="80%" />
+            </div>
+            <div class="col-md-6 col-sm-12 col-lg-4">
+                <img class="img-fluid mx-auto d-block comf" src="static/images/pexels-thorsten-technoman-338504.jpg" width="100%" height="80%" />
+            </div>
+            <div class="col-md-auto col-sm-12 col-lg-4">
+                <img class="img-fluid mx-auto d-block comf" src="static/images/pexels-naim-benjelloun-2287523.jpg" alt="" width="100%" height="80%" />
+            </div>
+            <p class="words">
+                We shall make you feel at house.we offer the best service you could ever have in the whichever cities we are.Come along with your families and friend and give them a taste of a worthy time spent together.We shall make you feel at house.we offer the best
+                service you could ever have in the whichever cities we are.Come along with your families and friend and give them a taste of a worthy time spent together.
+            </p>
+        </div>
+    </div>
+</div>
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <a id="book-now" href="#!" class="w-50 btn btn-outline-secondary">Search for Availability</a
+                >
+            </div>
+        </div>
+    </div>
+    <div class="testimonials">
+        <div class="row">
+            <div class="col">
+                <p class="feel2">Our Wonderful Experience at</p>
+                <h4 class="feel3">At Rest Tavern</h4>
+                <!-- <h3 class="experience">Our Wonderful Experience at Rest Tavern</h3> -->
+                <div
+                        id="myCarousel"
+                        class="carousel slide carousel-fade"
+                        data-bs-ride="carousel"
+                >
+                    <div class="carousel-inner">
+                        <div class="carousel-item active container-fluid">
+                            <!-- <h2 class="testimonial-text">I was served the best desert i ever had.</h2> -->
+                            <img
+                                    class="testimonials-img img-fluid mx-auto d-block"
+                                    src="static/images/pexels-alex-green-5699508.jpg"
+                                    alt=""
+                                    width="100%"
+                                    height="70%"
+                            />
+                            <h2 class="testimonial-text">
+                                I was served the best desert i ever had.
+                            </h2>
+                            <em class="user">Leslie and Sandra</em>
+                        </div>
+                        <div class="carousel-item container-fluid">
+                            <!-- <h2 class="testimonial-text">I was served the best desert i ever had.</h2> -->
+                            <img
+                                    class="testimonials-img img-fluid mx-auto d-block"
+                                    src="static/images/pexels-andrea-piacquadio-3756452.jpg"
+                                    alt=""
+                                    width="100%"
+                                    height="70%"
+                            />
+                            <h2 class="testimonial-text">
+                                I was served the best desert i ever had.
+                            </h2>
+                            <em class="user">Linda & Hakeem </em>
+                        </div>
+                        <div class="carousel-item container-fluid">
+                            <h2 class="testimonial-text"></h2>
+                            <img
+                                    class="testimonials-img img-fluid mx-auto d-block"
+                                    src="static/images/pexels-asad-photo-maldives-1268855.jpg"
+                                    width="100%"
+                                    height="70%"
+                            />
+                            <h2 class="testimonial-text">
+                                I was served the best desert i ever had.
+                            </h2>
+                            <em class="user">Steven & friends</em>
+                        </div>
+                        <div class="carousel-item container-fluid">
+                            <h2 class="testimonial-text"></h2>
+                            <img
+                                    class="testimonials-img img-fluid mx-auto d-block"
+                                    src="static/images/pexels-andrea-piacquadio-837129.jpg"
+                                    width="100%"
+                                    height="70%"
+                            />
+                            <h2 class="testimonial-text">
+                                I was served the best desert i ever had.
+                            </h2>
+                            <em class="user">Katrina.</em>
+                        </div>
+                    </div>
+                    <a
+                            class="carousel-control-prev"
+                            role="button"
+                            href="#myCarousel"
+                            data-slide="prev"
+                    >
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+
+            <a class="carousel-control-next" role="button" href="#myCarousel" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+{{ end }} {{define "js"}}
+<script>
+    document.getElementById("book-now").addEventListener("click", function() {
+        // notifyUser.success({msg: "success"})
+
+        let html =
+            `<div class="row">
+      <div class="col">
+          <form id ="check-availability-id" action="/check-availability" method="post" novalidate class="needs-validation">
+              <div class="col mt-1">
+                      <div class="row g-2" id="reservation-dates">
+                          <div class="col">
+                              <input class="form-control" name="check-in" placeholder="Check-in date" required
+                                     type="text">
+                          </div>
+                          <div class="col">
+                              <input class="form-control" name="check-out" placeholder="Check-out date" required
+                                     type="text">
+                          </div>
+                      </div>
+                      <hr>
+              </div>
+          </form>
+      </div>
+    </div>`
 
 
-          notifyUser.customer({
-              msg: html,
-              title: "Select Your date",
-              willOpen: () => {
-                  const elem = document.getElementById('reservation-dates');
-                  const rangepicker = new DateRangePicker(elem, {
-                      format: "yyyy-mm-dd",
-                      showOnFocus: false,
-                  });
-              },
-              didOpen: () => {
-                  document.getElementById("check-in").removeAttribute("disabled")
-                  document.getElementById("check-out").removeAttribute("disabled")
+        notifyUser.customer({
+            msg: html,
+            title: "Select Your date",
+            willOpen: () => {
+                const elem = document.getElementById('reservation-dates');
+                const rangepicker = new DateRangePicker(elem, {
+                    format: "yyyy-mm-dd",
+                    showOnFocus: false,
+                });
+            },
+            didOpen: () => {
+                document.getElementById("check-in").removeAttribute("disabled")
+                document.getElementById("check-out").removeAttribute("disabled")
 
-              },
+            },
 
-              //using Ajax to  get the date of check in / check-out
-              callback: function (formValues) {
-                  let form = document.getElementById("check-availability-id")
-                  let formData = new FormData(form)
+            //using Ajax to  get the date of check in / check-out
+            callback: function(formValues) {
+                let form = document.getElementById("check-availability-id")
+                let formData = new FormData(form)
 
-                  //adding a csrf token since we are using POST request
-                  formData.append("csrf_token", {{.CSRFToken}})
+                //adding a csrf token since we are using POST request
+                formData.append("csrf_token", {{ .CSRFToken}})
 
 
-                  // console.log("called values")
-                  fetch("/json-availability", {
-                      method: "post",
-                      body: formData,
-                  })
-                      .then(response => response.json())
-                      .then(data => {
-                          console.log(data)
-                      })
-              }
-          })
-      })
-  </script>
-{{end}}
+                // console.log("called values")
+                fetch("/json-availability", {
+                        method: "post",
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                    })
+            },
+        })
+    })
+</script>
+{{ end }}
