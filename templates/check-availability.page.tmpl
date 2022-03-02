@@ -31,57 +31,57 @@
 </style>
 
 {{define "content"}}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-{{/*                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">*/}}
-                <hr>
-                
-                <form action="/check-availability" method="post" novalidate class="needs-validation">
-                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-                    <div class="row g-2 mt-3">
-                        <div class="col g-2">
-                            <div class="row  g-3 " id="reservation-dates">
-                                <div class="col-md-12 col-sm-12 col-lg-6">
-                                    <input class="form-control" name="check-in" placeholder="Check-in date" required
-                                           type="text">
-                                </div>
-                                <div class="col-md-12 col-sm-12 col-lg-6">
-                                    <input class="form-control" name="check-out" placeholder="Check-in date" required
-                                           type="text">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row g-1">
-                        <div class="col-12 mt-4">
-                            <button class="btn w-45  btn-md btn-outline-secondary bt" type="submit">check for
-                                availability
-                            </button>
-                        </div>
-                    </div>
-                    <hr>
-                    <p class="mt-5text-muted text-center ">
-                        powered by Rest Tavern 2021
-                    </p>
-                </form>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+          {{/*                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">*/}}
+        <hr>
 
+        <form action="/check-availability" method="post" novalidate class="needs-validation">
+          <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+          <div class="row g-2 mt-3">
+            <div class="col g-2">
+              <div class="row  g-3 " id="reservation-dates">
+                <div class="col-md-12 col-sm-12 col-lg-6">
+                  <input class="form-control" name="check-in" placeholder="Check-in date" required
+                         type="text">
+                </div>
+                <div class="col-md-12 col-sm-12 col-lg-6">
+                  <input class="form-control" name="check-out" placeholder="Check-in date" required
+                         type="text">
+                </div>
+              </div>
             </div>
-        </div>
+          </div>
+          <hr>
+          <div class="row g-1">
+            <div class="col-12 mt-4">
+              <button class="btn w-45  btn-md btn-outline-secondary bt" type="submit">check for
+                availability
+              </button>
+            </div>
+          </div>
+          <hr>
+          <p class="mt-5text-muted text-center ">
+            powered by Rest Tavern 2021
+          </p>
+        </form>
+
+      </div>
     </div>
+  </div>
 
 
 {{end}}
 
 
 {{define "js"}}
-    <script>
-        //using vanilla date picker
-        const elem = document.getElementById('reservation-dates');
-        const rangepicker = new DateRangePicker(elem, {
-            format: "yyyy-mm-dd",
-        });
-    </script>
+  <script>
+      //using vanilla date picker
+      const elem = document.getElementById('reservation-dates');
+      const rangepicker = new DateRangePicker(elem, {
+          format: "yyyy-mm-dd",
+      });
+  </script>
 {{end}}
