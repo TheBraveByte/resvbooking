@@ -13,6 +13,7 @@ type postFormData struct {
 	formValue string
 }
 
+//Slices of struct
 var hTests = []struct {
 	pageName       string
 	pagesUrl       string
@@ -54,8 +55,7 @@ var hTests = []struct {
 
 func TestHandlers(t *testing.T) {
 	routes := getRoutes()
-	//web server that returns a status code, a test Server and a client that
-	//can ca on the server
+	//web server that returns a status code, a test Server and a client must be setup
 	sth := httptest.NewTLSServer(routes)
 
 	//close the server after the main function execute

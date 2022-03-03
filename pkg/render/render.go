@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"github.com/dev-ayaa/resvbooking/pkg/config"
 	"github.com/dev-ayaa/resvbooking/pkg/models"
@@ -38,7 +39,7 @@ func AddDefaultData(td *models.TemplateData, rq *http.Request) *models.TemplateD
 
 // Template RenderTemplates rendering tmpl templates using the cache created
 //{response, request, the templates, the data passed to the templates}
-func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *http.Request) {
+func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *http.Request) error {
 	/*Get the templates cache from the app config from the main.go file ,check if the template exist in the cache
 	how to use the right template hold bytes, creating a buffer for  the template and execute
 	used to pass default data to all templates */
@@ -58,6 +59,7 @@ func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *
 	t, ok := tc[tmpl]
 	if !ok {
 		log.Fatal("cannot create template")
+		//return err
 	}
 
 	// how to use the right template hold bytes
@@ -71,8 +73,9 @@ func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *
 	_, err := buf.WriteTo(wr)
 	if err != nil {
 		fmt.Println("Error writing Templates to browsers")
+		return errors.New("Error Getting the right template")
 	}
-
+	return nil
 }
 
 // TemplateCache Working with layout and building a template cache

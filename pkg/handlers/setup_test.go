@@ -93,6 +93,7 @@ func getRoutes() http.Handler {
 }
 
 func NoSurf(next http.Handler) http.Handler {
+	//Cross sites examined
 	csrfHandler := nosurf.New(next)
 
 	csrfHandler.SetBaseCookie(http.Cookie{

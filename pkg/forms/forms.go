@@ -19,7 +19,6 @@ func NewForm(data url.Values) *Form {
 		data,
 		errors(map[string][]string{}),
 	}
-
 }
 
 func (f *Form) Require(formField ...string) {
