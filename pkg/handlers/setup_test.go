@@ -13,6 +13,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"time"
 )
@@ -30,6 +31,12 @@ func getRoutes() http.Handler {
 	gob.Register(models.ReservationData{})
 
 	app.InProduction = false
+
+	infoLogger := log.New(os.Stdout, "INFO ::\t", log.LstdFlags)
+	app.InfoLog = infoLogger
+
+	errorLogger := log.New(os.Stdout, "ERROR ::\t", log.LstdFlags|log.Lshortfile)
+	app.ErrorLog = errorLogger
 
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour              // how to keep the session of users

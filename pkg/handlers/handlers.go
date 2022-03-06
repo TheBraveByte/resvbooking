@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/dev-ayaa/resvbooking/pkg/config"
 	"github.com/dev-ayaa/resvbooking/pkg/forms"
+	"github.com/dev-ayaa/resvbooking/pkg/helpers"
 	"github.com/dev-ayaa/resvbooking/pkg/models"
 	"github.com/dev-ayaa/resvbooking/pkg/render"
 	"log"
@@ -30,10 +31,6 @@ func NewHandlers(r *Repository) {
 
 // HomePage home page handlers & give the handlers a receiver
 func (rp *Repository) HomePage(wr http.ResponseWriter, rq *http.Request) {
-
-	//remoteIpAddr := rq.RemoteAddr
-	//rp.App.Session.Put(rq.Context(), "remote_ip", remoteIpAddr)
-
 	render.Template(wr, "home.page.tmpl", &models.TemplateData{}, rq)
 }
 
@@ -94,7 +91,8 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	/*Clients and Server-side Form Validation is process*/
 	err := rq.ParseForm()
 	if err != nil {
-		log.Println(err)
+		//log.Println(err)
+		helpers.ServerSideError(wr, err)
 	}
 
 	reservationData := models.ReservationData{
@@ -198,7 +196,8 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 	output, err := json.MarshalIndent(myResp, "", "     ")
 	//check for errors
 	if err != nil {
-		log.Println(err)
+		//log.Println(err)
+		helpers.ServerSideError(wr, err)
 	}
 
 	//this type the browser the type of content it is getting

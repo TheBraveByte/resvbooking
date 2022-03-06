@@ -5,6 +5,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/dev-ayaa/resvbooking/pkg/config"
 	"github.com/dev-ayaa/resvbooking/pkg/models"
+	"log"
 	"net/http"
 	"os"
 	"testing"
@@ -17,6 +18,12 @@ var testApp config.AppConfig
 func TestMain(m *testing.M) {
 	gob.Register(models.ReservationData{})
 	testApp.InProduction = false
+
+	infoLogger := log.New(os.Stdout, "INFO ::\t", log.LstdFlags)
+	testApp.InfoLog = infoLogger
+
+	errorLogger := log.New(os.Stdout, "ERROR ::\t", log.LstdFlags|log.Lshortfile)
+	testApp.ErrorLog = errorLogger
 
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour

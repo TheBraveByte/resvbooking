@@ -25,12 +25,14 @@ func TestAddDefaultData(t *testing.T) {
 }
 
 func getSession() (*http.Request, error) {
+	//Setting up request with a session
 	rq, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
 		return nil, err
 	}
 	ctx := rq.Context()
 	ctx, _ = session.Load(ctx, rq.Header.Get("X-Session"))
+	//check for err or not
 	rq = rq.WithContext(ctx)
 	return rq, nil
 

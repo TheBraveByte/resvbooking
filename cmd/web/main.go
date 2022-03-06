@@ -6,10 +6,12 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/dev-ayaa/resvbooking/pkg/config"
 	"github.com/dev-ayaa/resvbooking/pkg/handlers"
+	"github.com/dev-ayaa/resvbooking/pkg/helpers"
 	"github.com/dev-ayaa/resvbooking/pkg/models"
 	"github.com/dev-ayaa/resvbooking/pkg/render"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -19,6 +21,8 @@ const portNumber = ":8080"
 // to use session is the handlers package
 var app config.AppConfig
 var session *scs.SessionManager
+var infoLogger *log.Logger
+var errorLogger *log.Logger
 
 func main() {
 
@@ -45,6 +49,12 @@ func run() error {
 
 	app.InProduction = false
 
+	infoLogger = log.New(os.Stdout, "INFO ::\t", log.LstdFlags)
+	app.InfoLog = infoLogger
+
+	errorLogger = log.New(os.Stdout, "ERROR ::\t", log.LstdFlags|log.Lshortfile)
+	app.ErrorLog = errorLogger
+
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour              // how to keep the session of users
 	session.Cookie.Persist = true                  //To keep cookies
@@ -69,6 +79,7 @@ func run() error {
 	//Referencing the map store in the app AppConfig
 	repo := handlers.NewRepository(&app)
 	handlers.NewHandlers(repo)
+	helpers.NewHelper(&app)
 
 	render.NewTemplates(&app)
 

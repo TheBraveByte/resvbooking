@@ -63,6 +63,9 @@ func TestHandlers(t *testing.T) {
 
 	for _, h := range hTests {
 		if h.pageMethod == "GET" {
+			//this is when the client is requesting to view a page
+			//server.URL == localhost
+			//h.pagesUrls is the page the client is requesting for
 			response, err := sth.Client().Get(sth.URL + h.pagesUrl)
 			if err != nil {
 				t.Log(err)
