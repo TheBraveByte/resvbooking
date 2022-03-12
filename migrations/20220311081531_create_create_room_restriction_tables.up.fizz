@@ -1,0 +1,9 @@
+create_table("room_restriction") {
+  t.Column("id", "integer", {primary :true})
+  t.Column("check_in_date", "date",{})
+  t.Column("check_out_date", "date",{})
+  t.Column("room_id", "integer", {})
+  t.Column("reservation_id", "integer", {})
+  t.Column("restriction_id", "integer", {})
+
+}
