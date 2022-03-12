@@ -14,8 +14,7 @@ import (
 
 // Repository struct to store the app Config
 type Repository struct {
-	App *config.AppConfig // a struct
-
+	App *config.AppConfig
 }
 
 var Repo *Repository
@@ -31,49 +30,73 @@ func NewHandlers(r *Repository) {
 
 // HomePage home page handlers & give the handlers a receiver
 func (rp *Repository) HomePage(wr http.ResponseWriter, rq *http.Request) {
-	render.Template(wr, "home.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "home.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
 }
 
 // AboutPage about page  handler
 func (rp Repository) AboutPage(wr http.ResponseWriter, rq *http.Request) {
-	render.Template(wr, "about.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "about.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
 
 }
 
 //ContactPage handler function
 func (rp *Repository) ContactPage(wr http.ResponseWriter, rq *http.Request) {
 
-	render.Template(wr, "contact.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "contact.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
 }
 
 //JuniorSuitePage  handler function
 func (rp *Repository) JuniorSuitePage(wr http.ResponseWriter, rq *http.Request) {
 
-	render.Template(wr, "junior.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "junior.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
 }
 
 //PremiumSuitePage handler function
 func (rp *Repository) PremiumSuitePage(wr http.ResponseWriter, rq *http.Request) {
 
-	render.Template(wr, "premium.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "premium.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
 }
 
 //DeluxeSuitePage handler function
 func (rp *Repository) DeluxeSuitePage(wr http.ResponseWriter, rq *http.Request) {
 
-	render.Template(wr, "deluxe.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "deluxe.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
 }
 
 //PenthousePage handler function
 func (rp *Repository) PenthousePage(wr http.ResponseWriter, rq *http.Request) {
 
-	render.Template(wr, "penthouse.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "penthouse.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
 }
 
 //ExecutivePage handler function
 func (rp *Repository) ExecutivePage(wr http.ResponseWriter, rq *http.Request) {
 
-	render.Template(wr, "executive.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "executive.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
 }
 
 //MakeReservationPage handlers function
@@ -128,10 +151,13 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	if !form.FormValid() {
 		data := make(map[string]interface{})
 		data["reservationData"] = reservationData
-		render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
+		err := render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
 			Form: form,
 			Data: data,
 		}, rq)
+		if err != nil {
+			return
+		}
 		return
 	}
 
@@ -154,16 +180,22 @@ func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Re
 	data["reservationData"] = reservationData
 
 	rp.App.Session.Remove(rq.Context(), "reservationData")
-	render.Template(wr, "reservation-summary.page.tmpl", &models.TemplateData{
+	err := render.Template(wr, "reservation-summary.page.tmpl", &models.TemplateData{
 		Data: data,
 	}, rq)
+	if err != nil {
+		return
+	}
 
 }
 
 //CheckAvailabilityPage handler Function
 func (rp *Repository) CheckAvailabilityPage(wr http.ResponseWriter, rq *http.Request) {
 
-	render.Template(wr, "check-availability.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "check-availability.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
 }
 
 //PostCheckAvailabilityPage handler function

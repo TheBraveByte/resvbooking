@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/alexedwards/scs/v2"
 	"github.com/dev-ayaa/resvbooking/pkg/config"
+	"github.com/dev-ayaa/resvbooking/pkg/helpers"
 	"github.com/dev-ayaa/resvbooking/pkg/models"
 	"github.com/dev-ayaa/resvbooking/pkg/render"
 	"github.com/go-chi/chi"
@@ -62,6 +63,7 @@ func getRoutes() http.Handler {
 	//Referencing the map store in the app AppConfig
 	repo := NewRepository(&app)
 	NewHandlers(repo)
+	helpers.NewHelper(&app)
 
 	render.NewTemplates(&app)
 
