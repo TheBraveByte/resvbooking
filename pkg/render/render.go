@@ -97,8 +97,6 @@ func TemplateCache() (map[string]*template.Template, error) {
 	check if the templates matches any layout in the templates directory */
 
 	for _, pg := range pages {
-		//fmt.Println(pg)
-		//filePath.Base return the last element of the path i.e "*.page.tmpl"
 		filename := filepath.Base(pg)
 		tmp, err := template.New(filename).Funcs(functions).ParseFiles(pg)
 
@@ -113,7 +111,6 @@ func TemplateCache() (map[string]*template.Template, error) {
 			}
 		}
 		cache[filename] = tmp
-		//fmt.Println(cache)
 	}
 	return cache, nil
 

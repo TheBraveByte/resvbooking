@@ -29,7 +29,7 @@ var functions = template.FuncMap{
 var templatesPath = "./../../templates"
 
 func getRoutes() http.Handler {
-	gob.Register(models.ReservationData{})
+	gob.Register(models.Reservation{})
 
 	app.InProduction = false
 

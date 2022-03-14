@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/alexedwards/scs/v2"
 	"github.com/dev-ayaa/resvbooking/pkg/config"
+	"github.com/dev-ayaa/resvbooking/pkg/driver"
 	"github.com/dev-ayaa/resvbooking/pkg/handlers"
 	"github.com/dev-ayaa/resvbooking/pkg/helpers"
 	"github.com/dev-ayaa/resvbooking/pkg/models"
@@ -23,13 +24,18 @@ var app config.AppConfig
 var session *scs.SessionManager
 var infoLogger *log.Logger
 var errorLogger *log.Logger
+var dataSourceName string
 
 func main() {
 
-	err := run()
+	db, err := run()
 	if err != nil {
 		log.Fatal("Failed to run the Application........")
 	}
+
+	defer func(db *driver.DB) {
+		_ = db.PSQL.Close()
+	}(db)
 	//Using session to keep track of data store from the form
 
 	fmt.Println("Starting the Server :8080")
@@ -43,9 +49,14 @@ func main() {
 
 }
 
-func run() error {
+func run() (*driver.DB, error) {
 
-	gob.Register(models.ReservationData{})
+	gob.Register(models.Reservation{})
+	gob.Register(models.Room{})
+	gob.Register(models.Restriction{})
+	gob.Register(models.User{})
+	gob.Register(models.RoomRestriction{})
+	//gob.Register(models.{})
 
 	app.InProduction = false
 
@@ -76,13 +87,23 @@ func run() error {
 	//authorize using cache
 	app.UseCache = false
 
+	//connection the database to the Application
+	log.Println(".........Connecting to the database.........")
+	dataSourceName = "host=localhost port=5432  dbname=Resvbooking user=postgres password=dev-ayaa"
+	db, err := driver.ConnectSqlDb(dataSourceName)
+
+	if err != nil {
+		log.Fatal("Error Connecting to the database.....")
+		return nil, err
+	}
+
 	//Referencing the map store in the app AppConfig
-	repo := handlers.NewRepository(&app)
+	repo := handlers.NewRepository(&app, db)
 	handlers.NewHandlers(repo)
 	helpers.NewHelper(&app)
 
 	render.NewTemplates(&app)
 
-	return nil
+	return db, nil
 
 }

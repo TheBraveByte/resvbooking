@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/dev-ayaa/resvbooking/pkg/config"
+	"github.com/dev-ayaa/resvbooking/pkg/driver"
 	"github.com/dev-ayaa/resvbooking/pkg/forms"
 	"github.com/dev-ayaa/resvbooking/pkg/helpers"
 	"github.com/dev-ayaa/resvbooking/pkg/models"
 	"github.com/dev-ayaa/resvbooking/pkg/render"
+	"github.com/dev-ayaa/resvbooking/repository"
+	"github.com/dev-ayaa/resvbooking/repository/dbRepository"
 	"log"
 	"net/http"
 )
@@ -15,13 +18,16 @@ import (
 // Repository struct to store the app Config
 type Repository struct {
 	App *config.AppConfig
+	DB  repository.DatabaseRepository
 }
 
 var Repo *Repository
 
 // NewRepository  create a new repository
-func NewRepository(a *config.AppConfig) *Repository {
-	return &Repository{App: a}
+func NewRepository(a *config.AppConfig, db *driver.DB) *Repository {
+	return &Repository{App: a,
+		DB: dbRepository.NewPostgresRepository(a, db.PSQL)}
+
 }
 
 func NewHandlers(r *Repository) {
@@ -101,7 +107,7 @@ func (rp *Repository) ExecutivePage(wr http.ResponseWriter, rq *http.Request) {
 
 //MakeReservationPage handlers function
 func (rp *Repository) MakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
-	var newReservation models.ReservationData
+	var newReservation models.Reservation
 	data := make(map[string]interface{})
 	data["reservationData"] = newReservation
 	render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
@@ -118,7 +124,7 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 		helpers.ServerSideError(wr, err)
 	}
 
-	reservationData := models.ReservationData{
+	reservationData := models.Reservation{
 		FirstName:       rq.Form.Get("first-name"),
 		LastName:        rq.Form.Get("last-name"),
 		Email:           rq.Form.Get("email"),
@@ -168,7 +174,7 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 
 func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Request) {
 
-	reservationData, ok := rp.App.Session.Get(rq.Context(), "reservationData").(models.ReservationData)
+	reservationData, ok := rp.App.Session.Get(rq.Context(), "reservationData").(models.Reservation)
 	if !ok {
 		fmt.Println(ok)
 		rp.App.Session.Put(rq.Context(), "error", "session has not reservation")
