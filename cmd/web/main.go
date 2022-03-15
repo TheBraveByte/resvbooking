@@ -33,10 +33,10 @@ func main() {
 		log.Fatal("Failed to run the Application........")
 	}
 
+	//Close the Database
 	defer func(db *driver.DB) {
 		_ = db.PSQL.Close()
 	}(db)
-	//Using session to keep track of data store from the form
 
 	fmt.Println("Starting the Server :8080")
 
@@ -50,13 +50,13 @@ func main() {
 }
 
 func run() (*driver.DB, error) {
+	//Using session to keep track of data store from the form
 
 	gob.Register(models.Reservation{})
 	gob.Register(models.Room{})
 	gob.Register(models.Restriction{})
 	gob.Register(models.User{})
 	gob.Register(models.RoomRestriction{})
-	//gob.Register(models.{})
 
 	app.InProduction = false
 

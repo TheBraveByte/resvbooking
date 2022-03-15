@@ -17,12 +17,14 @@ const (
 	driverName    = "pgx"
 )
 
+//DB database tools
 type DB struct {
 	PSQL *sql.DB
 }
 
 var dbConn = &DB{}
 
+//ConnectSqlDb connect to PostgreSQL database
 func ConnectSqlDb(dsn string) (*DB, error) {
 	db, err := NewDatabase(dsn)
 
@@ -35,9 +37,24 @@ func ConnectSqlDb(dsn string) (*DB, error) {
 	db.SetConnMaxLifetime(maxDbLifeTime)
 
 	dbConn.PSQL = db
+	err = TestDatabase(db)
+	if err != nil {
+		return nil, err
+	}
 	return dbConn, nil
 }
 
+//TestDatabase testing to ping the database
+func TestDatabase(db *sql.DB) error {
+	err := db.Ping()
+	if err != nil {
+		log.Println("Error Testing Database connection")
+		return err
+	}
+	return nil
+}
+
+//NewDatabase connect to any database tools
 func NewDatabase(dsn string) (*sql.DB, error) {
 	db, err := sql.Open(driverName, dsn)
 

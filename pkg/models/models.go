@@ -14,8 +14,9 @@ type Reservation struct {
 	Password        string
 	ConfirmPassword string
 	RoomID          int
-	checkInDate     time.Time
-	checkOutDate    time.Time
+	CheckInDate     time.Time
+	CheckOutDate    time.Time
+	Room            Room
 }
 
 //Room rooms model
@@ -56,4 +57,7 @@ type RoomRestriction struct {
 	checkOutDate  time.Time
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
+	Room          Room
+	Restriction   Restriction
+	Reservation   Reservation
 }

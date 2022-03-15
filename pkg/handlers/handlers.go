@@ -13,6 +13,8 @@ import (
 	"github.com/dev-ayaa/resvbooking/repository/dbRepository"
 	"log"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 // Repository struct to store the app Config
@@ -124,6 +126,23 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 		helpers.ServerSideError(wr, err)
 	}
 
+	dateLayout := "2022-03-15"
+	cid := rq.Form.Get("check-in")
+	cod := rq.Form.Get("check-out")
+	checkInDate, err := time.Parse(dateLayout, cid)
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+	}
+
+	checkOutDate, err := time.Parse(dateLayout, cod)
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+	}
+
+	roomID, err := strconv.Atoi(rq.Form.Get("room_id"))
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+	}
 	reservationData := models.Reservation{
 		FirstName:       rq.Form.Get("first-name"),
 		LastName:        rq.Form.Get("last-name"),
@@ -131,20 +150,14 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 		PhoneNumber:     rq.Form.Get("phone-number"),
 		Password:        rq.Form.Get("inputPassword"),
 		ConfirmPassword: rq.Form.Get("inputPassword4"),
+		CheckInDate:     checkInDate,
+		CheckOutDate:    checkOutDate,
+		RoomID:          roomID,
 	}
 
 	form := forms.NewForm(rq.PostForm)
 
 	form.Require("first-name", "last-name", "phone-number", "email", "inputPassword4", "inputPassword")
-	// form.ValidPassword("inputPassword", rq)
-	// form.ValidPassword("inputPassword4", rq)
-	/*form.HasForm("first_name", rq)
-	form.HasForm("last_name", rq)
-	form.HasForm("phone-number", rq)
-	form.HasForm("email", rq)
-	form.HasForm("inputPassword", rq)
-	form.HasForm("inputPassword4", rq)
-	*/
 
 	form.ValidLenCharacter("first-name", 3, rq)
 	form.ValidLenCharacter("last-name", 3, rq)
@@ -167,6 +180,10 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 		return
 	}
 
+	err = rp.DB.InsertReservation(reservationData)
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+	}
 	rp.App.Session.Put(rq.Context(), "reservationData", reservationData)
 	//redirect the data back to avoid submitting the form more than onece
 	http.Redirect(wr, rq, "/make-reservation-data", http.StatusSeeOther)
