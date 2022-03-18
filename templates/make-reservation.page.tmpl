@@ -6,7 +6,7 @@
         font-family: Ubuntu;
         font-weight: light;
     }
-    
+
     .bt {
         background-color: goldenrod;
         color: black;
@@ -14,86 +14,96 @@
         font-weight: bold;
         border-radius: 0.55rem;
     }
+
     /* .form-control { background-color: goldenrod;
 font-size: 1.1rem; max-width: 50%; border-radius: 0.85rem; border-color: goldenrod; /* justify-content:center; */
     /* } */
-    
+
     #helpId {
         color: goldenrod;
     }
 </style>
 
 {{define "content"}}
-<div class="container">
+  <div class="container">
     <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-            {{$resv := index .Data "reservationData"}}
-            <form action="/make-reservation" method="post" class="" novalidate>
-                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-                <h3 class="">Rest Tavern Reservation</h3>
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+          {{$resv := index .Data "reservationData"}}
+        <form action="/make-reservation" method="post" class="" novalidate>
+          <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+          <h3 class="">Rest Tavern Reservation</h3>
 
-                <div class="row g-2 mt-5">
+          <div class="row g-2 mt-5">
 
-                    <div class="col-sm-12 col-lg-6 col-md-6">
-                        <label for="first-name">First Name: </label> {{with .Form.Error.Get "first-name"}}
-                        <label class="text-danger">{{.}}</label> {{end}}
-                        <input required autocomplete="off" type="text" class="form-control
-                            {{with .Form.Error.Get " first-name "}} is-invalid {{end}}" placeholder="Yousuff" id="first-name" name="first-name" value="{{$resv.FirstName}}">
-                    </div>
+            <div class="col-sm-12 col-lg-6 col-md-6">
+              <label for="first-name">First Name: </label> {{with .Form.Error.Get "first-name"}}
+                <label class="text-danger">{{.}}</label> {{end}}
+              <input required autocomplete="off" type="text" class="form-control
+                            {{with .Form.Error.Get " first-name "}} is-invalid {{end}}" placeholder="Yousuff"
+                     id="first-name" name="first-name" value="{{$resv.FirstName}}">
+            </div>
 
-                    <div class="col-sm-12 col-lg-6 col-md-6">
-                        <label for="last-name">Last Name: </label> {{with .Form.Error.Get "last-name"}}
-                        <label class="text-danger">{{.}}</label> {{end}}
-                        <input required autocomplete="off" type="text" class="form-control {{with .Form.Error.Get " last-name "}} is-invalid {{end}}" placeholder="Akinleye" name="last-name" id="last-name" value="{{$resv.LastName}}">
-                    </div>
+            <div class="col-sm-12 col-lg-6 col-md-6">
+              <label for="last-name">Last Name: </label> {{with .Form.Error.Get "last-name"}}
+                <label class="text-danger">{{.}}</label> {{end}}
+              <input required autocomplete="off" type="text"
+                     class="form-control {{with .Form.Error.Get " last-name "}} is-invalid {{end}}"
+                     placeholder="Akinleye" name="last-name" id="last-name" value="{{$resv.LastName}}">
+            </div>
 
-                </div>
+          </div>
 
-                <div class="row g-1 mt-3">
+          <div class="row g-1 mt-3">
 
-                    <div class="col-12">
-                        <label for="phone-number">Phone Number: </label> {{with .Form.Error.Get "phone-number"}}
-                        <label class="text-danger">{{.}}</label> {{end}}
-                        <input type="text" class="form-control {{with .Form.Error.Get " phone-number "}} is-invalid {{end}}" id="phone-number" placeholder="(+234)9047583219" required autocomplete="off" value="{{$resv.PhoneNumber}}" name="phone-number">
-                    </div>
+            <div class="col-12">
+              <label for="phone-number">Phone Number: </label> {{with .Form.Error.Get "phone-number"}}
+                <label class="text-danger">{{.}}</label> {{end}}
+              <input type="text" class="form-control {{with .Form.Error.Get " phone-number "}} is-invalid {{end}}"
+                     id="phone-number" placeholder="(+234)9047583219" required autocomplete="off"
+                     value="{{$resv.PhoneNumber}}" name="phone-number">
+            </div>
 
-                </div>
+          </div>
 
-                <div class="row g-1 mt-3">
-                    <div class="col">
-                        <label for="email">Email: </label> {{with .Form.Error.Get "email"}}
-                        <label class="text-danger">{{.}}</label> {{end}}
-                        <input required autocomplete="off" type="email" class="form-control {{with .Form.Error.Get " email "}} is-invalid {{end}}" id="email" placeholder="planets456@gmail.com" value="{{$resv.Email}}" name="email">
-                    </div>
-                </div>
+          <div class="row g-1 mt-3">
+            <div class="col">
+              <label for="email">Email: </label> {{with .Form.Error.Get "email"}}
+                <label class="text-danger">{{.}}</label> {{end}}
+              <input required autocomplete="off" type="email"
+                     class="form-control {{with .Form.Error.Get " email "}} is-invalid {{end}}" id="email"
+                     placeholder="planets456@gmail.com" value="{{$resv.Email}}" name="email">
+            </div>
+          </div>
+          <div class="row g-1 mt-3">
+            <div class="col">
+              <label for="check-in">check in date: </label>
+              <input required autocomplete="off" type="text" class="form-control" id="check-in" name="check-in">
+            </div>
+          </div>
 
-                <div class="row g-2 mt-3">
-                    <div class="col-md-6 col-sm-12 col-lg-6">
-                        <label for="inputPassword">Password: </label> {{with .Form.Error.Get "inputPassword"}}
-                        <label class="text-danger">{{.}}</label> {{end}}
-                        <input required autocomplete="off" type="password" class="form-control {{with .Form.Error.Get " inputPassword "}} is-invalid {{end}}" id="inputPassword" placeholder="Password" value="{{$resv.Password}}" name="inputPassword">
-                    </div>
-                    <div class="col-md-6 col-sm-12 col-lg-6">
-                        <label for="inputPassword4">Confirm Password: </label> {{with .Form.Error.Get "inputPassword4"}}
-                        <label class="text-danger">{{.}}</label> {{end}}
-                        <input required autocomplete="off" type="password" class="form-control {{with .Form.Error.Get " inputPassword4 "}} is-invalid {{end}}" id="inputPassword4" placeholder="confirm password" value="{{$resv.Password}}" name="inputPassword4">
-                    </div>
-                </div>
+          <div class="row g-1 mt-3">
+            <div class="col">
+              <label for="check-out">check out date: </label>
+              <input required autocomplete="off" type="text" class="form-control" id="check-out" name="check-out">
+            </div>
+          </div>
 
-                <div class="row">
-                    <div class="col-12 mt-4">
-                        <button type="submit" class="btn w-45  btn-md btn-hover-light bt">Make Reservation</button>
-                    </div>
-                </div>
-                <hr>
-                <p class="mt-5text-muted text-center">
-                    powered by Rest Tavern 2021
-                </p>
+          <input type="hidden" name="room_id" value="1">
 
-            </form>
-        </div>
+          <div class="row">
+            <div class="col-12 mt-4">
+              <button type="submit" class="btn w-45  btn-md btn-hover-light bt">Make Reservation</button>
+            </div>
+          </div>
+          <hr>
+          <p class="mt-5text-muted text-center">
+            powered by Rest Tavern 2021
+          </p>
+
+        </form>
+      </div>
     </div>
-</div>
+  </div>
 
 {{end}}

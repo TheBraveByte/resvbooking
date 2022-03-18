@@ -126,46 +126,43 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 		helpers.ServerSideError(wr, err)
 	}
 
-	dateLayout := "2022-03-15"
+	dateLayout := "2006-01-02"
 	cid := rq.Form.Get("check-in")
 	cod := rq.Form.Get("check-out")
 	checkInDate, err := time.Parse(dateLayout, cid)
 	if err != nil {
 		helpers.ServerSideError(wr, err)
+		return
 	}
 
 	checkOutDate, err := time.Parse(dateLayout, cod)
 	if err != nil {
 		helpers.ServerSideError(wr, err)
+		return
 	}
 
 	roomID, err := strconv.Atoi(rq.Form.Get("room_id"))
 	if err != nil {
 		helpers.ServerSideError(wr, err)
+		return
 	}
 	reservationData := models.Reservation{
-		FirstName:       rq.Form.Get("first-name"),
-		LastName:        rq.Form.Get("last-name"),
-		Email:           rq.Form.Get("email"),
-		PhoneNumber:     rq.Form.Get("phone-number"),
-		Password:        rq.Form.Get("inputPassword"),
-		ConfirmPassword: rq.Form.Get("inputPassword4"),
-		CheckInDate:     checkInDate,
-		CheckOutDate:    checkOutDate,
-		RoomID:          roomID,
+		FirstName:    rq.Form.Get("first-name"),
+		LastName:     rq.Form.Get("last-name"),
+		Email:        rq.Form.Get("email"),
+		PhoneNumber:  rq.Form.Get("phone-number"),
+		CheckInDate:  checkInDate,
+		CheckOutDate: checkOutDate,
+		RoomID:       roomID,
 	}
 
 	form := forms.NewForm(rq.PostForm)
 
-	form.Require("first-name", "last-name", "phone-number", "email", "inputPassword4", "inputPassword")
+	form.Require("first-name", "last-name", "phone-number", "email")
 
 	form.ValidLenCharacter("first-name", 3, rq)
 	form.ValidLenCharacter("last-name", 3, rq)
 	form.ValidEmail("email")
-	if form.ValidPassword("inputPassword", 10, rq) != form.ValidPassword("inputPassword4", 10, rq) {
-		log.Fatal("Incorrect Password....")
-		form.Set("inputPassword", "Incorrect Password")
-	}
 
 	if !form.FormValid() {
 		data := make(map[string]interface{})
@@ -180,10 +177,26 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 		return
 	}
 
-	err = rp.DB.InsertReservation(reservationData)
+	NewReservationID, err := rp.DB.InsertReservation(reservationData)
 	if err != nil {
 		helpers.ServerSideError(wr, err)
+		return
 	}
+	restriction := models.RoomRestriction{
+		ID:            0,
+		RoomID:        roomID,
+		ReservationID: NewReservationID,
+		RestrictionID: 1,
+		CheckInDate:   checkInDate,
+		CheckOutDate:  checkOutDate,
+	}
+
+	err = rp.DB.InsertRoomRestriction(restriction)
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+
 	rp.App.Session.Put(rq.Context(), "reservationData", reservationData)
 	//redirect the data back to avoid submitting the form more than onece
 	http.Redirect(wr, rq, "/make-reservation-data", http.StatusSeeOther)

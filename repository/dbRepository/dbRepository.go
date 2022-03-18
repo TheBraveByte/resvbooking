@@ -17,5 +17,6 @@ type PostgresDBRepository struct {
 func NewPostgresRepository(a *config.AppConfig, conn *sql.DB) repository.DatabaseRepository {
 	return &PostgresDBRepository{
 		App: a,
-		DB:  conn}
+		DB:  conn,
+	}
 }
