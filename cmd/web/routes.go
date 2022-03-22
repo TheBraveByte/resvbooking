@@ -36,6 +36,8 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/json-availability", handlers.Repo.JsonAvailabilityPage)
 	mux.Post("/json-availability", handlers.Repo.JsonAvailabilityPage)
 
+	//mux.Get("/available-rooms", handlers.Repo.AvailableRooms)
+
 	//This allows files static files like images and icon to display in the html
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))

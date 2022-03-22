@@ -1,0 +1,16 @@
+{{template "base" .}}
+
+{{define "content"}}
+    {{$rm := .index .Data "rooms"}}
+    <div class="container container-fluid">
+
+      <table>
+        <thead>Available Rooms</thead>
+        <tbody>{{range $rm}}
+            {{$rm.RoomName}}
+        {{end}}
+        </tbody>
+      </table>
+    </div>
+
+{{end}}

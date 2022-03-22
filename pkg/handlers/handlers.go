@@ -239,8 +239,43 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 	//getting the posted value from the form with respect to the field
 	checkIn := rq.Form.Get("check-in")
 	checkOut := rq.Form.Get("check-out")
+	dateLayout := "2006-01-02"
 
-	wr.Write([]byte(fmt.Sprintf("Check-in date is %s\nCheck-out date is %s", checkIn, checkOut)))
+	checkInDate, err := time.Parse(dateLayout, checkIn)
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+	checkOutDate, err := time.Parse(dateLayout, checkOut)
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+
+	rooms, err := rp.DB.SearchForAvailableRoom(checkInDate, checkOutDate)
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+
+	for _, room := range rooms {
+		rp.App.InfoLog.Println("Rooms Available :: ", room)
+	}
+
+	if len(rooms) == 0 {
+		rp.App.InfoLog.Println("NO AVAILABLE ROOMS")
+		rp.App.Session.Put(rq.Context(), "error", "No availale rooms")
+		http.Redirect(wr, rq, "/check-availability", http.StatusSeeOther)
+		return
+	}
+	data := make(map[string]interface{})
+	data["rooms"] = rooms
+
+	render.Template(wr, "rooms-available.page.tmpl", &models.TemplateData{
+		Data: data,
+	}, rq)
+
+	//wr.Write([]byte(fmt.Sprintf("Check-in date is %s\nCheck-out date is %s", checkIn, checkOut)))
 }
 
 //create a json struct interfaces
@@ -273,3 +308,21 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 	wr.Write(output)
 	//render.Template(wr, "check-availability.page.tmpl", &models.TemplateData{}, rq
 }
+
+//func (rp *Repository) AvailableRooms(wr http.ResponseWriter, rq *http.Request) {
+//	rooms, ok := rp.App.Session.Get(rq.Context(), "rooms").(models.Room)
+//	if !ok{
+//		rp.App.InfoLog.Println(ok)
+//		rp.App.Session.Put(rq.Context(),"Error","Cannot get the availale rooms")
+//		http.Redirect(wr,rq,"/check-availability.page.tmpl",http.StatusTemporaryRedirect)
+//	}
+//	var data map[string]interface{}
+//	data["rooms"] = rooms
+//	rp.App.Session.Remove(rq.Context(),"rooms")
+//	err := render.Template(wr, "rooms-available.page.tmpl", &models.TemplateData{
+//		Data: data,
+//	}, rq)
+//	if err != nil {
+//		return
+//	}
+//}
