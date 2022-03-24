@@ -29,14 +29,13 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Post("/make-reservation", handlers.Repo.PostMakeReservationPage)
 	mux.Get("/make-reservation-data", handlers.Repo.MakeReservationSummary)
 
-	//mux.Get("/check-availability", handlers.Repo.CheckAvailabilityPage)
 	mux.Get("/check-availability", handlers.Repo.CheckAvailabilityPage)
 	mux.Post("/check-availability", handlers.Repo.PostCheckAvailabilityPage)
 
 	mux.Get("/json-availability", handlers.Repo.JsonAvailabilityPage)
 	mux.Post("/json-availability", handlers.Repo.JsonAvailabilityPage)
 
-	//mux.Get("/available-rooms", handlers.Repo.AvailableRooms)
+	mux.Get("/choose-available-room/{id}", handlers.Repo.SelectAvailableRoom)
 
 	//This allows files static files like images and icon to display in the html
 	fileServer := http.FileServer(http.Dir("./static/"))

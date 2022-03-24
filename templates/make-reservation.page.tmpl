@@ -29,11 +29,23 @@ font-size: 1.1rem; max-width: 50%; border-radius: 0.85rem; border-color: goldenr
     <div class="row">
       <div class="col-md-3"></div>
       <div class="col-md-6">
-          {{$resv := index .Data "reservationData"}}
+          {{$resv := index .Data "resv"}}
         <form action="/make-reservation" method="post" class="" novalidate>
           <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-          <h3 class="">Rest Tavern Reservation</h3>
-
+          <input type="hidden" name="check-in" value="{{$resv.CheckInDate}}">
+          <input type="hidden" name="check-out" value="{{$resv.CheckOutDate}}">
+          <input type="hidden" name="room_id" value="1">
+          <div class="container-fluid container ">
+            <div class="row-cols-auto">
+              <h3 class="">Rest Tavern Reservation</h3>
+            </div>
+            <div class="col">
+              <p>Date checked in : {{index .StringData "check-in"}}</p>
+            </div>
+            <div class="col">
+              <p>Date checked in : {{index .StringData "check-out"}}</p>
+            </div>
+          </div>
           <div class="row g-2 mt-5">
 
             <div class="col-sm-12 col-lg-6 col-md-6">
@@ -75,21 +87,20 @@ font-size: 1.1rem; max-width: 50%; border-radius: 0.85rem; border-color: goldenr
                      placeholder="planets456@gmail.com" value="{{$resv.Email}}" name="email">
             </div>
           </div>
-          <div class="row g-1 mt-3">
-            <div class="col">
-              <label for="check-in">check in date: </label>
-              <input required autocomplete="off" type="text" class="form-control" id="check-in" name="check-in">
-            </div>
-          </div>
+            {{/*          <div class="row g-1 mt-3">*/}}
+            {{/*            <div class="col">*/}}
+            {{/*              <label for="check-in">check in date: </label>*/}}
+            {{/*              <input required autocomplete="off" type="text" class="form-control" id="check-in" name="check-in">*/}}
+            {{/*            </div>*/}}
+            {{/*          </div>*/}}
 
-          <div class="row g-1 mt-3">
-            <div class="col">
-              <label for="check-out">check out date: </label>
-              <input required autocomplete="off" type="text" class="form-control" id="check-out" name="check-out">
-            </div>
-          </div>
+            {{/*          <div class="row g-1 mt-3">*/}}
+            {{/*            <div class="col">*/}}
+            {{/*              <label for="check-out">check out date: </label>*/}}
+            {{/*              <input required autocomplete="off" type="text" class="form-control" id="check-out" name="check-out">*/}}
+            {{/*            </div>*/}}
+            {{/*          </div>*/}}
 
-          <input type="hidden" name="room_id" value="1">
 
           <div class="row">
             <div class="col-12 mt-4">

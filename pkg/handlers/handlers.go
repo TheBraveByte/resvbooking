@@ -11,6 +11,8 @@ import (
 	"github.com/dev-ayaa/resvbooking/pkg/render"
 	"github.com/dev-ayaa/resvbooking/repository"
 	"github.com/dev-ayaa/resvbooking/repository/dbRepository"
+	"github.com/go-chi/chi"
+	"github.com/pkg/errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -109,12 +111,27 @@ func (rp *Repository) ExecutivePage(wr http.ResponseWriter, rq *http.Request) {
 
 //MakeReservationPage handlers function
 func (rp *Repository) MakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
-	var newReservation models.Reservation
+	resv, ok := rp.App.Session.Get(rq.Context(), "resv").(models.Reservation)
+	if !ok {
+		helpers.ServerSideError(wr, errors.New("Error linking with sessions"))
+		return
+	}
+	var stringMapData map[string]string
+
+	checkInDate := resv.CheckInDate.Format("2006-01-02")
+	checkOutDate := resv.CheckOutDate.Format("2006-01-02")
+
+	stringMapData["check-in"] = checkInDate
+	stringMapData["check-out"] = checkOutDate
+
 	data := make(map[string]interface{})
-	data["reservationData"] = newReservation
+	data["resv"] = resv
+	rp.App.Session.Put(rq.Context(), "resv", resv)
+
 	render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
-		Form: forms.NewForm(nil),
-		Data: data,
+		Form:       forms.NewForm(nil),
+		Data:       data,
+		StringData: stringMapData,
 	}, rq)
 }
 
@@ -127,15 +144,15 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	}
 
 	dateLayout := "2006-01-02"
-	cid := rq.Form.Get("check-in")
-	cod := rq.Form.Get("check-out")
-	checkInDate, err := time.Parse(dateLayout, cid)
+	checkIn := rq.Form.Get("check-in")
+	checkOut := rq.Form.Get("check-out")
+	checkInDate, err := time.Parse(dateLayout, checkIn)
 	if err != nil {
 		helpers.ServerSideError(wr, err)
 		return
 	}
 
-	checkOutDate, err := time.Parse(dateLayout, cod)
+	checkOutDate, err := time.Parse(dateLayout, checkOut)
 	if err != nil {
 		helpers.ServerSideError(wr, err)
 		return
@@ -264,14 +281,22 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 
 	if len(rooms) == 0 {
 		rp.App.InfoLog.Println("NO AVAILABLE ROOMS")
-		rp.App.Session.Put(rq.Context(), "error", "No availale rooms")
+		rp.App.Session.Put(rq.Context(), "errors", "No availale rooms")
 		http.Redirect(wr, rq, "/check-availability", http.StatusSeeOther)
 		return
 	}
 	data := make(map[string]interface{})
 	data["rooms"] = rooms
 
-	render.Template(wr, "rooms-available.page.tmpl", &models.TemplateData{
+	//After checking for available room by date and store it in session
+	resv := models.Reservation{
+		CheckInDate:  checkInDate,
+		CheckOutDate: checkOutDate,
+	}
+
+	rp.App.Session.Put(rq.Context(), "resv", resv)
+
+	render.Template(wr, "select-available-room.page.tmpl", &models.TemplateData{
 		Data: data,
 	}, rq)
 
@@ -309,20 +334,19 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 	//render.Template(wr, "check-availability.page.tmpl", &models.TemplateData{}, rq
 }
 
-//func (rp *Repository) AvailableRooms(wr http.ResponseWriter, rq *http.Request) {
-//	rooms, ok := rp.App.Session.Get(rq.Context(), "rooms").(models.Room)
-//	if !ok{
-//		rp.App.InfoLog.Println(ok)
-//		rp.App.Session.Put(rq.Context(),"Error","Cannot get the availale rooms")
-//		http.Redirect(wr,rq,"/check-availability.page.tmpl",http.StatusTemporaryRedirect)
-//	}
-//	var data map[string]interface{}
-//	data["rooms"] = rooms
-//	rp.App.Session.Remove(rq.Context(),"rooms")
-//	err := render.Template(wr, "rooms-available.page.tmpl", &models.TemplateData{
-//		Data: data,
-//	}, rq)
-//	if err != nil {
-//		return
-//	}
-//}
+func (rp *Repository) SelectAvailableRoom(wr http.ResponseWriter, rq *http.Request) {
+	roomID, err := strconv.Atoi(chi.URLParam(rq, "id"))
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+	resv, ok := rp.App.Session.Get(rq.Context(), "resv").(models.Reservation)
+	if !ok {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+	resv.RoomID = roomID
+	rp.App.Session.Put(rq.Context(), "resv", resv)
+	http.Redirect(wr, rq, "/make-reservation", http.StatusSeeOther)
+	//render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{}, rq)
+}

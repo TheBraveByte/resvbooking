@@ -1,0 +1,23 @@
+{{template "base" .}}
+
+{{define "content"}}
+  <div class="container container-fluid">
+
+    <div class="row">
+      <div class="col">
+        <h3>Available Rooms</h3>
+        <hr>
+          {{$rm := index .Data "rooms"}}
+        <ul>
+            {{range $rm}}
+              <li>
+                 <a href="/available-room/{{.ID}}">{{.RoomName}}</a>
+                <br>
+              </li>
+            {{end}}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+{{end}}
