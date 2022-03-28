@@ -11,4 +11,5 @@ type DatabaseRepository interface {
 	InsertRoomRestriction(resv models.RoomRestriction) error
 	SearchRoomAvailabileByRoomID(roomID int, checkInDate, checkOutDate time.Time) (bool, error)
 	SearchForAvailableRoom(checkInDate, checkOutDate time.Time) ([]models.Room, error)
+	GetRooms(room_id int) (models.Room, error)
 }

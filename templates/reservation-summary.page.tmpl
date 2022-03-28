@@ -1,12 +1,11 @@
-{{template "base" .}} {{define "content"}} {{$resv := index .Data "reservationData"}}
+{{template "base" .}} {{define "content"}} {{$resv := index .Data "reservation"}}
 <div class="container">
     <div class="row">
         <div class="col">
             <h3>Reservation Form values</h3>
             <hr>
-            <table class="table table-responsive table-striped">
-                <thead>
-
+            <table class="table table-responsive table-striped table table-striped|sm|bordered|hover|inverse table-inverse table-responsive ">
+                <thead class="thead-inverse|thead-default ">
                 </thead>
                 <tbody>
                     <tr>
@@ -24,11 +23,11 @@
 
                     <tr>
                         <td>Check-in Date : </td>
-                        <td></td>
+                        <td>{{$resv.CheckInDate}}</td>
                     </tr>
                     <tr>
                         <td>check-out Date : </td>
-                        <td></td>
+                        <td>{{$resv.CheckOutDate}}</td>
                     </tr>
                 </tbody>
             </table>

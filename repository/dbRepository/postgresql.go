@@ -112,3 +112,19 @@ func (pg *PostgresDBRepository) SearchForAvailableRoom(checkInDate, checkOutDate
 	return rooms, nil
 
 }
+
+func (pg *PostgresDBRepository) GetRooms(room_id int) (models.Room, error) {
+	var room models.Room
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelCtx()
+	query := `select id, room_name , created_at, updated_at from rooms where id = $1`
+
+	rooms := pg.DB.QueryRowContext(ctx, query, room_id)
+
+	err := rooms.Scan(&room.ID, &room.RoomName, &room.CreatedAt, &room.UpdatedAt)
+	if err != nil {
+		return room, err
+	}
+	return room, nil
+
+}

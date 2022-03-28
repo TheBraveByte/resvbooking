@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/dev-ayaa/resvbooking/pkg/config"
 	"github.com/dev-ayaa/resvbooking/pkg/driver"
@@ -12,7 +13,6 @@ import (
 	"github.com/dev-ayaa/resvbooking/repository"
 	"github.com/dev-ayaa/resvbooking/repository/dbRepository"
 	"github.com/go-chi/chi"
-	"github.com/pkg/errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -111,67 +111,90 @@ func (rp *Repository) ExecutivePage(wr http.ResponseWriter, rq *http.Request) {
 
 //MakeReservationPage handlers function
 func (rp *Repository) MakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
-	resv, ok := rp.App.Session.Get(rq.Context(), "resv").(models.Reservation)
+	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
 	if !ok {
-		helpers.ServerSideError(wr, errors.New("Error linking with sessions"))
+		helpers.ServerSideError(wr, errors.New("error linking with sessions"))
 		return
 	}
-	var stringMapData map[string]string
+
+	room, err := rp.DB.GetRooms(resv.RoomID)
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+	resv.Room.RoomName = room.RoomName
+
+	data := make(map[string]interface{})
+	stringData := make(map[string]string)
 
 	checkInDate := resv.CheckInDate.Format("2006-01-02")
 	checkOutDate := resv.CheckOutDate.Format("2006-01-02")
 
-	stringMapData["check-in"] = checkInDate
-	stringMapData["check-out"] = checkOutDate
+	stringData["check-in"] = checkInDate
+	stringData["check-out"] = checkOutDate
 
-	data := make(map[string]interface{})
-	data["resv"] = resv
-	rp.App.Session.Put(rq.Context(), "resv", resv)
+	data["reservation"] = resv
+
+	rp.App.Session.Put(rq.Context(), "reservation", resv)
 
 	render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
 		Form:       forms.NewForm(nil),
 		Data:       data,
-		StringData: stringMapData,
+		StringData: stringData,
 	}, rq)
 }
 
 func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
 	/*Clients and Server-side Form Validation is process*/
+	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
+	if !ok {
+		helpers.ServerSideError(wr, errors.New("error transferring data to post handler"))
+
+	}
 	err := rq.ParseForm()
 	if err != nil {
-		//log.Println(err)
 		helpers.ServerSideError(wr, err)
 	}
+	/*
 
-	dateLayout := "2006-01-02"
-	checkIn := rq.Form.Get("check-in")
-	checkOut := rq.Form.Get("check-out")
-	checkInDate, err := time.Parse(dateLayout, checkIn)
-	if err != nil {
-		helpers.ServerSideError(wr, err)
-		return
-	}
+		dateLayout := "2006-01-02"
+		checkIn := rq.Form.Get("check-in")
+		checkOut := rq.Form.Get("check-out")
+		checkInDate, err := time.Parse(dateLayout, checkIn)
+		if err != nil {
+			helpers.ServerSideError(wr, err)
+			return
+		}
 
-	checkOutDate, err := time.Parse(dateLayout, checkOut)
-	if err != nil {
-		helpers.ServerSideError(wr, err)
-		return
-	}
+		checkOutDate, err := time.Parse(dateLayout, checkOut)
+		if err != nil {
+			helpers.ServerSideError(wr, err)
+			return
+		}
+	*/
 
 	roomID, err := strconv.Atoi(rq.Form.Get("room_id"))
 	if err != nil {
 		helpers.ServerSideError(wr, err)
 		return
 	}
-	reservationData := models.Reservation{
-		FirstName:    rq.Form.Get("first-name"),
-		LastName:     rq.Form.Get("last-name"),
-		Email:        rq.Form.Get("email"),
-		PhoneNumber:  rq.Form.Get("phone-number"),
-		CheckInDate:  checkInDate,
-		CheckOutDate: checkOutDate,
-		RoomID:       roomID,
-	}
+	// var resv models.Reservation
+	resv.FirstName = rq.Form.Get("first-name")
+	resv.LastName = rq.Form.Get("last-name")
+	resv.Email = rq.Form.Get("email")
+	resv.PhoneNumber = rq.Form.Get("phone-number")
+	// resv.CheckInDate = rq.Form.Get("check-in")
+	// resv.CheckOutDate = rq.Form.Get("check-out")
+	// 	RoomID:       roomID,
+
+	// 	FirstName:    rq.Form.Get("first-name"),
+	// 	LastName:     rq.Form.Get("last-name"),
+	// 	Email:        rq.Form.Get("email"),
+	// 	PhoneNumber:  rq.Form.Get("phone-number"),
+	// 	CheckInDate:  checkInDate,
+	// 	CheckOutDate: checkOutDate,
+	// 	RoomID:       roomID,
+	// }
 
 	form := forms.NewForm(rq.PostForm)
 
@@ -183,7 +206,7 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 
 	if !form.FormValid() {
 		data := make(map[string]interface{})
-		data["reservationData"] = reservationData
+		data["reservation"] = resv
 		err := render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
 			Form: form,
 			Data: data,
@@ -194,7 +217,7 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 		return
 	}
 
-	NewReservationID, err := rp.DB.InsertReservation(reservationData)
+	NewResvervationID, err := rp.DB.InsertReservation(resv)
 	if err != nil {
 		helpers.ServerSideError(wr, err)
 		return
@@ -202,10 +225,10 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	restriction := models.RoomRestriction{
 		ID:            0,
 		RoomID:        roomID,
-		ReservationID: NewReservationID,
+		ReservationID: NewResvervationID,
 		RestrictionID: 1,
-		CheckInDate:   checkInDate,
-		CheckOutDate:  checkOutDate,
+		CheckInDate:   resv.CheckInDate,
+		CheckOutDate:  resv.CheckOutDate,
 	}
 
 	err = rp.DB.InsertRoomRestriction(restriction)
@@ -214,14 +237,15 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 		return
 	}
 
-	rp.App.Session.Put(rq.Context(), "reservationData", reservationData)
+	rp.App.Session.Put(rq.Context(), "reservation", resv)
+
 	//redirect the data back to avoid submitting the form more than onece
 	http.Redirect(wr, rq, "/make-reservation-data", http.StatusSeeOther)
 }
 
 func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Request) {
 
-	reservationData, ok := rp.App.Session.Get(rq.Context(), "reservationData").(models.Reservation)
+	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
 	if !ok {
 		fmt.Println(ok)
 		rp.App.Session.Put(rq.Context(), "error", "session has not reservation")
@@ -229,10 +253,12 @@ func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Re
 		log.Println("Error transferring Data")
 		return
 	}
-	data := make(map[string]interface{})
-	data["reservationData"] = reservationData
+	rp.App.Session.Put(rq.Context(), "reservation", resv)
 
-	rp.App.Session.Remove(rq.Context(), "reservationData")
+	data := make(map[string]interface{})
+	data["reservation"] = resv
+
+	rp.App.Session.Remove(rq.Context(), "reservation")
 	err := render.Template(wr, "reservation-summary.page.tmpl", &models.TemplateData{
 		Data: data,
 	}, rq)
@@ -256,8 +282,9 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 	//getting the posted value from the form with respect to the field
 	checkIn := rq.Form.Get("check-in")
 	checkOut := rq.Form.Get("check-out")
-	dateLayout := "2006-01-02"
 
+	//Converting the date in string format to time.Time format
+	dateLayout := "2006-01-02"
 	checkInDate, err := time.Parse(dateLayout, checkIn)
 	if err != nil {
 		helpers.ServerSideError(wr, err)
@@ -274,7 +301,6 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 		helpers.ServerSideError(wr, err)
 		return
 	}
-
 	for _, room := range rooms {
 		rp.App.InfoLog.Println("Rooms Available :: ", room)
 	}
@@ -294,7 +320,7 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 		CheckOutDate: checkOutDate,
 	}
 
-	rp.App.Session.Put(rq.Context(), "resv", resv)
+	rp.App.Session.Put(rq.Context(), "reservation", resv)
 
 	render.Template(wr, "select-available-room.page.tmpl", &models.TemplateData{
 		Data: data,
@@ -304,7 +330,6 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 }
 
 //create a json struct interfaces
-
 type ResponseJSON struct {
 	Name    string `json:"name"`
 	Ok      bool   `json:"ok"`
@@ -331,7 +356,7 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 	//this type the browser the type of content it is getting
 	wr.Header().Set("Content-type", "application/json")
 	wr.Write(output)
-	//render.Template(wr, "check-availability.page.tmpl", &models.TemplateData{}, rq
+
 }
 
 func (rp *Repository) SelectAvailableRoom(wr http.ResponseWriter, rq *http.Request) {
@@ -340,13 +365,13 @@ func (rp *Repository) SelectAvailableRoom(wr http.ResponseWriter, rq *http.Reque
 		helpers.ServerSideError(wr, err)
 		return
 	}
-	resv, ok := rp.App.Session.Get(rq.Context(), "resv").(models.Reservation)
+	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
 	if !ok {
 		helpers.ServerSideError(wr, err)
 		return
 	}
 	resv.RoomID = roomID
-	rp.App.Session.Put(rq.Context(), "resv", resv)
+	rp.App.Session.Put(rq.Context(), "reservation", resv)
 	http.Redirect(wr, rq, "/make-reservation", http.StatusSeeOther)
 	//render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{}, rq)
 }
