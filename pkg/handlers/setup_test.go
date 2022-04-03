@@ -30,6 +30,9 @@ var templatesPath = "./../../templates"
 
 func getRoutes() http.Handler {
 	gob.Register(models.Reservation{})
+	// gob.Register(models.Restriction{})
+	// gob.Register(models.Room{})
+	// gob.Register(models.RoomRestriction{})
 
 	app.InProduction = false
 
@@ -61,7 +64,7 @@ func getRoutes() http.Handler {
 	app.UseCache = true
 
 	//Referencing the map store in the app AppConfig
-	repo := NewRepository(&app)
+	repo := NewTestRepository(&app)
 	NewHandlers(repo)
 	helpers.NewHelper(&app)
 

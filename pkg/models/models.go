@@ -11,8 +11,8 @@ type Reservation struct {
 	LastName        string
 	Email           string
 	PhoneNumber     string
-	Password        string
-	ConfirmPassword string
+	//Password        string
+	//ConfirmPassword string
 	RoomID          int
 	CheckInDate     time.Time
 	CheckOutDate    time.Time
