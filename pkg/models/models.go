@@ -6,17 +6,17 @@ import "time"
 
 //Reservation reservation data
 type Reservation struct {
-	ID              int
-	FirstName       string
-	LastName        string
-	Email           string
-	PhoneNumber     string
+	ID          int
+	FirstName   string
+	LastName    string
+	Email       string
+	PhoneNumber string
 	//Password        string
 	//ConfirmPassword string
-	RoomID          int
-	CheckInDate     time.Time
-	CheckOutDate    time.Time
-	Room            Room
+	RoomID       int
+	CheckInDate  time.Time
+	CheckOutDate time.Time
+	Room         Room
 }
 
 //Room rooms model
@@ -60,4 +60,10 @@ type RoomRestriction struct {
 	Room          Room
 	Restriction   Restriction
 	Reservation   Reservation
+}
+type MailData struct {
+	Sender      string
+	Receiver    string
+	MailContent string
+	MailSubject string
 }

@@ -38,6 +38,8 @@ func main() {
 		_ = db.PSQL.Close()
 	}(db)
 
+	defer close(app.MailChannel)
+
 	fmt.Println("Starting the Server :8080")
 
 	srv := &http.Server{
@@ -58,6 +60,18 @@ func run() (*driver.DB, error) {
 	gob.Register(models.User{})
 	gob.Register(models.RoomRestriction{})
 	//gob.Register([]models.Room{})
+
+	mailChannel := make(chan models.MailData)
+	app.MailChannel = mailChannel
+	mailRoutes()
+	//mailMsg := models.MailData{
+	//	MailSubject: "Learning more on go programming language",
+	//	Receiver: "yusufakinleye144@gmail.com",
+	//	Sender: "ayaaakinleye@gmail.com",
+	//	MailContent: "Hi Yusuf <strong>Akinleye</strong>",
+	//}
+	//
+	//app.MailChannel <- mailMsg
 
 	app.InProduction = false
 

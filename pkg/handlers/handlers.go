@@ -230,6 +230,27 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 		return
 	}
 
+	//Sending mail notification to customer after make a reservation
+	mailMsg := models.MailData{
+		MailSubject: "Reservation At Rest Tavern Inn",
+		Receiver:    resv.Email,
+		Sender:      "ayaaakinleye@gmail.com",
+		MailContent: `Hi Yusuf <strong>Akinleye</strong>`,
+	}
+
+	rp.App.MailChannel <- mailMsg
+
+	notifyOwner := fmt.Sprintf(`<strong>Notification for Reservation at Rest Tavern</strong><br>"+
+		"%v %v have secure a reservation of %v from %v to %v`, resv.FirstName, resv.LastName, resv.Room.RoomName,
+		resv.CheckInDate.Format("2006-01-02"), resv.CheckOutDate.Format("2006-01-02"))
+	mailMsg = models.MailData{
+		MailSubject: "Reservation At Rest Tavern Inn",
+		Receiver:    "ayaaakinleye@gmail.com",
+		Sender:      "ayaaakinleye@gmail.com",
+		MailContent: notifyOwner,
+	}
+
+	rp.App.MailChannel <- mailMsg
 	rp.App.Session.Put(rq.Context(), "reservation", resv)
 
 	//redirect the data back to avoid submitting the form more than once
