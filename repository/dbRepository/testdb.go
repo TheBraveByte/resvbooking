@@ -108,3 +108,19 @@ func (tpg *TestPostgresDBRepository) GetRooms(room_id int) (models.Room, error) 
 	return room, nil
 
 }
+
+//Users
+func (tpg TestPostgresDBRepository) GetUserInfoByID(userID int) (models.User, error) {
+	var user models.User
+	return user, nil
+}
+
+func (tpg TestPostgresDBRepository) UpdateUserInfo(user models.User) error {
+	return nil
+}
+
+func (tpg TestPostgresDBRepository) AuthenticateUser(testPassword, email string) (int, string, error) {
+	var userID int
+	var hashedPassword string
+	return userID, hashedPassword, nil
+}

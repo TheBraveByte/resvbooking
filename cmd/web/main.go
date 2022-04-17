@@ -52,7 +52,7 @@ func main() {
 }
 
 func run() (*driver.DB, error) {
-	//Using session to keep track of data store from the form
+	//Using session to keep track of data store in Models
 
 	gob.Register(models.Reservation{})
 	gob.Register(models.Room{})
@@ -64,14 +64,6 @@ func run() (*driver.DB, error) {
 	mailChannel := make(chan models.MailData)
 	app.MailChannel = mailChannel
 	mailRoutes()
-	//mailMsg := models.MailData{
-	//	MailSubject: "Learning more on go programming language",
-	//	Receiver: "yusufakinleye144@gmail.com",
-	//	Sender: "ayaaakinleye@gmail.com",
-	//	MailContent: "Hi Yusuf <strong>Akinleye</strong>",
-	//}
-	//
-	//app.MailChannel <- mailMsg
 
 	app.InProduction = false
 

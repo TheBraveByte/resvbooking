@@ -70,6 +70,18 @@ func (rp *Repository) ContactPage(wr http.ResponseWriter, rq *http.Request) {
 	}
 }
 
+func (rp Repository) LoginPage(wr http.ResponseWriter, rq *http.Request) {
+	render.Template(wr, "login.page.tmpl", &models.TemplateData{Form: forms.NewForm(nil)}, rq)
+
+}
+
+func (rp Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
+	//_, err := rp.App.Session.Get(rq.Context(), "user").(models.User)
+	//if err != nil {
+	//	rp.App.Session.Put(rq.Context(), "errors","No user detail in session" )
+	//}
+}
+
 //JuniorSuitePage  handler function
 func (rp *Repository) JuniorSuitePage(wr http.ResponseWriter, rq *http.Request) {
 

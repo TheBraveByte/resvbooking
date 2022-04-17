@@ -30,7 +30,7 @@ font-size: 1.1rem; max-width: 50%; border-radius: 0.85rem; border-color: goldenr
         <div class="col-md-6">
             {{$resv := index .Data "reservation"}}
 
-            <form action="/make-reservation" method="post" class="" novalidate>
+            <form action="/make-reservation" method="post" class="needs-validation" novalidate>
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
                 <input type="hidden" name="check-in" value="{{ $resv.CheckInDate }}" />
                 <input type="hidden" name="check-out" value="{{ $resv.CheckOutDate }}" /> {{/*

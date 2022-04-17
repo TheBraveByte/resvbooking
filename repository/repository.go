@@ -12,4 +12,8 @@ type DatabaseRepository interface {
 	SearchRoomAvailabileByRoomID(roomID int, checkInDate, checkOutDate time.Time) (bool, error)
 	SearchForAvailableRoom(checkInDate, checkOutDate time.Time) ([]models.Room, error)
 	GetRooms(room_id int) (models.Room, error)
+
+	GetUserInfoByID(user_id int) (models.User, error)
+	UpdateUserInfo(user models.User) error
+	AuthenticateUser(typedPassword, email string) (int, string, error)
 }
