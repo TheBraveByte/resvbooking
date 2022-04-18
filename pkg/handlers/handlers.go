@@ -75,11 +75,48 @@ func (rp Repository) LoginPage(wr http.ResponseWriter, rq *http.Request) {
 
 }
 
+//PostLoginPage post user detail in the database
 func (rp Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
-	//_, err := rp.App.Session.Get(rq.Context(), "user").(models.User)
-	//if err != nil {
-	//	rp.App.Session.Put(rq.Context(), "errors","No user detail in session" )
-	//}
+	fmt.Println("Logging in user details")
+	var email, password string
+	//To prevent session fixation during authentication of user login details
+	_ = rp.App.Session.RenewToken(rq.Context())
+	err := rq.ParseForm()
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "No parsing the login form")
+		return
+	}
+
+	email = rq.Form.Get("email")
+	password = rq.Form.Get("password")
+	form := forms.NewForm(rq.PostForm)
+	form.Require("email", "password")
+	form.ValidLenCharacter("password", 15, rq)
+	form.ValidEmail("email")
+	if !form.FormValid() {
+		render.Template(wr, "login.page.tmpl", &models.TemplateData{Form: forms.NewForm(nil)}, rq)
+		return
+		//http.Redirect(wr, rq, "/login", http.StatusTemporaryRedirect)
+	}
+	userID, _, err := rp.DB.AuthenticateUser(password, email)
+	if err != nil {
+		log.Println(err)
+		rp.App.Session.Put(rq.Context(), "errors", "log in with valid details")
+		http.Redirect(wr, rq, "/login", http.StatusSeeOther)
+		return
+	}
+	rp.App.Session.Put(rq.Context(), "userID", userID)
+	rp.App.Session.Put(rq.Context(), "flash", "successfully logged in")
+	http.Redirect(wr, rq, "/", http.StatusSeeOther)
+	//user, err := rp.DB.GetUserInfoByID(userID)
+
+}
+
+func (rp Repository) LogOutPage(wr http.ResponseWriter, rq *http.Request) {
+	rp.App.Session.Destroy(rq.Context())
+	rp.App.Session.RenewToken(rq.Context())
+	http.Redirect(wr, rq, "/", http.StatusSeeOther)
+	return
 }
 
 //JuniorSuitePage  handler function

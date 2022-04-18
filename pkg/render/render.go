@@ -34,6 +34,10 @@ func AddDefaultData(td *models.TemplateData, rq *http.Request) *models.TemplateD
 	td.Warning = app.Session.PopString(rq.Context(), "Warning")
 	td.Flash = app.Session.PopString(rq.Context(), "flash")
 	td.Error = app.Session.PopString(rq.Context(), "errors")
+	//To check if the user id is in the database
+	if app.Session.Exists(rq.Context(), "userID") {
+		td.IsAuth = 1
+	}
 	return td
 }
 

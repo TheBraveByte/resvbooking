@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/dev-ayaa/resvbooking/pkg/helpers"
 	"github.com/justinas/nosurf"
 	"net/http"
 )
@@ -31,4 +32,15 @@ func NoSurf(next http.Handler) http.Handler {
 //SessionLoad Loads and save the session on every request
 func SessionLoad(next http.Handler) http.Handler {
 	return session.LoadAndSave(next)
+}
+
+func Authenticate(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(wr http.ResponseWriter, rq *http.Request) {
+		if !helpers.IsAuthenticated(rq) {
+			session.Put(rq.Context(), "error", "you have not log in!")
+			http.Redirect(wr, rq, "/login", http.StatusSeeOther)
+			return
+		}
+		next.ServeHTTP(wr, rq)
+	})
 }

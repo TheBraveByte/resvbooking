@@ -23,3 +23,8 @@ func ServerSideError(wr http.ResponseWriter, err error) {
 	app.ErrorLog.Println(trackedError)
 	http.Error(wr, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 }
+
+func IsAuthenticated(rq *http.Request) bool {
+	est := app.Session.Exists(rq.Context(), "userID")
+	return est
+}

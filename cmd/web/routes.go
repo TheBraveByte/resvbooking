@@ -39,6 +39,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/book-room-now", handlers.Repo.BookRoomNow)
 	mux.Get("/login", handlers.Repo.LoginPage)
 	mux.Post("/login", handlers.Repo.PostLoginPage)
+	mux.Get("/logout", handlers.Repo.LogOutPage)
 
 	//This allows files static files like images and icon to display in the html
 	fileServer := http.FileServer(http.Dir("./static/"))

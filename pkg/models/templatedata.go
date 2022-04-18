@@ -14,4 +14,5 @@ type TemplateData struct {
 	Flash      string
 	Error      string
 	Form       *forms.Form
+	IsAuth     int
 }
