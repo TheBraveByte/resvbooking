@@ -10,5 +10,6 @@
             "username": "postgres",
             "password": "dev-ayaa"
         }
-    ]
+    ],
+    "diffEditor.codeLens": true
 }

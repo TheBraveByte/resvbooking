@@ -17,6 +17,8 @@ type Reservation struct {
 	CheckInDate  time.Time
 	CheckOutDate time.Time
 	Room         Room
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 //Room rooms model

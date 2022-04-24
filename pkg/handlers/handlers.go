@@ -12,6 +12,7 @@ import (
 	"github.com/dev-ayaa/resvbooking/repository"
 	"github.com/dev-ayaa/resvbooking/repository/dbRepository"
 	"github.com/go-chi/chi"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"strconv"
@@ -53,7 +54,7 @@ func (rp *Repository) HomePage(wr http.ResponseWriter, rq *http.Request) {
 }
 
 // AboutPage about page  handler
-func (rp Repository) AboutPage(wr http.ResponseWriter, rq *http.Request) {
+func (rp *Repository) AboutPage(wr http.ResponseWriter, rq *http.Request) {
 	err := render.Template(wr, "about.page.tmpl", &models.TemplateData{}, rq)
 	if err != nil {
 		return
@@ -68,271 +69,6 @@ func (rp *Repository) ContactPage(wr http.ResponseWriter, rq *http.Request) {
 	if err != nil {
 		return
 	}
-}
-
-func (rp Repository) LoginPage(wr http.ResponseWriter, rq *http.Request) {
-	render.Template(wr, "login.page.tmpl", &models.TemplateData{Form: forms.NewForm(nil)}, rq)
-
-}
-
-//PostLoginPage post user detail in the database
-func (rp Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
-	fmt.Println("Logging in user details")
-	var email, password string
-	//To prevent session fixation during authentication of user login details
-	_ = rp.App.Session.RenewToken(rq.Context())
-	err := rq.ParseForm()
-	if err != nil {
-		rp.App.Session.Put(rq.Context(), "errors", "No parsing the login form")
-		return
-	}
-
-	email = rq.Form.Get("email")
-	password = rq.Form.Get("password")
-	form := forms.NewForm(rq.PostForm)
-	form.Require("email", "password")
-	form.ValidLenCharacter("password", 15, rq)
-	form.ValidEmail("email")
-	if !form.FormValid() {
-		render.Template(wr, "login.page.tmpl", &models.TemplateData{Form: forms.NewForm(nil)}, rq)
-		return
-		//http.Redirect(wr, rq, "/login", http.StatusTemporaryRedirect)
-	}
-	userID, _, err := rp.DB.AuthenticateUser(password, email)
-	if err != nil {
-		log.Println(err)
-		rp.App.Session.Put(rq.Context(), "errors", "log in with valid details")
-		http.Redirect(wr, rq, "/login", http.StatusSeeOther)
-		return
-	}
-	rp.App.Session.Put(rq.Context(), "userID", userID)
-	rp.App.Session.Put(rq.Context(), "flash", "successfully logged in")
-	http.Redirect(wr, rq, "/", http.StatusSeeOther)
-	//user, err := rp.DB.GetUserInfoByID(userID)
-
-}
-
-func (rp Repository) LogOutPage(wr http.ResponseWriter, rq *http.Request) {
-	rp.App.Session.Destroy(rq.Context())
-	rp.App.Session.RenewToken(rq.Context())
-	http.Redirect(wr, rq, "/", http.StatusSeeOther)
-	return
-}
-
-//JuniorSuitePage  handler function
-func (rp *Repository) JuniorSuitePage(wr http.ResponseWriter, rq *http.Request) {
-
-	err := render.Template(wr, "junior.page.tmpl", &models.TemplateData{}, rq)
-	if err != nil {
-		return
-	}
-}
-
-//PremiumSuitePage handler function
-func (rp *Repository) PremiumSuitePage(wr http.ResponseWriter, rq *http.Request) {
-
-	err := render.Template(wr, "premium.page.tmpl", &models.TemplateData{}, rq)
-	if err != nil {
-		return
-	}
-}
-
-//DeluxeSuitePage handler function
-func (rp *Repository) DeluxeSuitePage(wr http.ResponseWriter, rq *http.Request) {
-
-	err := render.Template(wr, "deluxe.page.tmpl", &models.TemplateData{}, rq)
-	if err != nil {
-		return
-	}
-}
-
-//PenthousePage handler function
-func (rp *Repository) PenthousePage(wr http.ResponseWriter, rq *http.Request) {
-
-	err := render.Template(wr, "penthouse.page.tmpl", &models.TemplateData{}, rq)
-	if err != nil {
-		return
-	}
-}
-
-//ExecutivePage handler function
-func (rp *Repository) ExecutivePage(wr http.ResponseWriter, rq *http.Request) {
-
-	err := render.Template(wr, "executive.page.tmpl", &models.TemplateData{}, rq)
-	if err != nil {
-		return
-	}
-}
-
-//MakeReservationPage handlers function
-func (rp *Repository) MakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
-	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
-	if !ok {
-		rp.App.Session.Put(rq.Context(), "errors", "Error linking with Session: No data in session")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
-		//helpers.ServerSideError(wr, errors.New("error linking with sessions"))
-		return
-	}
-
-	room, err := rp.DB.GetRooms(resv.RoomID)
-	if err != nil {
-		rp.App.Session.Put(rq.Context(), "errors", "Error Getting the valid room id")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
-		return
-		//helpers.ServerSideError(wr, err)
-		//return
-	}
-	resv.Room.RoomName = room.RoomName
-
-	data := make(map[string]interface{})
-	stringData := make(map[string]string)
-
-	checkInDate := resv.CheckInDate.Format("2006-01-02")
-	checkOutDate := resv.CheckOutDate.Format("2006-01-02")
-
-	stringData["check-in"] = checkInDate
-	stringData["check-out"] = checkOutDate
-
-	data["reservation"] = resv
-
-	rp.App.Session.Put(rq.Context(), "reservation", resv)
-
-	render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
-		Form:       forms.NewForm(nil),
-		Data:       data,
-		StringData: stringData,
-	}, rq)
-}
-
-//PostMakeReservationPage : Post request information of the user make judicious use of
-//Session to pass around data
-func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
-	err := rq.ParseForm()
-	if err != nil {
-		rp.App.Session.Put(rq.Context(), "errors", "Error Cannot Parse form data")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
-		return
-	}
-
-	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
-	if !ok {
-		rp.App.Session.Put(rq.Context(), "errors", "Error No data for reservation in session")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
-		return
-
-	}
-
-	roomID, err := strconv.Atoi(rq.Form.Get("room_id"))
-	if err != nil {
-		rp.App.Session.Put(rq.Context(), "errors", "Error cannot get valid room id")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
-		return
-	}
-
-	resv.FirstName = rq.Form.Get("first-name")
-	resv.LastName = rq.Form.Get("last-name")
-	resv.Email = rq.Form.Get("email")
-	resv.PhoneNumber = rq.Form.Get("phone-number")
-
-	form := forms.NewForm(rq.PostForm)
-
-	//Clients and Server-side Form Validation is process*
-	form.Require("first-name", "last-name", "phone-number", "email")
-
-	form.ValidLenCharacter("first-name", 3, rq)
-	form.ValidLenCharacter("last-name", 3, rq)
-	form.ValidEmail("email")
-
-	if !form.FormValid() {
-		data := make(map[string]interface{})
-		data["reservation"] = resv
-		http.Error(wr, "INVALID INPUTS", http.StatusSeeOther)
-		err := render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
-			Form: form,
-			Data: data,
-		}, rq)
-		if err != nil {
-			return
-		}
-		return
-	}
-
-	NewResvervationID, err := rp.DB.InsertReservation(resv)
-	if err != nil {
-		rp.App.Session.Put(rq.Context(), "errors", "Error cannot insert reservation in the database")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
-		return
-	}
-	restriction := models.RoomRestriction{
-		ID:            0,
-		RoomID:        roomID,
-		ReservationID: NewResvervationID,
-		RestrictionID: 1,
-		CheckInDate:   resv.CheckInDate,
-		CheckOutDate:  resv.CheckOutDate,
-	}
-
-	err = rp.DB.InsertRoomRestriction(restriction)
-	if err != nil {
-		rp.App.Session.Put(rq.Context(), "errors", "Cannot insert room restriction in the data")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
-		return
-	}
-
-	//Sending mail notification to customer after make a reservation
-	mailMsg := models.MailData{
-		MailSubject: "Reservation At Rest Tavern Inn",
-		Receiver:    resv.Email,
-		Sender:      "ayaaakinleye@gmail.com",
-		MailContent: `Hi Yusuf <strong>Akinleye</strong>`,
-	}
-
-	rp.App.MailChannel <- mailMsg
-
-	notifyOwner := fmt.Sprintf(`<strong>Notification for Reservation at Rest Tavern</strong><br>"+
-		"%v %v have secure a reservation of %v from %v to %v`, resv.FirstName, resv.LastName, resv.Room.RoomName,
-		resv.CheckInDate.Format("2006-01-02"), resv.CheckOutDate.Format("2006-01-02"))
-	mailMsg = models.MailData{
-		MailSubject: "Reservation At Rest Tavern Inn",
-		Receiver:    "ayaaakinleye@gmail.com",
-		Sender:      "ayaaakinleye@gmail.com",
-		MailContent: notifyOwner,
-	}
-
-	rp.App.MailChannel <- mailMsg
-	rp.App.Session.Put(rq.Context(), "reservation", resv)
-
-	//redirect the data back to avoid submitting the form more than once
-	http.Redirect(wr, rq, "/make-reservation-data", http.StatusSeeOther)
-}
-
-//MakeReservationSummary : Shows all the user information "Fullname, email, Phone Number, check-in-date,
-//check-out-date, Room reserved" and many more
-func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Request) {
-
-	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
-	if !ok {
-		fmt.Println(ok)
-		rp.App.Session.Put(rq.Context(), "error", "session has not reservation")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
-		log.Println("Error transferring Data")
-		return
-	}
-	rp.App.Session.Put(rq.Context(), "reservation", resv)
-
-	data := make(map[string]interface{})
-	data["reservation"] = resv
-
-	//Remove the stored data in the session
-	rp.App.Session.Remove(rq.Context(), "reservation")
-
-	err := render.Template(wr, "reservation-summary.page.tmpl", &models.TemplateData{
-		Data: data,
-	}, rq)
-	if err != nil {
-		return
-	}
-
 }
 
 //CheckAvailabilityPage : This is a Get request handler which only render the check availability page
@@ -550,4 +286,310 @@ func (rp Repository) BookRoomNow(wr http.ResponseWriter, rq *http.Request) {
 	rp.App.Session.Put(rq.Context(), "reservation", resv)
 	http.Redirect(wr, rq, "/make-reservation", http.StatusSeeOther)
 
+}
+
+//JuniorSuitePage  handler function
+func (rp *Repository) JuniorSuitePage(wr http.ResponseWriter, rq *http.Request) {
+
+	err := render.Template(wr, "junior.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
+}
+
+//PremiumSuitePage handler function
+func (rp *Repository) PremiumSuitePage(wr http.ResponseWriter, rq *http.Request) {
+
+	err := render.Template(wr, "premium.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
+}
+
+//DeluxeSuitePage handler function
+func (rp *Repository) DeluxeSuitePage(wr http.ResponseWriter, rq *http.Request) {
+
+	err := render.Template(wr, "deluxe.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
+}
+
+//PenthousePage handler function
+func (rp *Repository) PenthousePage(wr http.ResponseWriter, rq *http.Request) {
+
+	err := render.Template(wr, "penthouse.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
+}
+
+//ExecutivePage handler function
+func (rp *Repository) ExecutivePage(wr http.ResponseWriter, rq *http.Request) {
+
+	err := render.Template(wr, "executive.page.tmpl", &models.TemplateData{}, rq)
+	if err != nil {
+		return
+	}
+}
+
+func (rp *Repository) LoginPage(wr http.ResponseWriter, rq *http.Request) {
+	render.Template(wr, "login.page.tmpl", &models.TemplateData{Form: forms.NewForm(nil)}, rq)
+
+}
+
+//PostLoginPage post user detail in the database
+func (rp *Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
+	fmt.Println("Logging in user details")
+	var email, password string
+	//To prevent session fixation during authentication of user login details
+	_ = rp.App.Session.RenewToken(rq.Context())
+	err := rq.ParseForm()
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "No parsing the login form")
+		return
+	}
+	var p = "Akinleye123"
+	b, err := bcrypt.GenerateFromPassword([]byte(p), 10)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(b))
+
+	email = rq.Form.Get("email")
+	password = rq.Form.Get("password")
+	form := forms.NewForm(rq.PostForm)
+	form.Require("email", "password")
+	//form.ValidLenCharacter("password", 15, rq)
+	form.ValidEmail("email")
+	if !form.FormValid() {
+		render.Template(wr, "login.page.tmpl", &models.TemplateData{Form: forms.NewForm(nil)}, rq)
+		return
+		//http.Redirect(wr, rq, "/login", http.StatusTemporaryRedirect)
+	}
+	fmt.Println("Hello 2")
+	userID, _, err := rp.DB.AuthenticateUser(password, email)
+	if err != nil {
+		log.Println(err)
+		rp.App.Session.Put(rq.Context(), "errors", "log in with valid details")
+		http.Redirect(wr, rq, "/login", http.StatusSeeOther)
+		return
+	}
+	fmt.Print("hEllo 3")
+	rp.App.Session.Put(rq.Context(), "userID", userID)
+	rp.App.Session.Put(rq.Context(), "flash", "successfully logged in")
+	http.Redirect(wr, rq, "/", http.StatusSeeOther)
+	//user, err := rp.DB.GetUserInfoByID(userID)
+
+}
+
+func (rp *Repository) LogOutPage(wr http.ResponseWriter, rq *http.Request) {
+	rp.App.Session.Destroy(rq.Context())
+	rp.App.Session.RenewToken(rq.Context())
+	http.Redirect(wr, rq, "/", http.StatusSeeOther)
+	return
+}
+
+//MakeReservationPage handlers function
+func (rp *Repository) MakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
+	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
+	if !ok {
+		rp.App.Session.Put(rq.Context(), "errors", "Error linking with Session: No data in session")
+		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		//helpers.ServerSideError(wr, errors.New("error linking with sessions"))
+		return
+	}
+
+	room, err := rp.DB.GetRooms(resv.RoomID)
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "Error Getting the valid room id")
+		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		return
+		//helpers.ServerSideError(wr, err)
+		//return
+	}
+	resv.Room.RoomName = room.RoomName
+
+	data := make(map[string]interface{})
+	stringData := make(map[string]string)
+
+	checkInDate := resv.CheckInDate.Format("2006-01-02")
+	checkOutDate := resv.CheckOutDate.Format("2006-01-02")
+
+	stringData["check-in"] = checkInDate
+	stringData["check-out"] = checkOutDate
+
+	data["reservation"] = resv
+
+	rp.App.Session.Put(rq.Context(), "reservation", resv)
+
+	render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
+		Form:       forms.NewForm(nil),
+		Data:       data,
+		StringData: stringData,
+	}, rq)
+}
+
+//PostMakeReservationPage : Post request information of the user make judicious use of
+//Session to pass around data
+func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
+	err := rq.ParseForm()
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "Error Cannot Parse form data")
+		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
+	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
+	if !ok {
+		rp.App.Session.Put(rq.Context(), "errors", "Error No data for reservation in session")
+		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		return
+
+	}
+
+	roomID, err := strconv.Atoi(rq.Form.Get("room_id"))
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "Error cannot get valid room id")
+		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
+	resv.FirstName = rq.Form.Get("first-name")
+	resv.LastName = rq.Form.Get("last-name")
+	resv.Email = rq.Form.Get("email")
+	resv.PhoneNumber = rq.Form.Get("phone-number")
+
+	form := forms.NewForm(rq.PostForm)
+
+	//Clients and Server-side Form Validation is process*
+	form.Require("first-name", "last-name", "phone-number", "email")
+
+	form.ValidLenCharacter("first-name", 3, rq)
+	form.ValidLenCharacter("last-name", 3, rq)
+	form.ValidEmail("email")
+
+	if !form.FormValid() {
+		data := make(map[string]interface{})
+		data["reservation"] = resv
+		http.Error(wr, "INVALID INPUTS", http.StatusSeeOther)
+		err := render.Template(wr, "make-reservation.page.tmpl", &models.TemplateData{
+			Form: form,
+			Data: data,
+		}, rq)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	NewResvervationID, err := rp.DB.InsertReservation(resv)
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "Error cannot insert reservation in the database")
+		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		return
+	}
+	restriction := models.RoomRestriction{
+		ID:            0,
+		RoomID:        roomID,
+		ReservationID: NewResvervationID,
+		RestrictionID: 1,
+		CheckInDate:   resv.CheckInDate,
+		CheckOutDate:  resv.CheckOutDate,
+	}
+
+	err = rp.DB.InsertRoomRestriction(restriction)
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "Cannot insert room restriction in the data")
+		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
+	//Sending mail notification to customer after make a reservation
+	mailMsg := models.MailData{
+		MailSubject: "Reservation At Rest Tavern Inn",
+		Receiver:    resv.Email,
+		Sender:      "ayaaakinleye@gmail.com",
+		MailContent: `Hi Yusuf <strong>Akinleye</strong>`,
+	}
+
+	rp.App.MailChannel <- mailMsg
+
+	notifyOwner := fmt.Sprintf(`<strong>Notification for Reservation at Rest Tavern</strong><br>"+
+		"%v %v have secure a reservation of %v from %v to %v`, resv.FirstName, resv.LastName, resv.Room.RoomName,
+		resv.CheckInDate.Format("2006-01-02"), resv.CheckOutDate.Format("2006-01-02"))
+	mailMsg = models.MailData{
+		MailSubject: "Reservation At Rest Tavern Inn",
+		Receiver:    "ayaaakinleye@gmail.com",
+		Sender:      "ayaaakinleye@gmail.com",
+		MailContent: notifyOwner,
+	}
+
+	rp.App.MailChannel <- mailMsg
+	rp.App.Session.Put(rq.Context(), "reservation", resv)
+
+	//redirect the data back to avoid submitting the form more than once
+	http.Redirect(wr, rq, "/make-reservation-data", http.StatusSeeOther)
+}
+
+//MakeReservationSummary : Shows all the user information "Fullname, email, Phone Number, check-in-date,
+//check-out-date, Room reserved" and many more
+func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Request) {
+
+	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
+	if !ok {
+		fmt.Println(ok)
+		rp.App.Session.Put(rq.Context(), "error", "session has not reservation")
+		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		log.Println("Error transferring Data")
+		return
+	}
+	rp.App.Session.Put(rq.Context(), "reservation", resv)
+
+	data := make(map[string]interface{})
+	data["reservation"] = resv
+
+	//Remove the stored data in the session
+	rp.App.Session.Remove(rq.Context(), "reservation")
+
+	err := render.Template(wr, "reservation-summary.page.tmpl", &models.TemplateData{
+		Data: data,
+	}, rq)
+	if err != nil {
+		return
+	}
+
+}
+
+func (rp *Repository) AdminPage(wr http.ResponseWriter, rq *http.Request) {
+	err := render.Template(wr, "/admin.page.tmpl", &models.TemplateData{}, rq)
+
+	if err != nil {
+		return
+	}
+}
+
+func (rp *Repository) AdminAllReservation(wr http.ResponseWriter, rq *http.Request) {
+	err := render.Template(wr, "/admin-all-reservation.page.tmpl", &models.TemplateData{}, rq)
+
+	if err != nil {
+		return
+	}
+}
+
+func (rp *Repository) AdminNewReservation(wr http.ResponseWriter, rq *http.Request) {
+	err := render.Template(wr, "/admin-new-reservation.page.tmpl", &models.TemplateData{}, rq)
+
+	if err != nil {
+		return
+	}
+}
+
+func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.Request) {
+	err := render.Template(wr, "/admin-reservation-calendar.page.tmpl", &models.TemplateData{}, rq)
+
+	if err != nil {
+		return
+	}
 }

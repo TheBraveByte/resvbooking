@@ -38,6 +38,8 @@ func main() {
 		_ = db.PSQL.Close()
 	}(db)
 
+	fmt.Println("..............connecting the mail server in channels..............")
+
 	defer close(app.MailChannel)
 
 	fmt.Println("Starting the Server :8080")

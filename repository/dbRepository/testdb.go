@@ -124,3 +124,8 @@ func (tpg TestPostgresDBRepository) AuthenticateUser(testPassword, email string)
 	var hashedPassword string
 	return userID, hashedPassword, nil
 }
+
+func (tpg TestPostgresDBRepository) AllReservation() ([]models.Reservation, error) {
+	var allResv []models.Reservation
+	return allResv, nil
+}

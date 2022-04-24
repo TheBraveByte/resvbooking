@@ -161,7 +161,7 @@ func (pg PostgresDBRepository) UpdateUserInfo(user models.User) error {
 }
 
 //AuthenticateUser to Athenticate the user by verifying the email and the Password
-func (pg PostgresDBRepository) AuthenticateUser(typedPassword, email string) (int, string, error) {
+func (pg *PostgresDBRepository) AuthenticateUser(typedPassword, email string) (int, string, error) {
 	var userID int
 	var hashedPassword string
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
@@ -181,4 +181,54 @@ func (pg PostgresDBRepository) AuthenticateUser(typedPassword, email string) (in
 	}
 	return userID, hashedPassword, nil
 
+}
+
+//DataBase Functions for the administration pages
+
+//AllReservation this show all the registered resservations in the database
+func (pg PostgresDBRepository) AllReservation() ([]models.Reservation, error) {
+	var allResv []models.Reservation
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelCtx()
+	query := `select r.id,
+       r.first_name,
+       r.last_name,
+       r.email,
+       r.phone_number,
+       r.room_id,
+       r.check_in_date,
+       r.check_in_date,
+       r.updated_at,
+       r.created_at
+       from reservation r
+         left join rooms rm on (r.room_id = rm.id)
+       order by r.check_in_date`
+	row, err := pg.DB.QueryContext(ctx, query)
+	if err != nil {
+		return allResv, err
+	}
+	for row.Next() {
+		var rs models.Reservation
+		err = row.Scan(
+			&rs.ID,
+			&rs.FirstName,
+			&rs.LastName,
+			&rs.Email,
+			&rs.CheckInDate,
+			&rs.CheckOutDate,
+			&rs.RoomID,
+			&rs.UpdatedAt,
+			&rs.CreatedAt,
+			&rs.Room.RoomName,
+			&rs.PhoneNumber,
+		)
+		if err != nil {
+			return allResv, err
+		}
+		allResv = append(allResv, rs)
+	}
+	if err = row.Err(); err != nil {
+		return allResv, err
+	}
+	return allResv, nil
 }

@@ -13,7 +13,11 @@ type DatabaseRepository interface {
 	SearchForAvailableRoom(checkInDate, checkOutDate time.Time) ([]models.Room, error)
 	GetRooms(room_id int) (models.Room, error)
 
+	//Users
 	GetUserInfoByID(user_id int) (models.User, error)
 	UpdateUserInfo(user models.User) error
 	AuthenticateUser(typedPassword, email string) (int, string, error)
+
+	//Admin page
+	AllReservation() ([]models.Reservation, error)
 }

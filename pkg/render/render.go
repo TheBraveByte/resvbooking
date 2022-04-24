@@ -11,11 +11,18 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+	"time"
 )
 
 var templatesPath = "./templates"
 var functions = template.FuncMap{
 	//format a dates, currents date
+	"DateFormat": RenderDateFormat,
+}
+
+func RenderDateFormat(t time.Time) string {
+	formatTime := t.Format("2006-01-02")
+	return formatTime
 }
 
 /*Storing the templates Cache into the AppConfig struct type, Import the AppConfig as a pointer in the render package back

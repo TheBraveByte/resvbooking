@@ -34,6 +34,7 @@ func SessionLoad(next http.Handler) http.Handler {
 	return session.LoadAndSave(next)
 }
 
+//Authenticate this is to make sure the user is Authenticated
 func Authenticate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(wr http.ResponseWriter, rq *http.Request) {
 		if !helpers.IsAuthenticated(rq) {

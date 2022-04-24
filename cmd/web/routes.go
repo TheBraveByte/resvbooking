@@ -1,11 +1,12 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/dev-ayaa/resvbooking/pkg/config"
 	"github.com/dev-ayaa/resvbooking/pkg/handlers"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"net/http"
 )
 
 func routes(app *config.AppConfig) http.Handler {
@@ -41,6 +42,17 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Post("/login", handlers.Repo.PostLoginPage)
 	mux.Get("/logout", handlers.Repo.LogOutPage)
 
+	//setting up the admin page
+	mux.Get("/admin", handlers.Repo.AdminPage)
+	mux.Get("/admin/admin-new-reservation", handlers.Repo.AdminNewReservation)
+	mux.Get("/admin/admin-all-reservation", handlers.Repo.AdminAllReservation)
+	mux.Get("/admin/admin-reservation-calendar", handlers.Repo.AdminReservationCalendar)
+	mux.Route("/admin", func(mux chi.Router) {
+		mux.Use(Authenticate)
+		mux.Get("/admin-new-reservation", handlers.Repo.AdminNewReservation)
+		mux.Get("/admin-all-reservation", handlers.Repo.AdminAllReservation)
+		mux.Get("/admin-reservation-calendar", handlers.Repo.AdminReservationCalendar)
+	})
 	//This allows files static files like images and icon to display in the html
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
