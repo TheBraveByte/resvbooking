@@ -1,0 +1,43 @@
+{{template "admin" .}}
+
+
+{{define "css"}}
+  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+
+{{end}}
+
+{{define "content"}}
+  {{$resv := index .Data "reservation"}}
+    <div class="container container-fluid">
+      <table class="table-striped table-responsive table-hover" id="all-resv">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Check In Date</th>
+          <th>Check Out Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range $resv}}
+            <tr>
+              <td>{{.ID}}</td>
+              <td>{{.FirstName}}</td>
+              <td>{{.LastName}}</td>
+              <td>{{.Email}}</td>
+              <td>{{DateFormat .CheckInDate}}</td>
+              <td>{{DateFormat .CheckOutDate}}</td>
+            </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+{{end}}
+
+
+{{define "js"}}
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+    <script></script>
+{{end}}
