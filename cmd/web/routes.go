@@ -44,11 +44,11 @@ func routes(app *config.AppConfig) http.Handler {
 
 	//setting up the admin page
 	mux.Get("/admin", handlers.Repo.AdminPage)
-	mux.Get("/admin/admin-new-reservation", handlers.Repo.AdminNewReservation)
-	mux.Get("/admin/admin-all-reservation", handlers.Repo.AdminAllReservation)
-	mux.Get("/admin/admin-reservation-calendar", handlers.Repo.AdminReservationCalendar)
+	// mux.Get("/admin/admin-new-reservation", handlers.Repo.AdminNewReservation)
+	// mux.Get("/admin/admin-all-reservation", handlers.Repo.AdminAllReservation)
+	// mux.Get("/admin/admin-reservation-calendar", handlers.Repo.AdminReservationCalendar)
 	mux.Route("/admin", func(mux chi.Router) {
-		mux.Use(Authenticate)
+		// mux.Use(Authenticate)
 		mux.Get("/admin-new-reservation", handlers.Repo.AdminNewReservation)
 		mux.Get("/admin-all-reservation", handlers.Repo.AdminAllReservation)
 		mux.Get("/admin-reservation-calendar", handlers.Repo.AdminReservationCalendar)

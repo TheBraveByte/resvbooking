@@ -131,7 +131,7 @@ func (pg *PostgresDBRepository) GetRooms(room_id int) (models.Room, error) {
 
 }
 
-func (pg PostgresDBRepository) GetUserInfoByID(userID int) (models.User, error) {
+func (pg *PostgresDBRepository) GetUserInfoByID(userID int) (models.User, error) {
 	var user models.User
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelCtx()
@@ -147,7 +147,7 @@ func (pg PostgresDBRepository) GetUserInfoByID(userID int) (models.User, error) 
 }
 
 //UpdateUserInfo to Update the users information or details in the database
-func (pg PostgresDBRepository) UpdateUserInfo(user models.User) error {
+func (pg *PostgresDBRepository) UpdateUserInfo(user models.User) error {
 	//var user models.User
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelCtx()
@@ -166,7 +166,7 @@ func (pg *PostgresDBRepository) AuthenticateUser(typedPassword, email string) (i
 	var hashedPassword string
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelCtx()
-	query := "select id, password from users where email= $1 "
+	query := `select id, password from users where email= $1`
 	row := pg.DB.QueryRowContext(ctx, query, email)
 	err := row.Scan(&userID, &hashedPassword)
 	if err != nil {
@@ -186,7 +186,7 @@ func (pg *PostgresDBRepository) AuthenticateUser(typedPassword, email string) (i
 //DataBase Functions for the administration pages
 
 //AllReservation this show all the registered resservations in the database
-func (pg PostgresDBRepository) AllReservation() ([]models.Reservation, error) {
+func (pg *PostgresDBRepository) AllReservation() ([]models.Reservation, error) {
 	var allResv []models.Reservation
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelCtx()

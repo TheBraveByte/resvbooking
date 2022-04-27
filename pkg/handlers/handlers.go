@@ -349,12 +349,12 @@ func (rp *Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
 		rp.App.Session.Put(rq.Context(), "errors", "No parsing the login form")
 		return
 	}
-	var p = "Akinleye123"
-	b, err := bcrypt.GenerateFromPassword([]byte(p), 10)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	var p = "2701Akin1234"
+	b, _ := bcrypt.GenerateFromPassword([]byte(p), 12)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
 	fmt.Println(string(b))
 
 	email = rq.Form.Get("email")
@@ -368,7 +368,6 @@ func (rp *Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
 		return
 		//http.Redirect(wr, rq, "/login", http.StatusTemporaryRedirect)
 	}
-	fmt.Println("Hello 2")
 	userID, _, err := rp.DB.AuthenticateUser(password, email)
 	if err != nil {
 		log.Println(err)
@@ -376,7 +375,6 @@ func (rp *Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
 		http.Redirect(wr, rq, "/login", http.StatusSeeOther)
 		return
 	}
-	fmt.Print("hEllo 3")
 	rp.App.Session.Put(rq.Context(), "userID", userID)
 	rp.App.Session.Put(rq.Context(), "flash", "successfully logged in")
 	http.Redirect(wr, rq, "/", http.StatusSeeOther)
