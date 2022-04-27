@@ -12,7 +12,6 @@ import (
 	"github.com/dev-ayaa/resvbooking/repository"
 	"github.com/dev-ayaa/resvbooking/repository/dbRepository"
 	"github.com/go-chi/chi"
-	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"strconv"
@@ -333,62 +332,6 @@ func (rp *Repository) ExecutivePage(wr http.ResponseWriter, rq *http.Request) {
 	}
 }
 
-func (rp *Repository) LoginPage(wr http.ResponseWriter, rq *http.Request) {
-	render.Template(wr, "login.page.tmpl", &models.TemplateData{Form: forms.NewForm(nil)}, rq)
-
-}
-
-//PostLoginPage post user detail in the database
-func (rp *Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
-	fmt.Println("Logging in user details")
-	var email, password string
-	//To prevent session fixation during authentication of user login details
-	_ = rp.App.Session.RenewToken(rq.Context())
-	err := rq.ParseForm()
-	if err != nil {
-		rp.App.Session.Put(rq.Context(), "errors", "No parsing the login form")
-		return
-	}
-	var p = "2701Akin1234"
-	b, _ := bcrypt.GenerateFromPassword([]byte(p), 12)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	fmt.Println(string(b))
-
-	email = rq.Form.Get("email")
-	password = rq.Form.Get("password")
-	form := forms.NewForm(rq.PostForm)
-	form.Require("email", "password")
-	//form.ValidLenCharacter("password", 15, rq)
-	form.ValidEmail("email")
-	if !form.FormValid() {
-		render.Template(wr, "login.page.tmpl", &models.TemplateData{Form: forms.NewForm(nil)}, rq)
-		return
-		//http.Redirect(wr, rq, "/login", http.StatusTemporaryRedirect)
-	}
-	userID, _, err := rp.DB.AuthenticateUser(password, email)
-	if err != nil {
-		log.Println(err)
-		rp.App.Session.Put(rq.Context(), "errors", "log in with valid details")
-		http.Redirect(wr, rq, "/login", http.StatusSeeOther)
-		return
-	}
-	rp.App.Session.Put(rq.Context(), "userID", userID)
-	rp.App.Session.Put(rq.Context(), "flash", "successfully logged in")
-	http.Redirect(wr, rq, "/", http.StatusSeeOther)
-	//user, err := rp.DB.GetUserInfoByID(userID)
-
-}
-
-func (rp *Repository) LogOutPage(wr http.ResponseWriter, rq *http.Request) {
-	rp.App.Session.Destroy(rq.Context())
-	rp.App.Session.RenewToken(rq.Context())
-	http.Redirect(wr, rq, "/", http.StatusSeeOther)
-	return
-}
-
 //MakeReservationPage handlers function
 func (rp *Repository) MakeReservationPage(wr http.ResponseWriter, rq *http.Request) {
 	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
@@ -560,16 +503,63 @@ func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Re
 
 }
 
-func (rp *Repository) AdminPage(wr http.ResponseWriter, rq *http.Request) {
-	err := render.Template(wr, "/admin.page.tmpl", &models.TemplateData{}, rq)
+func (rp *Repository) LoginPage(wr http.ResponseWriter, rq *http.Request) {
+	render.Template(wr, "login.page.tmpl", &models.TemplateData{Form: forms.NewForm(nil)}, rq)
 
+}
+
+//PostLoginPage post user detail in the database
+func (rp *Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
+	fmt.Println("Logging in user details")
+	var email, password string
+	//To prevent session fixation during authentication of user login details
+	_ = rp.App.Session.RenewToken(rq.Context())
+	err := rq.ParseForm()
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "No parsing the login form")
+		return
+	}
+
+	//Get the input value from the form and check for authentication
+	email = rq.Form.Get("email")
+	password = rq.Form.Get("password")
+	form := forms.NewForm(rq.PostForm)
+	form.Require("email", "password")
+	//form.ValidLenCharacter("password", 15, rq)
+	form.ValidEmail("email")
+	if !form.FormValid() {
+		render.Template(wr, "login.page.tmpl", &models.TemplateData{Form: forms.NewForm(nil)}, rq)
+		return
+	}
+	userID, _, err := rp.DB.AuthenticateUser(password, email)
+	if err != nil {
+		log.Println(err)
+		rp.App.Session.Put(rq.Context(), "errors", "log in with valid details")
+		http.Redirect(wr, rq, "/login", http.StatusSeeOther)
+		return
+	}
+	rp.App.Session.Put(rq.Context(), "userID", userID)
+	rp.App.Session.Put(rq.Context(), "flash", "successfully logged in")
+	http.Redirect(wr, rq, "/", http.StatusSeeOther)
+
+}
+
+func (rp *Repository) LogOutPage(wr http.ResponseWriter, rq *http.Request) {
+	rp.App.Session.Destroy(rq.Context())
+	rp.App.Session.RenewToken(rq.Context())
+	http.Redirect(wr, rq, "/", http.StatusSeeOther)
+	return
+}
+
+func (rp *Repository) AdminPage(wr http.ResponseWriter, rq *http.Request) {
+	err := render.Template(wr, "admin-dashboard.page.tmpl", &models.TemplateData{}, rq)
 	if err != nil {
 		return
 	}
 }
 
 func (rp *Repository) AdminAllReservation(wr http.ResponseWriter, rq *http.Request) {
-	err := render.Template(wr, "/admin-all-reservation.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "admin-all-reservation.page.tmpl", &models.TemplateData{}, rq)
 
 	if err != nil {
 		return
@@ -577,15 +567,14 @@ func (rp *Repository) AdminAllReservation(wr http.ResponseWriter, rq *http.Reque
 }
 
 func (rp *Repository) AdminNewReservation(wr http.ResponseWriter, rq *http.Request) {
-	err := render.Template(wr, "/admin-new-reservation.page.tmpl", &models.TemplateData{}, rq)
-
+	err := render.Template(wr, "admin-new-reservation.page.tmpl", &models.TemplateData{}, rq)
 	if err != nil {
 		return
 	}
 }
 
 func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.Request) {
-	err := render.Template(wr, "/admin-reservation-calendar.page.tmpl", &models.TemplateData{}, rq)
+	err := render.Template(wr, "admin-reservation-calendar.page.tmpl", &models.TemplateData{}, rq)
 
 	if err != nil {
 		return
