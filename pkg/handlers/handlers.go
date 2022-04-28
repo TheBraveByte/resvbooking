@@ -559,11 +559,17 @@ func (rp *Repository) AdminPage(wr http.ResponseWriter, rq *http.Request) {
 }
 
 func (rp *Repository) AdminAllReservation(wr http.ResponseWriter, rq *http.Request) {
-	err := render.Template(wr, "admin-all-reservation.page.tmpl", &models.TemplateData{}, rq)
-
+	allResv, err := rp.DB.AllReservation()
+	data := make(map[string]interface{})
 	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "no reservation in the database")
 		return
 	}
+	data["reservation"] = allResv
+	render.Template(wr, "admin-all-reservation.page.tmpl", &models.TemplateData{
+		Data: data,
+	}, rq)
+
 }
 
 func (rp *Repository) AdminNewReservation(wr http.ResponseWriter, rq *http.Request) {

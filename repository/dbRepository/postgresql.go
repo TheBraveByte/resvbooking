@@ -207,6 +207,8 @@ func (pg *PostgresDBRepository) AllReservation() ([]models.Reservation, error) {
 	if err != nil {
 		return allResv, err
 	}
+	defer row.Close()
+
 	for row.Next() {
 		var rs models.Reservation
 		err = row.Scan(
