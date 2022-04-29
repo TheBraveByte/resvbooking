@@ -1,0 +1,69 @@
+{{template  "admin" .}}
+
+{{define "css"}}
+
+{{end}}
+
+{{define "page-title"}}
+
+{{end}}
+{{define "content"}}
+    {{$resv := index .Data "reservation"}}
+    {{$srclink := index .StringData "src"}}
+    <div class="container container-fluid">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <form action="/admin/admin-show-reservation/{{$srclink}}/{{$resv.ID}}" method="post">
+                    <input type="hidden" value="{{.CSRFToken}}" name="csrf_token">
+                    <div class="row g-2 mt-5">
+                        <div class="col-sm-12 col-lg-6 col-md-6">
+                            <label for="first-name">First Name: </label> {{with .Form.Error.Get "first-name"}}
+                                <label class="text-danger">{{.}}</label> {{ end }}
+                            <input required autocomplete="off" type="text"
+                                   class="form-control {{with .Form.Error.Get " first-name "}} is-invalid {{ end }}"
+                                   placeholder="Yousuff" id="first-name" name="first-name" value="{{$resv.FirstName}}">
+                        </div>
+
+                        <div class="col-sm-12 col-lg-6 col-md-6">
+                            <label for="last-name">Last Name: </label> {{with .Form.Error.Get "last-name"}}
+                                <label class="text-danger">{{.}}</label> {{ end }}
+                            <input required autocomplete="off" type="text"
+                                   class="form-control {{with .Form.Error.Get " last-name "}} is-invalid {{ end }}"
+                                   placeholder="Akinleye" name="last-name" id="last-name" value="{{$resv.LastName}}">
+                        </div>
+                    </div>
+
+                    <div class="row g-1 mt-3">
+                        <div class="col-12">
+                            <label for="phone-number">Phone Number: </label> {{with .Form.Error.Get "phone-number"}}
+                                <label class="text-danger">{{.}}</label> {{ end }}
+                            <input type="tel"
+                                   class="form-control {{with .Form.Error.Get " phone-number "}} is-invalid {{ end }}"
+                                   id="phone-number" placeholder="(+234)9047583219" required autocomplete="off"
+                                   value="{{ $resv.PhoneNumber }}" name="phone-number">
+                        </div>
+                    </div>
+
+                    <div class="row g-1 mt-3">
+                        <div class="col">
+                            <label for="email">Email: </label> {{with .Form.Error.Get "email"}}
+                                <label class="text-danger">{{.}}</label> {{ end }}
+                            <input required autocomplete="off" type="email"
+                                   class="form-control {{with .Form.Error.Get " email "}} is-invalid {{ end }}"
+                                   id="email" placeholder="planets456@gmail.com" value="{{ $resv.Email }}" name="email">
+                        </div>
+                    </div>
+                    <hr>
+                    <button type="submit" class="btn w-45 btn-md btn-hover-light btn-outline-success" value="save">save
+                        reservation
+                    </button>
+                    <button class="btn w-45 btn-md btn-hover-light btn-outline-danger"><a
+                                href="/admin/admin-{{$srclink}}-reservation"></a>cancel reservation
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+{{end}}

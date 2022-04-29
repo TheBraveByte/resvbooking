@@ -15,6 +15,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -544,6 +545,7 @@ func (rp *Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
 
 }
 
+//LogOutPage this helps to log out the user or admin out of the site
 func (rp *Repository) LogOutPage(wr http.ResponseWriter, rq *http.Request) {
 	rp.App.Session.Destroy(rq.Context())
 	rp.App.Session.RenewToken(rq.Context())
@@ -551,6 +553,7 @@ func (rp *Repository) LogOutPage(wr http.ResponseWriter, rq *http.Request) {
 	return
 }
 
+//AdminPage this is the Administration management page
 func (rp *Repository) AdminPage(wr http.ResponseWriter, rq *http.Request) {
 	err := render.Template(wr, "admin-dashboard.page.tmpl", &models.TemplateData{}, rq)
 	if err != nil {
@@ -558,11 +561,13 @@ func (rp *Repository) AdminPage(wr http.ResponseWriter, rq *http.Request) {
 	}
 }
 
+//AdminAllReservation this show all the registered user in the administration page
 func (rp *Repository) AdminAllReservation(wr http.ResponseWriter, rq *http.Request) {
 	allResv, err := rp.DB.AllReservation()
 	data := make(map[string]interface{})
 	if err != nil {
-		rp.App.Session.Put(rq.Context(), "errors", "no reservation in the database")
+		helpers.ServerSideError(wr, err)
+		//rp.App.Session.Put(rq.Context(), "errors", "no reservation in the database")
 		return
 	}
 	data["reservation"] = allResv
@@ -572,13 +577,52 @@ func (rp *Repository) AdminAllReservation(wr http.ResponseWriter, rq *http.Reque
 
 }
 
+//AdminNewReservation this shows all the NEW registered user in the Administration page
 func (rp *Repository) AdminNewReservation(wr http.ResponseWriter, rq *http.Request) {
-	err := render.Template(wr, "admin-new-reservation.page.tmpl", &models.TemplateData{}, rq)
+	data := make(map[string]interface{})
+	newResv, err := rp.DB.AllNewReservation()
 	if err != nil {
+		helpers.ServerSideError(wr, err)
 		return
 	}
+	data["reservation"] = newResv
+	render.Template(wr, "admin-new-reservation.page.tmpl", &models.TemplateData{
+		Data: data,
+	}, rq)
 }
 
+//AdminShowReservation this shows all the reservation information about a particular user
+func (rp *Repository) AdminShowReservation(wr http.ResponseWriter, rq *http.Request) {
+	StringData := make(map[string]string)
+	data := make(map[string]interface{})
+	var src string
+	var id int
+
+	userInfo := strings.Split(rq.RequestURI, "/")
+	id, err := strconv.Atoi(userInfo[len(userInfo)-1])
+	if err != nil {
+		//helpers.ServerSideError(wr, err)
+		log.Println("invalid id conversion")
+		return
+	}
+	src = userInfo[len(userInfo)-2]
+	userResv, err := rp.DB.ShowUserReservation(id)
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+
+	data["reservation"] = userResv
+	StringData["src"] = src
+
+	render.Template(wr, "admin-show-reservation.page.tmpl", &models.TemplateData{
+		Form:       forms.NewForm(nil),
+		Data:       data,
+		StringData: StringData,
+	}, rq)
+}
+
+//AdminReservationCalendar this shows the calendar schedule of all reservations
 func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.Request) {
 	err := render.Template(wr, "admin-reservation-calendar.page.tmpl", &models.TemplateData{}, rq)
 

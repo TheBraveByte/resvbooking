@@ -1,0 +1,61 @@
+{{template "admin" .}}
+
+
+{{define "css"}}
+
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+
+{{end}}
+
+{{define "page-title"}}
+
+    <em><b>Rest</b></em> New Reservations
+
+{{end}}
+
+
+{{define "content"}}
+    {{$resv := index .Data "reservation"}}
+    <div class="container container-fluid col-md-auto">
+        <table class="table table-hover table-striped table-responsive" id="all-new-resv-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Check In Date</th>
+                <th>Check Out Date</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {{range $resv}}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>
+                        <a href="/admin/admin-show-reservation/new/{{.ID}}">
+                            {{.FirstName}}</a>
+                    </td>
+                    <td>{{.LastName}}</td>
+                    <td>{{.Email}}</td>
+                    <td>{{DateFormat .CheckInDate}}</td>
+                    <td>{{DateFormat .CheckOutDate}}</td>
+
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+{{end}}
+
+
+{{define "js"}}
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+    <script>
+        const dataTable = new simpleDatatables.DataTable("all-new-resv-table", {
+            searchable: true,
+        })
+
+    </script>
+{{end}}

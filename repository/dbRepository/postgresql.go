@@ -99,6 +99,7 @@ func (pg *PostgresDBRepository) SearchForAvailableRoom(checkInDate, checkOutDate
 	if err != nil {
 		return rooms, err
 	}
+	defer rows.Close()
 	for rows.Next() {
 		var room models.Room
 		err = rows.Scan(&room.ID, &room.RoomName)
@@ -168,6 +169,8 @@ func (pg *PostgresDBRepository) AuthenticateUser(typedPassword, email string) (i
 	defer cancelCtx()
 	query := `select id, password from users where email= $1`
 	row := pg.DB.QueryRowContext(ctx, query, email)
+
+	//scan the database respectively with the query parameters
 	err := row.Scan(&userID, &hashedPassword)
 	if err != nil {
 		return userID, "", err
@@ -183,7 +186,7 @@ func (pg *PostgresDBRepository) AuthenticateUser(typedPassword, email string) (i
 
 }
 
-//DataBase Functions for the administration pages
+/*DataBase Functions for the administration pages */
 
 //AllReservation this show all the registered resservations in the database
 func (pg *PostgresDBRepository) AllReservation() ([]models.Reservation, error) {
@@ -197,9 +200,10 @@ func (pg *PostgresDBRepository) AllReservation() ([]models.Reservation, error) {
        r.phone_number,
        r.room_id,
        r.check_in_date,
-       r.check_in_date,
+       r.check_out_date,
        r.updated_at,
-       r.created_at
+       r.created_at,
+       r.processed
        from reservation r
          left join rooms rm on (r.room_id = rm.id)
        order by r.check_in_date`
@@ -211,18 +215,21 @@ func (pg *PostgresDBRepository) AllReservation() ([]models.Reservation, error) {
 
 	for row.Next() {
 		var rs models.Reservation
+		//scan the database respectively with the query parameters
+
 		err = row.Scan(
 			&rs.ID,
 			&rs.FirstName,
 			&rs.LastName,
 			&rs.Email,
+			&rs.PhoneNumber,
+			&rs.RoomID,
 			&rs.CheckInDate,
 			&rs.CheckOutDate,
-			&rs.RoomID,
-			&rs.UpdatedAt,
+			//&rs.Room.RoomName,
 			&rs.CreatedAt,
-			&rs.Room.RoomName,
-			&rs.PhoneNumber,
+			&rs.UpdatedAt,
+			&rs.Processed,
 		)
 		if err != nil {
 			return allResv, err
@@ -233,4 +240,104 @@ func (pg *PostgresDBRepository) AllReservation() ([]models.Reservation, error) {
 		return allResv, err
 	}
 	return allResv, nil
+}
+
+//AllNewReservation this helps to get all the newly registered reservation in the database
+func (pg *PostgresDBRepository) AllNewReservation() ([]models.Reservation, error) {
+	var newResv []models.Reservation
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelCtx()
+	query := `select r.id,
+       r.first_name,
+       r.last_name,
+       r.email,
+       r.phone_number,
+       r.room_id,
+       r.check_in_date,
+       r.check_out_date,
+       r.updated_at, 
+       r.created_at,
+       r.processed
+       from reservation r
+           left join rooms rm on (r.room_id = rm.id)
+           where r.processed = 0
+           order by r.check_in_date`
+	row, err := pg.DB.QueryContext(ctx, query)
+	if err != nil {
+		return newResv, err
+	}
+	defer row.Close()
+
+	for row.Next() {
+		var rs models.Reservation
+		//scan the database respectively with the query parameters
+		err = row.Scan(
+			&rs.ID,
+			&rs.FirstName,
+			&rs.LastName,
+			&rs.Email,
+			&rs.PhoneNumber,
+			&rs.RoomID,
+			&rs.CheckInDate,
+			&rs.CheckOutDate,
+			&rs.UpdatedAt,
+			&rs.CreatedAt,
+			&rs.Processed,
+		)
+		if err != nil {
+			return newResv, err
+		}
+		newResv = append(newResv, rs)
+	}
+	if err = row.Err(); err != nil {
+		return newResv, err
+	}
+	return newResv, nil
+}
+
+func (pg *PostgresDBRepository) ShowUserReservation(id int) (models.Reservation, error) {
+	var userResv models.Reservation
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelCtx()
+
+	query := `select r.id,
+       r.first_name,
+       r.last_name,
+       r.email,
+       r.phone_number,
+       r.room_id,
+       r.check_in_date,
+       r.check_out_date,
+       r.updated_at,
+       r.created_at,
+       r.processed,
+       rm.room_name,
+       rm.id
+from reservation r
+         left outer join rooms rm on (rm.id = r.room_id)
+where r.id = $1`
+	row := pg.DB.QueryRowContext(ctx, query, id)
+	err := row.Scan(
+		&userResv.ID,
+		&userResv.FirstName,
+		&userResv.LastName,
+		&userResv.Email,
+		&userResv.PhoneNumber,
+		&userResv.RoomID,
+		&userResv.CheckInDate,
+		&userResv.CheckOutDate,
+		&userResv.UpdatedAt,
+		&userResv.CreatedAt,
+		&userResv.Processed,
+		&userResv.Room.RoomName,
+		&userResv.Room.ID,
+	)
+	if err != nil {
+		return userResv, err
+	}
+	if err = row.Err(); err != nil {
+		return userResv, err
+	}
+	return userResv, nil
+
 }

@@ -29,6 +29,7 @@ func (tpg *TestPostgresDBRepository) InsertRoomRestriction(resv models.RoomRestr
 	return nil
 }
 
+//SearchRoomAvailabileByRoomID testing to check for all available with a certaion period ogf time
 func (tpg *TestPostgresDBRepository) SearchRoomAvailabileByRoomID(roomID int, checkInDate, checkOutDate time.Time) (bool, error) {
 	dateLayout := "2006-01-02"
 	checkIn := "2025-09-09"
@@ -65,6 +66,7 @@ func (tpg *TestPostgresDBRepository) SearchRoomAvailabileByRoomID(roomID int, ch
 	// return true, nil
 }
 
+//SearchForAvailableRoom Testing to search for all available room in the database within certain date
 func (tpg *TestPostgresDBRepository) SearchForAvailableRoom(checkInDate, checkOutDate time.Time) ([]models.Room, error) {
 
 	var rooms []models.Room
@@ -98,6 +100,7 @@ func (tpg *TestPostgresDBRepository) SearchForAvailableRoom(checkInDate, checkOu
 
 }
 
+//GetRoom Testing to get the correct room with it id from the database
 func (tpg *TestPostgresDBRepository) GetRooms(room_id int) (models.Room, error) {
 	var room models.Room
 
@@ -109,23 +112,37 @@ func (tpg *TestPostgresDBRepository) GetRooms(room_id int) (models.Room, error) 
 
 }
 
-//Users
-func (tpg TestPostgresDBRepository) GetUserInfoByID(userID int) (models.User, error) {
+//GetUserInfoByID testing to get user details in the database
+func (tpg *TestPostgresDBRepository) GetUserInfoByID(userID int) (models.User, error) {
 	var user models.User
 	return user, nil
 }
 
-func (tpg TestPostgresDBRepository) UpdateUserInfo(user models.User) error {
+//UpdateUserInfo tesing for updating user information in the database
+func (tpg *TestPostgresDBRepository) UpdateUserInfo(user models.User) error {
 	return nil
 }
 
-func (tpg TestPostgresDBRepository) AuthenticateUser(testPassword, email string) (int, string, error) {
+//AuthenticateUser testing for authenticated user with the database function
+func (tpg *TestPostgresDBRepository) AuthenticateUser(testPassword, email string) (int, string, error) {
 	var userID int
 	var hashedPassword string
 	return userID, hashedPassword, nil
 }
 
-func (tpg TestPostgresDBRepository) AllReservation() ([]models.Reservation, error) {
+//AllReservation testing for the database function for all present reservation
+func (tpg *TestPostgresDBRepository) AllReservation() ([]models.Reservation, error) {
 	var allResv []models.Reservation
 	return allResv, nil
+}
+
+//AllNewReservation testing for the database function for all new reservation
+func (tpg *TestPostgresDBRepository) AllNewReservation() ([]models.Reservation, error) {
+	var allNewResv []models.Reservation
+	return allNewResv, nil
+}
+
+func (tpg *TestPostgresDBRepository) ShowUserReservation(id int) (models.Reservation, error) {
+	var userResv models.Reservation
+	return userResv, nil
 }

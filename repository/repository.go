@@ -20,4 +20,6 @@ type DatabaseRepository interface {
 
 	//Admin page
 	AllReservation() ([]models.Reservation, error)
+	AllNewReservation() ([]models.Reservation, error)
+	ShowUserReservation(id int) (models.Reservation, error)
 }

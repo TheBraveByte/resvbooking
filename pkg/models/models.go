@@ -19,6 +19,7 @@ type Reservation struct {
 	Room         Room
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
+	Processed    int
 }
 
 //Room rooms model
