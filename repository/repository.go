@@ -25,5 +25,3 @@ type DatabaseRepository interface {
 	UpdateUserReservation(resv models.Reservation) error
 	ProcessedUpdateReservation(id int) error
 }
-
-}
