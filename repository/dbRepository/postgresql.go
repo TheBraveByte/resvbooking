@@ -5,6 +5,7 @@ import (
 	"github.com/dev-ayaa/resvbooking/pkg/models"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
+	"log"
 	"time"
 )
 
@@ -340,4 +341,49 @@ where r.id = $1`
 	}
 	return userResv, nil
 
+}
+
+//UpdateUserReservation this modify the user reservation details from the administration
+func (pg *PostgresDBRepository) UpdateUserReservation(resv models.Reservation) error {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelCtx()
+
+	query := `update reservation set id= $1,first_name=$2, last_name=$3, email=$4, phone_number=$5, updated_at=$6 where id = $1`
+
+	_, err := pg.DB.ExecContext(ctx, query,
+		resv.ID, resv.FirstName, resv.LastName, resv.Email, resv.PhoneNumber, resv.UpdatedAt)
+	if err != nil {
+		log.Println("error updateing user reservation")
+		return err
+	}
+	return nil
+}
+
+//DeleteUserReservation  this delete the user reservation from the administration
+func (pg *PostgresDBRepository) DeleteUserReservation(id int) error {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelCtx()
+
+	query := `delete from reservation where id = $1`
+	_, err := pg.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		log.Println("error cannot delete reservation as requested")
+		return err
+	}
+	return nil
+}
+
+//
+func (pg *PostgresDBRepository) ProcessedUpdateReservation(id int, processed int) error {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelCtx()
+
+	query := `update reservation set processed = $1 where id = $2`
+
+	_, err := pg.DB.ExecContext(ctx, query, processed, id)
+	if err != nil {
+		log.Println("error processing user reservation update")
+		return err
+	}
+	return nil
 }

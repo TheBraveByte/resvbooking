@@ -146,3 +146,10 @@ func (tpg *TestPostgresDBRepository) ShowUserReservation(id int) (models.Reserva
 	var userResv models.Reservation
 	return userResv, nil
 }
+func (tpg TestPostgresDBRepository) UpdateUserReservation(resv models.Reservation) error {
+	return nil
+}
+
+func (tpg *TestPostgresDBRepository) ProcessedUpdateReservation(id int) error {
+	return nil
+}

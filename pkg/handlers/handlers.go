@@ -622,6 +622,44 @@ func (rp *Repository) AdminShowReservation(wr http.ResponseWriter, rq *http.Requ
 	}, rq)
 }
 
+//
+func (rp *Repository) PostAdminShowReservation(wr http.ResponseWriter, rq *http.Request) {
+	var src string
+	StringData := make(map[string]string)
+
+	err := rq.ParseForm()
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "error parsing forms")
+		return
+	}
+	userInfo := strings.Split(rq.RequestURI, "/")
+	id, err := strconv.Atoi(userInfo[len(userInfo)-1])
+	if err != nil {
+		log.Println("invalid id conversion")
+		return
+	}
+	src = userInfo[len(userInfo)-2]
+	StringData["src"] = src
+	userResv, err := rp.DB.ShowUserReservation(id)
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+
+	userResv.FirstName = rq.Form.Get("first_name")
+	userResv.LastName = rq.Form.Get("last_name")
+	userResv.PhoneNumber = rq.Form.Get("phone_number")
+	userResv.Email = rq.Form.Get("email")
+
+	err = rp.DB.UpdateUserReservation(userResv)
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "error", "error updating user reservation")
+		return
+	}
+	//http.Redirect(wr, rq, "/admin/admin-}}-reservation")
+
+}
+
 //AdminReservationCalendar this shows the calendar schedule of all reservations
 func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.Request) {
 	err := render.Template(wr, "admin-reservation-calendar.page.tmpl", &models.TemplateData{}, rq)

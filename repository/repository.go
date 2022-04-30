@@ -22,4 +22,8 @@ type DatabaseRepository interface {
 	AllReservation() ([]models.Reservation, error)
 	AllNewReservation() ([]models.Reservation, error)
 	ShowUserReservation(id int) (models.Reservation, error)
+	UpdateUserReservation(resv models.Reservation) error
+	ProcessedUpdateReservation(id int) error
+}
+
 }
