@@ -24,4 +24,5 @@ type DatabaseRepository interface {
 	ShowUserReservation(id int) (models.Reservation, error)
 	UpdateUserReservation(resv models.Reservation) error
 	ProcessedUpdateReservation(id int) error
+	DeleteUserReservation(id int) error
 }

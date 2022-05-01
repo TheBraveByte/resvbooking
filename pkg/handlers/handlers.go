@@ -605,7 +605,11 @@ func (rp *Repository) AdminShowReservation(wr http.ResponseWriter, rq *http.Requ
 		log.Println("invalid id conversion")
 		return
 	}
+
 	src = userInfo[len(userInfo)-2]
+	month := rq.URL.Query().Get("m")
+	year := rq.URL.Query().Get("y")
+
 	userResv, err := rp.DB.ShowUserReservation(id)
 	if err != nil {
 		helpers.ServerSideError(wr, err)
@@ -614,7 +618,8 @@ func (rp *Repository) AdminShowReservation(wr http.ResponseWriter, rq *http.Requ
 
 	data["reservation"] = userResv
 	StringData["src"] = src
-
+	StringData["month"] = month
+	StringData["year"] = year
 	render.Template(wr, "admin-show-reservation.page.tmpl", &models.TemplateData{
 		Form:       forms.NewForm(nil),
 		Data:       data,
@@ -656,8 +661,20 @@ func (rp *Repository) PostAdminShowReservation(wr http.ResponseWriter, rq *http.
 		rp.App.Session.Put(rq.Context(), "error", "error updating user reservation")
 		return
 	}
-	//http.Redirect(wr, rq, "/admin/admin-}}-reservation")
+	month := rq.Form.Get("month")
+	year := rq.Form.Get("year")
+	rp.App.Session.Put(rq.Context(), "flash", "saved")
 
+	if year == "" {
+		http.Redirect(wr, rq, fmt.Sprintf("/admin/admin-%s-reservation", src), http.StatusSeeOther)
+	} else {
+		http.Redirect(wr, rq, fmt.Sprintf("/admin/admin-reservation-calendar?y=%s&m=%s", year, month), http.StatusSeeOther)
+	}
+
+}
+
+func (rp Repository) AdminProcessReservation(wr http.ResponseWriter, rq *http.Request) {
+	return
 }
 
 //AdminReservationCalendar this shows the calendar schedule of all reservations
@@ -666,5 +683,24 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 
 	if err != nil {
 		return
+	}
+}
+
+func (rp Repository) AdminDeleteReservation(wr http.ResponseWriter, rq *http.Request) {
+	id, _ := strconv.Atoi(chi.URLParam(rq, "id"))
+	src := chi.URLParam(rq, "src")
+	err := rp.DB.DeleteUserReservation(id)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	year := rq.URL.Query().Get("y")
+	month := rq.URL.Query().Get("m")
+	rp.App.Session.Put(rq.Context(), "flash", "Reservation deleted")
+
+	if year == "" {
+		http.Redirect(wr, rq, fmt.Sprintf("/admin/admin-%s-reservations", src), http.StatusSeeOther)
+	} else {
+		http.Redirect(wr, rq, fmt.Sprintf("/admin/admin-reservations-calendar?y=%s&m=%s", year, month), http.StatusSeeOther)
 	}
 }

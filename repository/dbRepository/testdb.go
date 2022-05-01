@@ -153,3 +153,7 @@ func (tpg TestPostgresDBRepository) UpdateUserReservation(resv models.Reservatio
 func (tpg *TestPostgresDBRepository) ProcessedUpdateReservation(id int) error {
 	return nil
 }
+
+func (tpg *TestPostgresDBRepository) DeleteUserReservation(id int) error {
+	return nil
+}

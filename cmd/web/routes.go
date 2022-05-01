@@ -54,6 +54,11 @@ func routes(app *config.AppConfig) http.Handler {
 		mux.Get("/admin-all-reservation", handlers.Repo.AdminAllReservation)
 		mux.Get("/admin-reservation-calendar", handlers.Repo.AdminReservationCalendar)
 		mux.Get("/admin-show-reservation/{src}/{id}", handlers.Repo.AdminShowReservation)
+
+		mux.Post("/admin-show-reservation/{src}/{id}", handlers.Repo.PostAdminShowReservation)
+		mux.Get("/admin/admin-delete-reservation/{src}", handlers.Repo.AdminDeleteReservation)
+		mux.Get("/admin/admin-process-reservation", handlers.Repo.AdminProcessReservation)
+
 	})
 	//This allows files static files like images and icon to display in the html
 	fileServer := http.FileServer(http.Dir("./static/"))

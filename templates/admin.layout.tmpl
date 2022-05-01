@@ -133,10 +133,44 @@
     <!-- endinject -->
     <!-- Custom js for this page-->
     <script src="js/dashboard.js"></script>
-    {{block "js" .}}
+    <script src="https://unpkg.com/notie"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script> let notifyUser = promptAlert()
+
+        function Notie(msg, msgType) {
+            notie.alert({
+                type: msgType,
+                text: msg,
+            })
+        }
+
+        function NotieModal(title, text, html, icon, confirmationButton) {
+            Swal.fire({
+                title: title,
+                html: text,
+                icon: icon,
+                confirmationButton: confirmationButton
+            })
+        }
 
 
-    {{end}}
+        {{with .Error}}
+        notify("{{.}}", "error")
+        {{end}}
+
+        {{with .Flash}}
+        notify("{{.}}", "success")
+        {{end}}
+
+        {{with .Warning}}
+        notify("{{.}}", "warning")
+        {{end}}
+
+        {{block "js" .}}
+
+        {{end}}
+    </script>
     </body>
 
     </html>

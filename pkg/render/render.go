@@ -25,6 +25,24 @@ func RenderDateFormat(t time.Time) string {
 	return formatTime
 }
 
+func RenderFormat(t time.Time, format string) string {
+	return t.Format(format)
+}
+
+func RenderIterate(count int) []int {
+	var index int
+	var itemArr []int
+	for index = 0; index < count; index++ {
+		itemArr = append(itemArr, index)
+	}
+	return itemArr
+}
+
+func RenderAddUp(valueA, valueB int) int {
+	return valueA + valueB
+
+}
+
 /*Storing the templates Cache into the AppConfig struct type, Import the AppConfig as a pointer in the render package back
 now use the type store in the AppConfig in the render package ,To keep the stored data updated import the function
 where the AppConfig is store in the render package to the main package
