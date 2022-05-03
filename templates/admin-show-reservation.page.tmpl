@@ -1,116 +1,131 @@
-{{template "admin" .}} {{define "css"}} {{end}} {{define "page-title"}} {{end}} {{define "content"}} {{$resv := index .Data "reservation"}} {{$srclink := index .StringData "src"}}
-<div class="container container-fluid">
-    <hr>
-    <em><b>Checked in : </b></em> {{DateFormat $resv.CheckInDate}}
-    <br>
-    <em><b>Checked out : </b></em> {{DateFormat $resv.CheckOutDate}}
-    <br>
+{{template "admin" .}}
 
-    <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-            <form action="/admin/admin-show-reservation/{{$srclink}}/{{$resv.ID}}" method="post" class="" novalidate>
-                <input type="hidden" value="{{.CSRFToken}}" name="csrf_token">
-
-                <input type="hidden" value="{{index .StringData " year "}}" name="year">
-
-                <input type="hidden" value="{{index .StringData " month "}}" name="month">
-
-                <div class="row g-2 mt-5">
-                    <div class="col-sm-12 col-lg-6 col-md-6">
-                        <label for="first-name">First Name: </label> {{with .Form.Error.Get "first-name"}}
-                            <label class="text-danger">{{.}}</label> {{ end }}
-                        <input required autocomplete="off" type="text"
-                               class="form-control {{with .Form.Error.Get " first-name "}} is-invalid {{ end }}"
-                               placeholder="Yousuff" id="first-name" name="first-name" value="{{$resv.FirstName}}">
-                    </div>
-
-                    <div class="col-sm-12 col-lg-6 col-md-6">
-                        <label for="last-name">Last Name: </label> {{with .Form.Error.Get "last-name"}}
-                            <label class="text-danger">{{.}}</label> {{ end }}
-                        <input required autocomplete="off" type="text"
-                               class="form-control {{with .Form.Error.Get " last-name "}} is-invalid {{ end }}"
-                               placeholder="Akinleye" name="last-name" id="last-name" value="{{$resv.LastName}}">
-                    </div>
-                </div>
-
-                <div class="row g-1 mt-3">
-                    <div class="col-12">
-                        <label for="phone-number">Phone Number: </label> {{with .Form.Error.Get "phone-number"}}
-                            <label class="text-danger">{{.}}</label> {{ end }}
-                        <input type="tel"
-                               class="form-control {{with .Form.Error.Get " phone-number "}} is-invalid {{ end }}"
-                               id="phone-number" placeholder="(+234)9047583219" required autocomplete="off"
-                               value="{{ $resv.PhoneNumber }}" name="phone-number">
-                    </div>
-                </div>
-
-                <div class="row g-1 mt-3">
-                    <div class="col">
-                        <label for="email">Email: </label> {{with .Form.Error.Get "email"}}
-                            <label class="text-danger">{{.}}</label> {{ end }}
-                        <input required autocomplete="off" type="email"
-                               class="form-control {{with .Form.Error.Get " email "}} is-invalid {{ end }}" id="email"
-                               placeholder="planets456@gmail.com" value="{{ $resv.Email }}" name="email">
-                    </div>
-                </div>
-                <hr>
-                <div class="align-self-auto">
-                    <input type="submit" class="btn w-45 btn-md btn-hover-light btn-outline-success"
-                           value="save reservation">
-                    {{if eq $srclink "cal"}}
-                        <a href="#!" onclick="window.history.go(-1)" class="btn btn-warning">Cancel Reservation</a>
-                    {{else}}
-                        <a href="/admin/admin-{{$srclink}}-reservation" class="btn btn-warning">Cancel Reservation</a>
-                    {{end}}
-                    {{if eq $resv.Processed 0}}
-                        <a href="#!" class="btn btn-info" onclick="processsReservation({{$resv.ID}})">Reservation
-                            Processed</a>
-                    {{end}}
-                </div>
-
-                <div class="align-self-auto"></div>
-                <a href="#!" class="btn w-45 btn-sm btn-hover-light btn-danger clearfix"
-                   onclick="deleteReservation({{$resv.ID}})">Delete Reservation</a>
-            </form>
-        </div>
-    </div>
-</div>
+{{define "css"}}
 
 {{end}}
 
-<script>
-    function ProcessReservation(id) {
-        attention.custom({
-            icon: 'warning',
-            msg: 'Are you sure?',
-            callback: function (result) {
-                if (result !== false) {
-                    window.location.href = "/admin/admin-process-reservation/{{$srclink}}/"
-                      + id
-                      + "/do?y={{index .StringMap "year"}}&m={{index .StringMap "month"}}";
-                }
-            }
-        })
-    }
+{{define "page-title"}}
+    Reservation Details
+{{end}}
 
-    function deleteReservation(id) {
-        attention.custom({
-            icon: 'warning',
-            msg: 'Are you sure?',
-            callback: function (result) {
-                if (result !== false) {
-                    window.location.href = "/admin/admin-delete-reservation/{{$src}}/"
-                      + id
-                      + "/do?y={{index .StringMap "year"}}&m={{index .StringMap "month"}}";
-                }
-            }
-        })
-    }
-</script>
+{{define "content"}}
+    {{$resv := index .Data "reservation"}}
+    {{$srclink := index .StringData "src"}}
+    <div class="container container-fluid">
+        <hr>
+        <p>
+            <em><b>Check In  : </b></em> {{dateFormat $resv.CheckInDate}}
+            <br>
+            <em><b>Check Out : </b></em> {{dateFormat $resv.CheckOutDate}}
+            <br>
+            <em><b>Room Name : </b></em> {{$resv.Room.RoomName}}
+            <br>
+        </p>
 
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <form action="/admin/admin-show-reservation/{{$srclink}}/{{$resv.ID}}" method="post" class=""
+                      novalidate>
+                    <input type="hidden" value="{{.CSRFToken}}" name="csrf_token">
+
+                    <input type="hidden" value="{{index .StringData "year"}}" name="year">
+
+                    <input type="hidden" value="{{index .StringData "month"}}" name="month">
+
+                    <div class="row g-2 mt-5">
+                        <div class="col-sm-12 col-lg-6 col-md-6">
+                            <label for="first-name">First Name: </label> {{with .Form.Error.Get "first-name"}}
+                                <label class="text-danger">{{.}}</label> {{ end }}
+                            <input required autocomplete="off" type="text"
+                                   class="form-control {{with .Form.Error.Get " first-name "}} is-invalid {{ end }}"
+                                   placeholder="Yousuff" id="first-name" name="first-name" value="{{$resv.FirstName}}">
+                        </div>
+
+                        <div class="col-sm-12 col-lg-6 col-md-6">
+                            <label for="last-name">Last Name: </label> {{with .Form.Error.Get "last-name"}}
+                                <label class="text-danger">{{.}}</label> {{ end }}
+                            <input required autocomplete="off" type="text"
+                                   class="form-control {{with .Form.Error.Get " last-name "}} is-invalid {{ end }}"
+                                   placeholder="Akinleye" name="last-name" id="last-name" value="{{$resv.LastName}}">
+                        </div>
+                    </div>
+
+                    <div class="row g-1 mt-3">
+                        <div class="col-12">
+                            <label for="phone-number">Phone Number: </label> {{with .Form.Error.Get "phone-number"}}
+                                <label class="text-danger">{{.}}</label> {{ end }}
+                            <input type="tel"
+                                   class="form-control {{with .Form.Error.Get " phone-number "}} is-invalid {{ end }}"
+                                   id="phone-number" placeholder="(+234)9047583219" required autocomplete="off"
+                                   value="{{ $resv.PhoneNumber }}" name="phone-number">
+                        </div>
+                    </div>
+
+                    <div class="row g-1 mt-3">
+                        <div class="col">
+                            <label for="email">Email: </label> {{with .Form.Error.Get "email"}}
+                                <label class="text-danger">{{.}}</label> {{ end }}
+                            <input required autocomplete="off" type="email"
+                                   class="form-control {{with .Form.Error.Get " email "}} is-invalid {{ end }}"
+                                   id="email"
+                                   placeholder="planets456@gmail.com" value="{{ $resv.Email }}" name="email">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="align-self-auto">
+                        <input type="submit" class="btn btn-md btn-hover-light btn-success m-2"
+                               value="save">
+                        {{if eq $srclink "cal"}}
+                            <a href="#!" onclick="window.history.go(-1)" class="btn btn-warning btn-md m-2">Cancel</a>
+                        {{else}}
+                            <a href="/admin/admin-{{$srclink}}-reservation" class="btn btn-warning btn-md m-2">Cancel</a>
+                        {{end}}
+                        {{if eq $resv.Processed 0}}
+                            <a href="#!" class="btn btn-hover btn-md btn-primary m-2" onclick="processsReservation({{$resv.ID}})">Process</a>
+                        {{end}}
+                    </div>
+
+                    <div class="align-self-center"></div>
+                    <a href="#!" class="mt-3 btn btn-md btn-hover-light btn-danger clearfix"
+                       onclick="deleteReservation({{$resv.ID}})">Delete</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{{end}}
 {{define "js"}}
+    {{$srclink := index .StringData "src"}}
 
+    <script>
+        function ProcessReservation(id) {
+            attention.custom({
+                icon: 'warning',
+                msg: 'Are you sure?',
+                callback: function (result) {
+                    if (result !== false) {
+                        window.location.href = "/admin/admin-process-reservation/{{$srclink}}/"
+                          + id
+                          + "/done?y={{index .StringMap "year"}}&m={{index .StringMap "month"}}";
+                    }
+                }
+            })
+        }
 
+        function deleteReservation(id) {
+            attention.custom({
+                icon: 'warning',
+                msg: 'Are you sure?',
+                callback: function (result) {
+                    if (result !== false) {
+                        window.location.href = "/admin/admin-delete-reservation/{{$srclink}}/"
+                          + id
+                          + "/done?y={{index .StringMap "year"}}&m={{index .StringMap "month"}}";
+                    }
+                }
+            })
+        }
+    </script>
 
 {{end}}

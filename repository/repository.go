@@ -6,7 +6,7 @@ import (
 )
 
 type DatabaseRepository interface {
-	AllUser() bool
+	AllRoom() ([]models.Room, error)
 	InsertReservation(resv models.Reservation) (int, error)
 	InsertRoomRestriction(resv models.RoomRestriction) error
 	SearchRoomAvailabileByRoomID(roomID int, checkInDate, checkOutDate time.Time) (bool, error)
@@ -23,6 +23,10 @@ type DatabaseRepository interface {
 	AllNewReservation() ([]models.Reservation, error)
 	ShowUserReservation(id int) (models.Reservation, error)
 	UpdateUserReservation(resv models.Reservation) error
-	ProcessedUpdateReservation(id int) error
+	ProcessedUpdateReservation(id int, processed int) error
 	DeleteUserReservation(id int) error
+
+	GetRestrictionsForRoomByDate(roomID int, checkInDate, checkOutDate time.Time) ([]models.RoomRestriction, error)
+	DeleteBlockByID(id int) error
+	InsertBlockForRoom(id int, checkInDate time.Time) error
 }

@@ -5,11 +5,11 @@ import "github.com/dev-ayaa/resvbooking/pkg/forms"
 //TemplateData  holds data sent from handlers to templates
 type TemplateData struct {
 	StringData map[string]string
-	intData    map[string]int
-	floatData  map[string]float64
+	IntData    map[string]int
+	FloatData  map[string]float64
 	Data       map[string]interface{}
 	CSRFToken  string
-	popMessage string
+	PopMessage string
 	Warning    string
 	Flash      string
 	Error      string

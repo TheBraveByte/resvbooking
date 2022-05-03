@@ -9,8 +9,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (tpg *TestPostgresDBRepository) AllUser() bool {
-	return true
+func (tpg *TestPostgresDBRepository) AllRoom() ([]models.Room, error) {
+	var rooms []models.Room
+	return rooms, nil
 }
 
 //InsertReservation Insert a Reservation data into the database
@@ -150,10 +151,23 @@ func (tpg TestPostgresDBRepository) UpdateUserReservation(resv models.Reservatio
 	return nil
 }
 
-func (tpg *TestPostgresDBRepository) ProcessedUpdateReservation(id int) error {
+func (tpg *TestPostgresDBRepository) ProcessedUpdateReservation(id int, processed int) error {
 	return nil
 }
 
 func (tpg *TestPostgresDBRepository) DeleteUserReservation(id int) error {
+	return nil
+}
+
+func (tpg *TestPostgresDBRepository) GetRestrictionsForRoomByDate(roomID int, checkInDate, checkOutDate time.Time) ([]models.RoomRestriction, error) {
+	var restrictions []models.RoomRestriction
+	return restrictions, nil
+}
+
+func (tpg *TestPostgresDBRepository) InsertBlockForRoom(id int, checkInDate time.Time) error {
+	return nil
+}
+
+func (tpg *TestPostgresDBRepository) DeleteBlockByID(id int) error {
 	return nil
 }

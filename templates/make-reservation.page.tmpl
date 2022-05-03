@@ -75,7 +75,7 @@ font-size: 1.1rem; max-width: 50%; border-radius: 0.85rem; border-color: goldenr
                 <div class="row g-1 mt-3">
                     <div class="col-12">
                         <label for="phone-number">Phone Number: </label> {{with .Form.Error.Get "phone-number"}}
-                        <label class="text-danger">{{.}}</label> {{ end }} <input type="text" class="form-control
+                        <label class="text-danger">{{.}}</label> {{ end }} <input type="tel" class="form-control
             {{with .Form.Error.Get " phone-number "}} is-invalid {{ end }}" id="phone-number" placeholder="(+234)9047583219" required autocomplete="off" value="{{ $resv.PhoneNumber }}" name="phone-number">
                     </div>
                 </div>

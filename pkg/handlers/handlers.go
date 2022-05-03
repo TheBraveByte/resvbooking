@@ -555,6 +555,8 @@ func (rp *Repository) LogOutPage(wr http.ResponseWriter, rq *http.Request) {
 
 //AdminPage this is the Administration management page
 func (rp *Repository) AdminPage(wr http.ResponseWriter, rq *http.Request) {
+	//user := rp.App.Session.Get(rq.Context(),"user")
+
 	err := render.Template(wr, "admin-dashboard.page.tmpl", &models.TemplateData{}, rq)
 	if err != nil {
 		return
@@ -599,14 +601,14 @@ func (rp *Repository) AdminShowReservation(wr http.ResponseWriter, rq *http.Requ
 	var id int
 
 	userInfo := strings.Split(rq.RequestURI, "/")
-	id, err := strconv.Atoi(userInfo[len(userInfo)-1])
+	id, err := strconv.Atoi(userInfo[len(userInfo)-2])
 	if err != nil {
-		//helpers.ServerSideError(wr, err)
 		log.Println("invalid id conversion")
 		return
 	}
 
-	src = userInfo[len(userInfo)-2]
+	src = userInfo[len(userInfo)-3]
+
 	month := rq.URL.Query().Get("m")
 	year := rq.URL.Query().Get("y")
 
@@ -627,7 +629,7 @@ func (rp *Repository) AdminShowReservation(wr http.ResponseWriter, rq *http.Requ
 	}, rq)
 }
 
-//
+//PostAdminShowReservation this show the register user info which can be updated
 func (rp *Repository) PostAdminShowReservation(wr http.ResponseWriter, rq *http.Request) {
 	var src string
 	StringData := make(map[string]string)
@@ -674,16 +676,25 @@ func (rp *Repository) PostAdminShowReservation(wr http.ResponseWriter, rq *http.
 }
 
 func (rp Repository) AdminProcessReservation(wr http.ResponseWriter, rq *http.Request) {
-	return
-}
+	id, _ := strconv.Atoi(chi.URLParam(rq, "id"))
+	src := chi.URLParam(rq, "src")
 
-//AdminReservationCalendar this shows the calendar schedule of all reservations
-func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.Request) {
-	err := render.Template(wr, "admin-reservation-calendar.page.tmpl", &models.TemplateData{}, rq)
-
+	err := rp.DB.ProcessedUpdateReservation(id, 1)
 	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "unable to processed reservation update")
 		return
 	}
+	year := rq.URL.Query().Get("y")
+	month := rq.URL.Query().Get("m")
+
+	rp.App.Session.Put(rq.Context(), "flash", "Reservation marked as processed")
+
+	if year == "" {
+		http.Redirect(wr, rq, fmt.Sprintf("/admin/admin-%s-reservations", src), http.StatusSeeOther)
+	} else {
+		http.Redirect(wr, rq, fmt.Sprintf("/admin/admin-reservations-calendar?y=%s&m=%s", year, month), http.StatusSeeOther)
+	}
+
 }
 
 func (rp Repository) AdminDeleteReservation(wr http.ResponseWriter, rq *http.Request) {
@@ -703,4 +714,93 @@ func (rp Repository) AdminDeleteReservation(wr http.ResponseWriter, rq *http.Req
 	} else {
 		http.Redirect(wr, rq, fmt.Sprintf("/admin/admin-reservations-calendar?y=%s&m=%s", year, month), http.StatusSeeOther)
 	}
+}
+
+//AdminReservationCalendar this shows the calendar schedule of all reservations
+func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.Request) {
+	data := make(map[string]interface{})
+	stringData := make(map[string]string)
+	intData := make(map[string]int)
+
+	presentTime := time.Now()
+	rqYear := rq.URL.Query().Get("y")
+	if rqYear != "" {
+		year, _ := strconv.Atoi(rq.URL.Query().Get("y"))
+		month, _ := strconv.Atoi(rq.URL.Query().Get("m"))
+		//func Date(year int, month Month, day, hour, min, sec, nsec int, loc *Location)
+		presentTime = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+	}
+	data["presentTime"] = presentTime
+	//this increase or add up to the current day // Decrease the date
+	nextDate := presentTime.AddDate(0, 1, 0)
+	lastDate := presentTime.AddDate(0, -1, 0)
+
+	nextMonthDate := nextDate.Format("01")
+	nextMonthYearDate := nextDate.Format("2006")
+
+	lastMonthDate := lastDate.Format("01")
+	lastMonthYearDate := lastDate.Format("2006")
+
+	stringData["next_month_date"] = nextMonthDate
+	stringData["next_month_year_date"] = nextMonthYearDate
+	stringData["last_month_date"] = lastMonthDate
+	stringData["last_month_year_date"] = lastMonthYearDate
+
+	stringData["current_month"] = presentTime.Format("01")
+	stringData["current_month_year"] = presentTime.Format("2006")
+
+	//Knowing th current date of the month
+	presentYear, presentMonth, _ := presentTime.Date()
+	presentLocation := presentTime.Location()
+	firstDay := time.Date(presentYear, presentMonth, 1, 0, 0, 0, 0, presentLocation)
+	lastDay := firstDay.AddDate(0, 1, -1)
+
+	intData["days_in_month"] = lastDay.Day()
+
+	allRooms, err := rp.DB.AllRoom()
+	if err != nil {
+		rp.App.Session.Put(rq.Context(), "errors", "error cannot get room schedule from calendar")
+		return
+	}
+	data["rooms"] = allRooms
+	for _, room := range allRooms {
+		reservationMap := make(map[string]int)
+		blockMap := make(map[string]int)
+
+		for d := firstDay; d.After(lastDay) == false; d = d.AddDate(0, 0, 1) {
+			reservationMap[d.Format("2006-01-2")] = 0
+			blockMap[d.Format("2006-01-2")] = 0
+		}
+
+		// get all the restrictions for the current room
+		restrictions, err := rp.DB.GetRestrictionsForRoomByDate(room.ID, firstDay, lastDay)
+		if err != nil {
+			helpers.ServerSideError(wr, err)
+			return
+		}
+
+		for _, y := range restrictions {
+			if y.ReservationID > 0 {
+				// it's a reservation with respect to the date
+				for d := y.CheckInDate; d.After(y.CheckOutDate) == false; d = d.AddDate(0, 0, 1) {
+					reservationMap[d.Format("2006-01-2")] = y.ReservationID
+				}
+			} else {
+				// it's a block
+				blockMap[y.CheckInDate.Format("2006-01-2")] = y.ID
+			}
+		}
+		data[fmt.Sprintf("reservation_map_%d", room.ID)] = reservationMap
+		data[fmt.Sprintf("block_map_%d", room.ID)] = blockMap
+
+		rp.App.Session.Put(rq.Context(), fmt.Sprintf("block_map_%d", room.ID), blockMap)
+	}
+
+	render.Template(wr, "admin-reservations-calendar.page.tmpl", &models.TemplateData{StringData: stringData,
+		Data: data, IntData: intData}, rq)
+
+}
+
+func (rp Repository) PostAdminReservationCalendar(wr http.ResponseWriter, rq *http.Request) {
+	return
 }

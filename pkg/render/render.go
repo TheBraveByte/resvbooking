@@ -17,7 +17,10 @@ import (
 var templatesPath = "./templates"
 var functions = template.FuncMap{
 	//format a dates, currents date
-	"DateFormat": RenderDateFormat,
+	"dateFormat": RenderDateFormat,
+	"format":     RenderFormat,
+	"iterate":    RenderIterate,
+	"add":        RenderAddUp,
 }
 
 func RenderDateFormat(t time.Time) string {
