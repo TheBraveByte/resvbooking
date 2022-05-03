@@ -31,9 +31,9 @@ func (f *Form) Require(formField ...string) {
 }
 
 //HasForm to check if the form is not empty
-func (f *Form) HasForm(formField string, rq *http.Request) bool {
+func (f *Form) HasForm(formField string) bool {
 	/*This to check if the form input has value or not*/
-	checkForm := rq.Form.Get(formField)
+	checkForm := f.Get(formField)
 	if checkForm == "" {
 		f.Error.Set(formField, "this field cannot be blank")
 		return false

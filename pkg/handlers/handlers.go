@@ -802,5 +802,50 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 }
 
 func (rp Repository) PostAdminReservationCalendar(wr http.ResponseWriter, rq *http.Request) {
-	return
+
+	err := rq.ParseForm()
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+	year, _ := strconv.Atoi(rq.Form.Get("y"))
+	month, _ := strconv.Atoi(rq.Form.Get("m"))
+
+	allRooms, err := rp.DB.AllRoom()
+	if err != nil {
+		helpers.ServerSideError(wr, err)
+		return
+	}
+	form := forms.NewForm(rq.PostForm)
+	//this is to implement the blocked reservations
+	for _, r := range allRooms {
+		currentMap := rp.App.Session.Get(rq.Context(), fmt.Sprintf("block_map_%d", r.ID)).(map[string]int)
+		for key, value := range currentMap {
+			if val, ok := currentMap[key]; ok {
+				if val > 0 {
+					if !form.HasForm(fmt.Sprintf("remove_block_%d_%s", r.ID, key)) {
+						err := rp.DB.DeleteBlockByID(value)
+						if err != nil {
+							log.Println(err)
+						}
+					}
+				}
+			}
+		}
+	} // now handle new blocks
+	for name, _ := range rq.PostForm {
+		if strings.HasPrefix(name, "add_block") {
+			exploded := strings.Split(name, "_")
+			roomID, _ := strconv.Atoi(exploded[2])
+			t, _ := time.Parse("2006-01-2", exploded[3])
+			// insert a new block
+			err := rp.DB.InsertBlockForRoom(roomID, t)
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
+
+	rp.App.Session.Put(rq.Context(), "flash", "Changes saved")
+	http.Redirect(wr, rq, fmt.Sprintf("/admin/reservations-calendar?y=%d&m=%d", year, month), http.StatusSeeOther)
 }
