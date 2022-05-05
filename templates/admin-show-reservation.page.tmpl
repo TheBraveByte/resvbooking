@@ -11,10 +11,10 @@
 {{define "content"}}
     {{$resv := index .Data "reservation"}}
     {{$srclink := index .StringData "src"}}
-    <div class="container container-fluid">
+    <div class="container container-fluid col-md-12">
         <hr>
         <p>
-            <em><b>Check In  : </b></em> {{dateFormat $resv.CheckInDate}}
+            <em><b>Check In : </b></em> {{dateFormat $resv.CheckInDate}}
             <br>
             <em><b>Check Out : </b></em> {{dateFormat $resv.CheckOutDate}}
             <br>
@@ -79,10 +79,12 @@
                         {{if eq $srclink "cal"}}
                             <a href="#!" onclick="window.history.go(-1)" class="btn btn-warning btn-md m-2">Cancel</a>
                         {{else}}
-                            <a href="/admin/admin-{{$srclink}}-reservation" class="btn btn-warning btn-md m-2">Cancel</a>
+                            <a href="/admin/admin-{{$srclink}}-reservation"
+                               class="btn btn-warning btn-md m-2">Cancel</a>
                         {{end}}
                         {{if eq $resv.Processed 0}}
-                            <a href="#!" class="btn btn-hover btn-md btn-primary m-2" onclick="processsReservation({{$resv.ID}})">Process</a>
+                            <a href="#!" class="btn btn-hover btn-md btn-primary m-2"
+                               onclick="processsReservation({{$resv.ID}})">Process</a>
                         {{end}}
                     </div>
 

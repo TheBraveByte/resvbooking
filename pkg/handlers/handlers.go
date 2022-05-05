@@ -719,39 +719,41 @@ func (rp Repository) AdminDeleteReservation(wr http.ResponseWriter, rq *http.Req
 //AdminReservationCalendar this shows the calendar schedule of all reservations
 func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.Request) {
 	data := make(map[string]interface{})
-	stringData := make(map[string]string)
+	StringData := make(map[string]string)
 	intData := make(map[string]int)
 
-	presentTime := time.Now()
-	rqYear := rq.URL.Query().Get("y")
-	if rqYear != "" {
+	present := time.Now()
+	if rq.URL.Query().Get("y") != "" {
 		year, _ := strconv.Atoi(rq.URL.Query().Get("y"))
 		month, _ := strconv.Atoi(rq.URL.Query().Get("m"))
 		//func Date(year int, month Month, day, hour, min, sec, nsec int, loc *Location)
-		presentTime = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+		present = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
 	}
-	data["presentTime"] = presentTime
+	data["present"] = present
 	//this increase or add up to the current day // Decrease the date
-	nextDate := presentTime.AddDate(0, 1, 0)
-	lastDate := presentTime.AddDate(0, -1, 0)
+	nextDate := present.AddDate(0, 1, 0)
+	lastDate := present.AddDate(0, -1, 0)
 
+	//Dateformatting
 	nextMonthDate := nextDate.Format("01")
 	nextMonthYearDate := nextDate.Format("2006")
 
 	lastMonthDate := lastDate.Format("01")
 	lastMonthYearDate := lastDate.Format("2006")
 
-	stringData["next_month_date"] = nextMonthDate
-	stringData["next_month_year_date"] = nextMonthYearDate
-	stringData["last_month_date"] = lastMonthDate
-	stringData["last_month_year_date"] = lastMonthYearDate
+	//Storing Formatted date in the database
 
-	stringData["current_month"] = presentTime.Format("01")
-	stringData["current_month_year"] = presentTime.Format("2006")
+	StringData["next_month_date"] = nextMonthDate
+	StringData["next_month_year_date"] = nextMonthYearDate
+	StringData["last_month_date"] = lastMonthDate
+	StringData["last_month_year_date"] = lastMonthYearDate
+
+	StringData["current_month"] = present.Format("01")
+	StringData["current_month_year"] = present.Format("2006")
 
 	//Knowing th current date of the month
-	presentYear, presentMonth, _ := presentTime.Date()
-	presentLocation := presentTime.Location()
+	presentYear, presentMonth, _ := present.Date()
+	presentLocation := present.Location()
 	firstDay := time.Date(presentYear, presentMonth, 1, 0, 0, 0, 0, presentLocation)
 	lastDay := firstDay.AddDate(0, 1, -1)
 
@@ -796,8 +798,10 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 		rp.App.Session.Put(rq.Context(), fmt.Sprintf("block_map_%d", room.ID), blockMap)
 	}
 
-	render.Template(wr, "admin-reservations-calendar.page.tmpl", &models.TemplateData{StringData: stringData,
-		Data: data, IntData: intData}, rq)
+	render.Template(wr, "admin-reservation-calendar.page.tmpl", &models.TemplateData{
+		StringData: StringData,
+		Data:       data,
+		IntData:    intData}, rq)
 
 }
 
@@ -847,5 +851,5 @@ func (rp Repository) PostAdminReservationCalendar(wr http.ResponseWriter, rq *ht
 	}
 
 	rp.App.Session.Put(rq.Context(), "flash", "Changes saved")
-	http.Redirect(wr, rq, fmt.Sprintf("/admin/reservations-calendar?y=%d&m=%d", year, month), http.StatusSeeOther)
+	http.Redirect(wr, rq, fmt.Sprintf("/admin/admin-reservation-calendar?y=%d&m=%d", year, month), http.StatusSeeOther)
 }

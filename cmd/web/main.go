@@ -61,7 +61,7 @@ func run() (*driver.DB, error) {
 	gob.Register(models.Restriction{})
 	gob.Register(models.User{})
 	gob.Register(models.RoomRestriction{})
-	//gob.Register([]models.Room{})
+	gob.Register(map[string]int{})
 
 	mailChannel := make(chan models.MailData)
 	app.MailChannel = mailChannel
