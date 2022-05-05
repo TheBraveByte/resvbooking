@@ -13,13 +13,12 @@
         {{$present := index .Data "present"}}
         {{$allRooms := index .Data "rooms"}}
         {{$days := index .IntData "days_in_month"}}
-        {{$currentMonth := index .IntData  "current_month"}}
-        {{$currentMonthYear := index .IntData  "current_month_year"}}
+        {{$currentMonth := index .StringData  "current_month"}}
+        {{$currentMonthYear := index .StringData  "current_month_year"}}
     </p>
     <div class="col-md-12">
-        <div>
-            <h3 class="text-center">Akinleye
-                Yusuf {{dateFormat $present "January"}} {{ dateFormat $present "2006"}}</h3>
+        <div class="text-center">
+            <h3>{{format $present "January"}} {{ format $present "2006"}}</h3>
         </div>
         <div class="float-start">
             <a class="btn btn-sm btn-dark"
@@ -45,7 +44,7 @@
                         <tr class="table-hover table-light">
                             {{range $index := iterate $days}}
                                 <td class="text-center">
-                                    {{add $index}}
+                                    {{add $index 1}}
                                 </td>
                             {{end}}
                         </tr>
@@ -53,10 +52,10 @@
                             {{range $index := iterate $days}}
                                 <td class="text-center">
                                     {{if gt (index $resv (printf "%s-%s-%d" $currentMonthYear $currentMonth (add $index 1))) 0}}
-                                        <a href="/admin/admin-reservation/calendar/{{index $resv (printf "%s-%s-%d" $currentMonthYear $currentMonth (add $index 1 ))}}/show?y={{$currentMonthYear}}&m={{$currentMonth}}"><span
-                                                    class="text-success">R</span></a>
+                                        <a href="/admin/admin-reservation/calendar/{{index $resv (printf "%s-%s-%d" $currentMonthYear $currentMonth (add $index 1 ))}}/show?y={{$currentMonthYear}}&m={{$currentMonth}}">
+                                            <span class="text-danger">R</span></a>
                                     {{else}}
-                                        <input {{if gt (index $blocks (printf "%s-%s-%d" $currentMonthYear $currentMonth (add index 1)) 0 )}} checked name="remove_block_{{$roomID}}_{{printf "%s-%s-%d" $currentMonthYear $currentMonth (add index 1)}} value={{index $blocks ( printf "%s-%s-%d" $currentMonthYear $currentMonth (add index 1))}}"
+                                        <input {{if gt (index $blocks (printf "%s-%s-%d" $currentMonthYear $currentMonth (add $index 1))) 0 }} checked name="remove_block_{{$roomID}}_{{printf "%s-%s-%d" $currentMonthYear $currentMonth (add $index 1)}} value={{index $blocks ( printf "%s-%s-%d" $currentMonthYear $currentMonth (add $index 1))}}"
                                         {{else}} name="add_block_{{$roomID}}_{{printf "%s-%s-%d" $currentMonthYear $currentMonth}}" value="1" {{end}}
                                                 type="checkbox">
                                     {{end}}
@@ -66,10 +65,9 @@
                     </table>
                 </div>
             {{end}}
-            <br>
+{{/*            <br/>*/}}
             <hr>
             <input type="submit" class="btn btn-primary" value="Save Changes">
-
         </form>
     </div>
 {{end}}

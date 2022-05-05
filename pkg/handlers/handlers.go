@@ -160,10 +160,8 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 	err := rq.ParseForm()
 	if err != nil {
 		myResp := ResponseJSON{
-			RoomID: "",
-			Ok:     false,
-			//CheckInDate:  "",
-			//CheckOutDate: "",
+			RoomID:  "",
+			Ok:      false,
 			Message: "server error",
 		}
 		output, _ := json.MarshalIndent(myResp, "", "   ")
@@ -207,6 +205,8 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 		wr.Write(output)
 		return
 	}
+
+	//For the database
 	myResp := ResponseJSON{
 		RoomID:       strconv.Itoa(roomID),
 		Ok:           isRoomAvailable,
@@ -218,19 +218,6 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 	//Creating a Json file from struct type
 	output, err := json.MarshalIndent(myResp, "", "     ")
 
-	//	myResp := ResponseJSON{
-	//		RoomID:       "1",
-	//		Ok:           false,
-	//		CheckInDate:  "2022-08-09",
-	//		CheckOutDate: "2022-08-09",
-	//		Message:      "cannot parse form to Json",
-	//	}
-	//	output, _ := json.MarshalIndent(myResp, "", "   ")
-	//	//this type the browser the type of content it is getting
-	//	wr.Header().Set("Content-type", "application/json")
-	//	wr.Write(output)
-	//	return
-	//}
 	//this type the browser the type of content it is getting
 	wr.Header().Set("Content-type", "application/json")
 	wr.Write(output)
@@ -719,8 +706,6 @@ func (rp Repository) AdminDeleteReservation(wr http.ResponseWriter, rq *http.Req
 //AdminReservationCalendar this shows the calendar schedule of all reservations
 func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.Request) {
 	data := make(map[string]interface{})
-	StringData := make(map[string]string)
-	intData := make(map[string]int)
 
 	present := time.Now()
 	if rq.URL.Query().Get("y") != "" {
@@ -742,7 +727,7 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 	lastMonthYearDate := lastDate.Format("2006")
 
 	//Storing Formatted date in the database
-
+	StringData := make(map[string]string)
 	StringData["next_month_date"] = nextMonthDate
 	StringData["next_month_year_date"] = nextMonthYearDate
 	StringData["last_month_date"] = lastMonthDate
@@ -757,7 +742,8 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 	firstDay := time.Date(presentYear, presentMonth, 1, 0, 0, 0, 0, presentLocation)
 	lastDay := firstDay.AddDate(0, 1, -1)
 
-	intData["days_in_month"] = lastDay.Day()
+	IntData := make(map[string]int)
+	IntData["days_in_month"] = lastDay.Day()
 
 	allRooms, err := rp.DB.AllRoom()
 	if err != nil {
@@ -794,14 +780,19 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 		}
 		data[fmt.Sprintf("reservation_map_%d", room.ID)] = reservationMap
 		data[fmt.Sprintf("block_map_%d", room.ID)] = blockMap
+		fmt.Println(
+			StringData["next_month_date"],
+			StringData["next_month_year_date"],
+			StringData["last_month_date"],
+			StringData["last_month_year_date"])
 
 		rp.App.Session.Put(rq.Context(), fmt.Sprintf("block_map_%d", room.ID), blockMap)
 	}
 
 	render.Template(wr, "admin-reservation-calendar.page.tmpl", &models.TemplateData{
 		StringData: StringData,
-		Data:       data,
-		IntData:    intData}, rq)
+		IntData:    IntData,
+		Data:       data}, rq)
 
 }
 
