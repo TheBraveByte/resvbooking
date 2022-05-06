@@ -498,7 +498,7 @@ func (rp *Repository) LoginPage(wr http.ResponseWriter, rq *http.Request) {
 
 //PostLoginPage post user detail in the database
 func (rp *Repository) PostLoginPage(wr http.ResponseWriter, rq *http.Request) {
-	fmt.Println("Logging in user details")
+	//fmt.Println("Logging in user details")
 	var email, password string
 	//To prevent session fixation during authentication of user login details
 	_ = rp.App.Session.RenewToken(rq.Context())

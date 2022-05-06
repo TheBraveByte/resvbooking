@@ -31,19 +31,27 @@ var hTests = []struct {
 	pageStatusCode int
 }{
 	{pageName: "HomePage", pagesUrl: "/", pageMethod: "GET", pageStatusCode: http.StatusOK},
-
-	{pageName: "JuniorSuitePage", pagesUrl: "/junior-suite", pageMethod: "GET", pageStatusCode: http.StatusOK},
-
-	{pageName: "DeluxeSuitePage", pagesUrl: "/deluxe-suite", pageMethod: "GET", pageStatusCode: http.StatusOK},
-
-	// {pageName: "MakeReservationPage", pagesUrl: "/make-reservation", pageMethod: "GET", pageStatusCode: http.StatusOK},
-
-	// {pageName: "MakeReservationSummary", pagesUrl: "/make-reservation-data", pageMethod: "GET", pageStatusCode: http.StatusOK},
-
-	// {pageName: "CheckAvailabilityPage", pagesUrl: "/check-availability", pageMethod: "GET", pageStatusCode: http.StatusOK},
 	{pageName: "AboutPage", pagesUrl: "/about", pageMethod: "GET", pageStatusCode: http.StatusOK},
-
 	{pageName: "ContactPage", pagesUrl: "/contact", pageMethod: "GET", pageStatusCode: http.StatusOK},
+	{pageName: "JuniorSuitePage", pagesUrl: "/junior-suite", pageMethod: "GET", pageStatusCode: http.StatusOK},
+	{pageName: "DeluxeSuitePage", pagesUrl: "/deluxe-suite", pageMethod: "GET", pageStatusCode: http.StatusOK},
+	{pageName: "MakeReservationPage", pagesUrl: "/make-reservation", pageMethod: "GET", pageStatusCode: http.StatusOK},
+	{pageName: "MakeReservationSummary", pagesUrl: "/make-reservation-data", pageMethod: "GET", pageStatusCode: http.StatusOK},
+	{pageName: "CheckAvailabilityPage", pagesUrl: "/check-availability", pageMethod: "GET", pageStatusCode: http.StatusOK},
+	{"LoginPage", "/login", "GET", http.StatusOK},
+	{"LogOutPage", "/logout", "GET", http.StatusOK},
+
+	{"Admin", "/admin/dashboard", "GET", http.StatusOK},
+	{"NewResvPage", "/admin/admin-new-reservation", "GET", http.StatusOK},
+	{"AllResvPage", "/admin/admin-all-reservation", "GET", http.StatusOK},
+	{"ResvCalendar", "/admin/admin-reservation-calendar", "GET", http.StatusOK},
+	{"ShowResv", "/admin/admin-show-reservation/new/1/show", "GET", http.StatusOK},
+	//{"DeleteResv", "/admin/admin-delete-reservation/new/1/done", "GET", http.StatusSeeOther},
+	//{"ProcessResv", "/admin/admin-process-reservation/new/1/done", "GET", http.StatusSeeOther},
+
+	//{"PostShowResv", "/admin/admin-show-reservation/new/1", "POST", http.StatusSeeOther},
+	//{"PostLoginPage", "/login", "POST", http.StatusSeeOther},
+	//{"PostResvCalendar", "/admin/admin-reservation-calendar", "POST", http.StatusSeeOther},
 }
 
 //Notice
@@ -727,6 +735,105 @@ func TestRepository_BookRoom(t *testing.T) {
 
 	if responseRecorder.Code != http.StatusOK {
 		t.Errorf("BookRoom handler returned wrong response code: got %d, wanted %d", responseRecorder.Code, http.StatusInternalServerError)
+	}
+}
+
+//For login test
+var loginTests = []struct {
+	testName           string
+	email              string
+	correctStatusCode  int
+	correctHTML        string
+	correctUrlLocation string
+}{
+	{
+		"valid-login-details",
+		"dev-ayaa007@admin.com",
+		http.StatusSeeOther,
+		"",
+		"/",
+	},
+	{
+		"invalid-login-details",
+		"dev-ayaa007@jingle.com",
+		http.StatusSeeOther,
+		"",
+		"/login",
+	},
+	{
+		"invalid-data",
+		"dev-ayaa007",
+		http.StatusOK,
+		`action="/login"`,
+		"",
+	},
+}
+
+func TestRepository_PostLoginPage(t *testing.T) {
+	for _, d := range loginTests {
+		postRqData := url.Values{}
+		postRqData.Add("email", d.email)
+		postRqData.Add("password", "2701Akin1234")
+
+		rq, _ := http.NewRequest("POST", "/login", strings.NewReader(postRqData.Encode()))
+		ctx := getContext(rq)
+		rq = rq.WithContext(ctx)
+		rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		responseRecorder := httptest.NewRecorder()
+		handler := http.HandlerFunc(Repo.PostLoginPage)
+		handler.ServeHTTP(responseRecorder, rq)
+
+		//checking for the correct statusCode
+		if responseRecorder.Code != d.correctStatusCode {
+			t.Errorf("Error Testing LoginPage got wrong ressponse code expected %v got %v", d.correctStatusCode, responseRecorder.Code)
+		}
+
+		//checking for the correct html
+		if d.correctHTML != "" {
+			html := responseRecorder.Body.String()
+			if !strings.Contains(html, d.correctHTML) {
+				t.Errorf("Error invalid templates for login-page expected %v", d.correctHTML)
+			}
+
+		}
+		//checking for the correct location to be redirect
+		if d.correctUrlLocation != "" {
+			urlLocation, _ := responseRecorder.Result().Location()
+			if urlLocation.String() != d.correctUrlLocation {
+				t.Errorf("Error invalid location for login-page expected %v", d.correctUrlLocation)
+			}
+		}
+
+	}
+}
+
+var ShowResvTest = []struct {
+	testName           string
+	month              string
+	year               string
+	correcturlSrc      string
+	correctUrlLocation string
+	correctStatusCode  int
+	user_id            int
+}{
+	{
+		"valid-reservation",
+		"05",
+		"2022",
+		"new",
+		"/admin/admin-reservation-calendar",
+		http.StatusSeeOther,
+		1,
+	},
+}
+
+func TestRepository_PostAdminShowReservation(t *testing.T) {
+	for _, s := range ShowResvTest {
+		postRqData := url.Values{}
+		postRqData.Add("first_name", "Yusuf")
+		postRqData.Add("last_name", "Akinleye")
+		postRqData.Add("phone_number", "09088765312")
+		postRqData.Add("email", "yusuf@gmail.com")
 	}
 }
 

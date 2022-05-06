@@ -24,15 +24,22 @@ var app config.AppConfig
 
 var functions = template.FuncMap{
 	//format a dates, currents date
+
+	"dateFormat": render.RenderDateFormat,
+	"format":     render.RenderFormat,
+	"iterate":    render.RenderIterate,
+	"add":        render.RenderAddUp,
 }
 
 var templatesPath = "./../../templates"
 
 func getRoutes() http.Handler {
 	gob.Register(models.Reservation{})
-	// gob.Register(models.Restriction{})
-	// gob.Register(models.Room{})
-	// gob.Register(models.RoomRestriction{})
+	gob.Register(models.Restriction{})
+	gob.Register(models.Room{})
+	gob.Register(models.RoomRestriction{})
+	gob.Register(models.User{})
+	gob.Register(models.MailData{})
 
 	app.InProduction = false
 
@@ -96,6 +103,24 @@ func getRoutes() http.Handler {
 
 	mux.Get("/json-availability", Repo.JsonAvailabilityPage)
 	mux.Post("/json-availability", Repo.JsonAvailabilityPage)
+
+	mux.Post("/login", Repo.PostLoginPage)
+	mux.Get("/logout", Repo.LogOutPage)
+
+	//setting up the admin page
+
+	//mux.Use(Authenticate)
+	mux.Get("/admin/dashboard", Repo.AdminPage)
+	mux.Get("/admin/admin-new-reservation", Repo.AdminNewReservation)
+	mux.Get("/admin/admin-all-reservation", Repo.AdminAllReservation)
+	mux.Get("/admin/admin-reservation-calendar", Repo.AdminReservationCalendar)
+	mux.Post("/admin/admin-reservation-calendar", Repo.PostAdminReservationCalendar)
+
+	mux.Get("/admin/admin-show-reservation/{src}/{id}/show", Repo.AdminShowReservation)
+	mux.Post("/admin/admin-show-reservation/{src}/{id}", Repo.PostAdminShowReservation)
+
+	mux.Get("/admin/admin-delete-reservation/{src}/{id}/done", Repo.AdminDeleteReservation)
+	mux.Get("/admin/admin-process-reservation/{src}/{id}/done", Repo.AdminProcessReservation)
 
 	//This allows files static files like images and icon to display in the html
 	fileServer := http.FileServer(http.Dir("./static/"))

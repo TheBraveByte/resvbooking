@@ -126,9 +126,12 @@ func (tpg *TestPostgresDBRepository) UpdateUserInfo(user models.User) error {
 
 //AuthenticateUser testing for authenticated user with the database function
 func (tpg *TestPostgresDBRepository) AuthenticateUser(testPassword, email string) (int, string, error) {
-	var userID int
-	var hashedPassword string
-	return userID, hashedPassword, nil
+	//var userID int
+	//var hashedPassword string
+	if email == "dev-ayaa007@admin.com" {
+		return 1, "", nil
+	}
+	return 0, "", errors.New("invalid login details")
 }
 
 //AllReservation testing for the database function for all present reservation
