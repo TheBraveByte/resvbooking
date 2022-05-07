@@ -1,101 +1,89 @@
 {{define "admin"}}
-    <!DOCTYPE html>
+<!DOCTYPE html>
 
-    <html lang="en">
+<html lang="en">
 
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Rest Tavern Administration</title>
-        <!-- plugins:css -->
-        <link rel="stylesheet" href="/static/admin-statics/vendors/ti-icons/css/themify-icons.css">
-        <link rel="stylesheet" href="/statics/admin-statics/vendors/base/vendor.bundle.base.css">
-        <!-- endinject -->
-        <!-- plugin css for this page -->
-        <!-- End plugin css for this page -->
-        <!-- inject:css -->
-        <link rel="stylesheet" href="/static/admin-statics/css/style.css">
-        <!-- endinject -->
-        <link rel="shortcut icon" href="/static/admin-statics/images/favicon.png"/>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Rest Tavern Administration</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/static/admin-statics/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/statics/admin-statics/vendors/base/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="/static/admin-statics/css/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="/static/admin-statics/images/favicon.png" /> {{/* bb*/}}
+    <link rel="stylesheet" href="bootstrap.min.css" />
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet" />
 
-        {{/*        bb*/}}
-        <link rel="stylesheet" href="bootstrap.min.css"/>
-        <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-              integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css" rel="stylesheet" />
+    <!--notie stylesheet-->
+    <link href="https://unpkg.com/notie/dist/notie.min.css" rel="stylesheet" type="text/css" />
+    <!--sweetAlert stylesheet -->
+    <!--    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>-->
+    <!--    <link rel="stylesheet" href="sweetalert2.min.css">-->
+    <link href="bootstrap.min.css" rel="stylesheet" />
 
-        <link href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css"
-              rel="stylesheet"/>
-        <!--notie stylesheet-->
-        <link href="https://unpkg.com/notie/dist/notie.min.css" rel="stylesheet" type="text/css"/>
-        <!--sweetAlert stylesheet -->
-        <!--    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>-->
-        <!--    <link rel="stylesheet" href="sweetalert2.min.css">-->
-        <link href="bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <!--block for css--->
+    {{block "css" .}} {{ end}}
+    <style>
+        .navbar-dark .navbar-brand {
+            color: goldenrod;
+            font-family: Consolas;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .navbar-dark .navbar-toggler {
+            border-color: goldenrod;
+        }
+        
+        .navbar-dark .navbar-toggler-icon {
+            border-color: goldenrod;
+        }
+        
+        .nav-link {
+            color: goldenrod;
+        }
+        
+        .dropdown-menu {
+            background-color: goldenrod;
+            color: white;
+        }
+        
+        .navItem {
+            margin-inline-end: 0;
+        }
+        
+        #dashboard {
+            max-height: 700px;
+            margin-top: 3rem;
+            margin-bottom: 30rem;
+        }
+        /*.form-control {*/
+        /*    background-color:darkgray;*/
+        /*    font-size: 1.1rem;*/
+        /*    max-width: 90%;*/
+        /*    border-radius: 0.85rem;*/
+        /*    border-color: goldenrod;*/
+        /*}*/
+    </style>
+</head>
 
-        <link rel="stylesheet" href="/static/css/styles.css"/>
-        <!--block for css--->
-        {{block "css" .}}
+<!--block for html tags--->
 
-        {{ end}}
-        <style>
-            .navbar-dark .navbar-brand {
-                color: goldenrod;
-                font-family: Consolas;
-                font-size: 2rem;
-                font-weight: bold;
-            }
-
-            .navbar-dark .navbar-toggler {
-                border-color: goldenrod;
-            }
-
-            .navbar-dark .navbar-toggler-icon {
-                border-color: goldenrod;
-            }
-
-            .nav-link {
-                color: goldenrod;
-            }
-
-            .dropdown-menu {
-                background-color: goldenrod;
-                color: white;
-            }
-
-            .navItem {
-                margin-inline-end: 0;
-            }
-
-            #dashboard {
-                max-height: 700px;
-                margin-top: 3rem;
-                margin-bottom: 30rem;
-
-
-            }
-
-
-            /*.form-control {*/
-            /*    background-color:darkgray;*/
-            /*    font-size: 1.1rem;*/
-            /*    max-width: 90%;*/
-            /*    border-radius: 0.85rem;*/
-            /*    border-color: goldenrod;*/
-            /*}*/
-        </style>
-    </head>
-
-    <!--block for html tags--->
-
-    <body class="">
+<body class="">
     <div class="">
         <nav aria-label="Eighth navbar example" class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="/admin/dashboard">Rest</a>
-                <button aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation"
-                        class="navbar-toggler" data-bs-target="#navbarsExample07" data-bs-toggle="collapse"
-                        type="button">
+                <button aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbarsExample07" data-bs-toggle="collapse" type="button">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse navItem" id="navbarsExample07">
@@ -111,8 +99,7 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
-                               id="dropdown07">Admin menu</a>
+                            <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdown07">Admin menu</a>
 
                             <ul aria-labelledby="dropdown07" class="dropdown-menu">
                                 <li class="nav-item">
@@ -142,19 +129,19 @@
                 <div class="col">
                     <div class="row">
                         <div>
-                            <h4 class="font-monospace mb-0 text-capitalize">{{block "page-title" .}}
-                                {{end}}
+                            <h4 class="font-monospace mb-0 text-capitalize">{{block "page-title" .}} {{end}}
                             </h4>
                         </div>
                     </div>
                     <div class="row">
                         <h3 class="font-monospace mt-3">Welcome to the Rest Tavern Administration</h3>
                     </div>
-                    <div class="mt-4 container container-fluid">
-                        <div class="row">
-                            {{block "content" .}}
-
-                            {{end}}
+                    <!-- <div>
+                        <img class="" src=" /static/admin-statics/images/admin-login-sign-table-made-wood-68499314.jpg " alt=" " srcset=" ">
+                    </div> -->
+                    <div class="mt-4 container container-fluid ">
+                        <div class="row ">
+                            {{block "content " .}} {{end}}
                         </div>
                     </div>
 
@@ -162,91 +149,87 @@
             </div>
         </section>
         <!-- content-wrapper ends -->
-        <footer class="footer bg-dark">
-            <div class="row">
-                <div class="col-4">
-                    <h5 class="ft">Rest Tavern Sections</h5>
-                    <ul class="nav flex-column navigate">
-                        <li class="nav-item mb-2">
-                            <a class="nav-link p-0 text-muted" href="#">Home</a>
+        <footer class="footer bg-dark ">
+            <div class="row ">
+                <div class="col-4 ">
+                    <h5 class="ft ">Rest Tavern Sections</h5>
+                    <ul class="nav flex-column navigate ">
+                        <li class="nav-item mb-2 ">
+                            <a class="nav-link p-0 text-muted " href="# ">Home</a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a class="nav-link p-0 text-muted" href="#">Book now</a>
+                        <li class="nav-item mb-2 ">
+                            <a class="nav-link p-0 text-muted " href="# ">Book now</a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a class="nav-link p-0 text-muted" href="#">Rooms</a>
+                        <li class="nav-item mb-2 ">
+                            <a class="nav-link p-0 text-muted " href="# ">Rooms</a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a class="nav-link p-0 text-muted" href="#">Contact</a>
+                        <li class="nav-item mb-2 ">
+                            <a class="nav-link p-0 text-muted " href="# ">Contact</a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a class="nav-link p-0 text-muted" href="#">About</a>
+                        <li class="nav-item mb-2 ">
+                            <a class="nav-link p-0 text-muted " href="# ">About</a>
                         </li>
                     </ul>
                 </div>
 
-                <div class="col-3">
-                    <h5 class="ft">Contact us on</h5>
-                    <ul class="nav flex-column social">
-                        <li class="nav-item mb-2">
-                            <a class="nav-link p-0 text-muted" href="www.dropbox.com"><img alt="" class="ico"
-                                                                                           src="/static/icons/dropbox-32x32-675656.png"/></a>
+                <div class="col-3 ">
+                    <h5 class="ft ">Contact us on</h5>
+                    <ul class="nav flex-column social ">
+                        <li class="nav-item mb-2 ">
+                            <a class="nav-link p-0 text-muted " href="www.dropbox.com "><img alt=" " class="ico " src="/static/icons/dropbox-32x32-675656.png " /></a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a class="nav-link p-0 text-muted" href="www.facebook.com"><img alt="" class="ico"
-                                                                                            src="/static/icons/facebook-32x32-675666.png"/></a>
+                        <li class="nav-item mb-2 ">
+                            <a class="nav-link p-0 text-muted " href="www.facebook.com "><img alt=" " class="ico " src="/static/icons/facebook-32x32-675666.png " /></a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a class="nav-link p-0 text-muted" href="www.github.com"><img alt="" class="ico"
-                                                                                          src="/static/icons/github-32x32-675676.png"/></a>
+                        <li class="nav-item mb-2 ">
+                            <a class="nav-link p-0 text-muted " href="www.github.com "><img alt=" " class="ico " src="/static/icons/github-32x32-675676.png " /></a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a class="nav-link p-0 text-muted" href="www.linkedin.com"><img alt="" class="ico"
-                                                                                            src="/static/icons/linkedin-32x32-675695.png"/></a>
+                        <li class="nav-item mb-2 ">
+                            <a class="nav-link p-0 text-muted " href="www.linkedin.com "><img alt=" " class="ico " src="/static/icons/linkedin-32x32-675695.png " /></a>
                         </li>
-                        <!-- <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted"></a></li> -->
+                        <!-- <li class="nav-item mb-2 "><a href="# " class="nav-link p-0 text-muted "></a></li> -->
                     </ul>
                 </div>
-                <div class="col-4 offset-1 newsletter">
+                <div class="col-4 offset-1 newsletter ">
                     <form>
-                        <h5 class="ft">Subscribe to our newsletter</h5>
+                        <h5 class="ft ">Subscribe to our newsletter</h5>
                         <p>Monthly digest of whats new and exciting from us.</p>
-                        <div class="d-flex w-75 gap-2">
-                            <label class="visually-hidden" for="newsletter1">Email address</label
+                        <div class="d-flex w-75 gap-2 ">
+                            <label class="visually-hidden " for="newsletter1 ">Email address</label
                             >
                             <input
-                                    class="form-control"
-                                    id="newsletter1"
-                                    placeholder="Email address"
-                                    type="text"
+                                    class="form-control "
+                                    id="newsletter1 "
+                                    placeholder="Email address "
+                                    type="text "
                             />
-                            <button class="sub" type="button">Subscribe</button>
+                            <button class="sub " type="button ">Subscribe</button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between py-1 my-1 border-top">
-                <p class="ft">@Rest Tavern : 2021 Tech Inc. All rights reserved.</p>
-                <ul class="list-unstyled d-flex">
-                    <li class="ms-3">
-                        <a class="link-dark" href="#">
-                            <svg class="bi" height="24" width="24">
-                                <use xlink:href="#twitter"/>
+            <div class="d-flex justify-content-between py-1 my-1 border-top ">
+                <p class="ft ">@Rest Tavern : 2021 Tech Inc. All rights reserved.</p>
+                <ul class="list-unstyled d-flex ">
+                    <li class="ms-3 ">
+                        <a class="link-dark " href="# ">
+                            <svg class="bi " height="24 " width="24 ">
+                                <use xlink:href="#twitter "/>
                             </svg>
                         </a>
                     </li>
-                    <li class="ms-3">
-                        <a class="link-dark" href="#">
-                            <svg class="bi" height="24" width="24">
-                                <use xlink:href="#instagram"/>
+                    <li class="ms-3 ">
+                        <a class="link-dark " href="# ">
+                            <svg class="bi " height="24 " width="24 ">
+                                <use xlink:href="#instagram "/>
                             </svg>
                         </a>
                     </li>
-                    <li class="ms-3">
-                        <a class="link-dark" href="#">
-                            <svg class="bi" height="24" width="24">
-                                <use xlink:href="#facebook"/>
+                    <li class="ms-3 ">
+                        <a class="link-dark " href="# ">
+                            <svg class="bi " height="24 " width="24 ">
+                                <use xlink:href="#facebook "/>
                             </svg>
                         </a>
                     </li>
@@ -258,18 +241,18 @@
 
     <!-- main-panel-->
 
-    <script src="/static/admin-statics/vendors/base/vendor.bundle.base.js"></script>
-    <script src="/static/admin-statics/js/off-canvas.js"></script>
-    <script src="/static/admin-statics/js/hoverable-collapse.js"></script>
-    <script src="/static/admin-statics/js/template.js"></script>
-    <script src="/static/admin-statics/js/todolist.js"></script>
-    <script src="/static/admin-statics/js/dashboard.js"></script>
+    <script src="/static/admin-statics/vendors/base/vendor.bundle.base.js "></script>
+    <script src="/static/admin-statics/js/off-canvas.js "></script>
+    <script src="/static/admin-statics/js/hoverable-collapse.js "></script>
+    <script src="/static/admin-statics/js/template.js "></script>
+    <script src="/static/admin-statics/js/todolist.js "></script>
+    <script src="/static/admin-statics/js/dashboard.js "></script>
 
     <!-- endinject -->
     <!-- Custom js for this page-->
-    <script src="js/dashboard.js"></script>
-    <script src="https://unpkg.com/notie"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="js/dashboard.js "></script>
+    <script src="https://unpkg.com/notie "></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10 "></script>
 
     <script> let notifyUser = promptAlert()
 
@@ -291,20 +274,20 @@
 
 
         {{with .Error}}
-        notify("{{.}}", "error")
+        notify("{{.}} ", "error ")
         {{end}}
 
         {{with .Flash}}
-        notify("{{.}}", "success")
+        notify("{{.}} ", "success ")
         {{end}}
 
         {{with .Warning}}
-        notify("{{.}}", "warning")
+        notify("{{.}} ", "warning ")
         {{end}}
 
 
     </script>
-    {{block "js" .}}
+    {{block "js " .}}
     {{end}}
     </body>
 

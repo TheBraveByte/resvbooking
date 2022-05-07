@@ -366,14 +366,14 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	err := rq.ParseForm()
 	if err != nil {
 		rp.App.Session.Put(rq.Context(), "errors", "Error Cannot Parse form data")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		http.Redirect(wr, rq, "/", http.StatusSeeOther)
 		return
 	}
 
 	resv, ok := rp.App.Session.Get(rq.Context(), "reservation").(models.Reservation)
 	if !ok {
 		rp.App.Session.Put(rq.Context(), "errors", "Error No data for reservation in session")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		http.Redirect(wr, rq, "/", http.StatusSeeOther)
 		return
 
 	}
@@ -381,7 +381,7 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	roomID, err := strconv.Atoi(rq.Form.Get("room_id"))
 	if err != nil {
 		rp.App.Session.Put(rq.Context(), "errors", "Error cannot get valid room id")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		http.Redirect(wr, rq, "/", http.StatusSeeOther)
 		return
 	}
 
@@ -416,7 +416,7 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	NewResvervationID, err := rp.DB.InsertReservation(resv)
 	if err != nil {
 		rp.App.Session.Put(rq.Context(), "errors", "Error cannot insert reservation in the database")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		http.Redirect(wr, rq, "/", http.StatusSeeOther)
 		return
 	}
 	restriction := models.RoomRestriction{
@@ -431,7 +431,7 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	err = rp.DB.InsertRoomRestriction(restriction)
 	if err != nil {
 		rp.App.Session.Put(rq.Context(), "errors", "Cannot insert room restriction in the data")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		http.Redirect(wr, rq, "/", http.StatusSeeOther)
 		return
 	}
 
@@ -627,12 +627,14 @@ func (rp *Repository) PostAdminShowReservation(wr http.ResponseWriter, rq *http.
 		return
 	}
 	userInfo := strings.Split(rq.RequestURI, "/")
-	id, err := strconv.Atoi(userInfo[len(userInfo)-1])
+	//id, err := strconv.Atoi(userInfo[len(userInfo)-1])
+	id, err := strconv.Atoi(userInfo[4])
+
 	if err != nil {
 		log.Println("invalid id conversion")
 		return
 	}
-	src = userInfo[len(userInfo)-2]
+	src = userInfo[3]
 	StringData["src"] = src
 	userResv, err := rp.DB.ShowUserReservation(id)
 	if err != nil {

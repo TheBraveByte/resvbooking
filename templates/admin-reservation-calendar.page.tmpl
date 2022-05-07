@@ -39,8 +39,8 @@
                 {{$resv := index $.Data (printf "reservation_map_%d" .ID)}}
 
                 <h3 class="mt-3"> {{.RoomName}}</h3>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm">
+                <div class="table-responsive table-dark">
+                    <table class="table table-bordered table-responsive-md">
                         <tr class="table-hover table-light">
                             {{range $index := iterate $days}}
                                 <td class="text-center">

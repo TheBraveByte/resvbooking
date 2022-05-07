@@ -11,5 +11,7 @@
             "password": "dev-ayaa"
         }
     ],
-    "diffEditor.codeLens": true
+    "diffEditor.codeLens": true,
+    "editor.fontSize": 16,
+    "editor.cursorStyle": "line"
 }
