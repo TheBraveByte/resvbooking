@@ -87,7 +87,7 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 	err := rq.ParseForm()
 	if err != nil {
 		rp.App.Session.Put(rq.Context(), "errors", "error cannot parse check availability form")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		http.Redirect(wr, rq, "/", http.StatusSeeOther)
 		return
 	}
 
@@ -102,28 +102,28 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 	checkInDate, err := time.Parse(dateLayout, checkIn)
 	if err != nil {
 		rp.App.Session.Put(rq.Context(), "errors", "cannot parse check-in-date")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		http.Redirect(wr, rq, "/", http.StatusSeeOther)
 		return
 	}
 	checkOutDate, err := time.Parse(dateLayout, checkOut)
 	if err != nil {
 		rp.App.Session.Put(rq.Context(), "errors", "cannot parse check-out-date")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		http.Redirect(wr, rq, "/", http.StatusSeeOther)
 		return
 	}
 
 	rooms, err := rp.DB.SearchForAvailableRoom(checkInDate, checkOutDate)
 	if err != nil {
 		rp.App.Session.Put(rq.Context(), "errors", "No available room to reserve")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		http.Redirect(wr, rq, "/", http.StatusSeeOther)
 		return
 	}
-	for _, room := range rooms {
-		rp.App.InfoLog.Println("Rooms Available :: ", room)
-	}
+	// for _, room := range rooms {
+	// 	rp.App.InfoLog.Println("Rooms Available :: ", room)
+	// }
 
 	if len(rooms) == 0 {
-		rp.App.InfoLog.Println("NO AVAILABLE ROOMS")
+		// rp.App.InfoLog.Println("NO AVAILABLE ROOMS")
 		rp.App.Session.Put(rq.Context(), "errors", "No availale rooms")
 		http.Redirect(wr, rq, "/check-availability", http.StatusSeeOther)
 		return
@@ -157,6 +157,7 @@ type ResponseJSON struct {
 // JsonAvailabilityPage  handler Function
 func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Request) {
 
+	//for server error during connection
 	err := rq.ParseForm()
 	if err != nil {
 		myResp := ResponseJSON{
@@ -175,36 +176,13 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 	cod := rq.Form.Get("check-out")
 
 	layout := "2006-01-02"
+
 	CheckInDate, _ := time.Parse(layout, cid)
-	//if err != nil {
-	//	rp.App.Session.Put(rq.Context(), "errors", "Error Parsing the check in date")
-	//	return
-	//}
-
 	CheckOutDate, _ := time.Parse(layout, cod)
-	//if err != nil {
-	//	rp.App.Session.Put(rq.Context(), "errors", "Error Parsing the check in date")
-	//	return
-	//}
-
+	
 	roomID, _ := strconv.Atoi(rq.Form.Get("room_id"))
 
 	isRoomAvailable, err := rp.DB.SearchRoomAvailabileByRoomID(roomID, CheckInDate, CheckOutDate)
-
-	if err != nil {
-		myResp := ResponseJSON{
-			RoomID: "",
-			Ok:     false,
-			//CheckInDate:  "",
-			//CheckOutDate: "",
-			Message: "error querying database",
-		}
-		output, _ := json.MarshalIndent(myResp, "", "   ")
-		//this type the browser the type of content it is getting
-		wr.Header().Set("Content-type", "application/json")
-		wr.Write(output)
-		return
-	}
 
 	//For the database
 	myResp := ResponseJSON{
@@ -216,12 +194,27 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 	}
 
 	//Creating a Json file from struct type
-	output, err := json.MarshalIndent(myResp, "", "     ")
+	output, _ := json.MarshalIndent(myResp, "", "     ")
 
 	//this type the browser the type of content it is getting
 	wr.Header().Set("Content-type", "application/json")
 	wr.Write(output)
 
+	//For the database
+	if err != nil {
+		myResp := ResponseJSON{
+			RoomID: "",
+			Ok:     false,
+			Message: "error querying database",
+		}
+		output, _ := json.MarshalIndent(myResp, "", "   ")
+		//this type the browser the type of content it is getting
+		wr.Header().Set("Content-type", "application/json")
+		wr.Write(output)
+		return
+	}
+
+	
 }
 
 //SelectAvailableRoom : This allow the user to check for all available rooms by RoomID and

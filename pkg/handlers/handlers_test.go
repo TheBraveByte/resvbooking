@@ -287,10 +287,10 @@ var CheckAvailTest = []struct {
 			"check-in":  {"2022-09-09"},
 			"check-out": {"2022-09-10"},
 		},
-		correctStatusCode: http.StatusSeeOther,
+		correctStatusCode: http.StatusOK,
 	},
 	{
-		testName: "valid check-in date",
+		testName: "invalid check-in date",
 		postRqData: url.Values{
 			"check-in":  {"invalid"},
 			"check-out": {"2022-09-10"},
@@ -303,7 +303,7 @@ var CheckAvailTest = []struct {
 			"check-in":  {"2022-09-09"},
 			"check-out": {"2022-09-10"},
 		},
-		correctStatusCode: http.StatusSeeOther,
+		correctStatusCode: http.StatusOK,
 	},
 	{
 		testName: "invalid early reservation",
@@ -311,7 +311,7 @@ var CheckAvailTest = []struct {
 			"check-in":  {"2000-09-09"},
 			"check-out": {"2000-09-10"},
 		},
-		correctStatusCode: http.StatusSeeOther,
+		correctStatusCode: http.StatusOK,
 	},
 	{
 		testName: "invalid future reservation",
@@ -333,244 +333,89 @@ func TestRepository_PostCheckAvailabilityPage(t *testing.T) {
 		responseRecorder := httptest.NewRecorder()
 		handler := http.HandlerFunc(Repo.PostCheckAvailabilityPage)
 		handler.ServeHTTP(responseRecorder, rq)
-		if responseRecorder.Code != http.StatusOK {
-			t.Errorf("Error Testing for %s in Post availability when no rooms available gave wrong status code: got %d, wanted %d",m.testName, responseRecorder.Code,m.correctStatusCode)
+		if responseRecorder.Code != m.correctStatusCode {
+			t.Errorf("Error Testing for %s in Post availability when no rooms available gave wrong status code: got %d, wanted %d", m.testName, responseRecorder.Code, m.correctStatusCode)
 		}
 	}
-	// PostRqData := url.Values{}
+}
 
-	// PostRqData.Add("check-in", "2022-09-09")
-	// PostRqData.Add("check-out", "2022-09-10")
-
-	// //  rooms are available that does not exist
-	// PostRqData.Add("check-in", "2000-09-09")
-	// PostRqData.Add("check-out", "2000-09-10")
-
-	// rq, _ = http.NewRequest("POST", "/search-availability", strings.NewReader(PostRqData.Encode()))
-
-	// ctx = getContext(rq)
-	// rq = rq.WithContext(ctx)
-
-	// rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	// responseRecorder = httptest.NewRecorder()
-	// handler = http.HandlerFunc(Repo.PostCheckAvailabilityPage)
-	// handler.ServeHTTP(responseRecorder, rq)
-
-	// // since we have rooms available, we expect to get status http.StatusOK
-	// if responseRecorder.Code != http.StatusOK {
-	// 	t.Errorf("Post availability when rooms are available gave wrong status code: got %d, wanted %d", responseRecorder.Code, http.StatusOK)
-	// }
-
-	// //No date to check for reservation
-	// rq, _ = http.NewRequest("POST", "/search-availability", nil)
-
-	// ctx = getContext(rq)
-	// rq = rq.WithContext(ctx)
-
-	// rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	// responseRecorder = httptest.NewRecorder()
-
-	// handler = http.HandlerFunc(Repo.PostCheckAvailabilityPage)
-
-	// handler.ServeHTTP(responseRecorder, rq)
-
-	// // since we have rooms available, we expect to get status http.StatusTemporaryRedirect
-	// if responseRecorder.Code != http.StatusTemporaryRedirect {
-	// 	t.Errorf("Post availability with empty request body (nil) gave wrong status code: got %d, wanted %d", responseRecorder.Code, http.StatusTemporaryRedirect)
-	// }
-
-	// //Wrong  Date format
-	// // start date in the wrong format
-	// PostRqData.Add("check-in", "invalid")
-	// PostRqData.Add("check-out", "2022-09-09")
-
-	// rq, _ = http.NewRequest("POST", "/search-availability", strings.NewReader(PostRqData.Encode()))
-
-	// // get the context with session
-	// ctx = getContext(rq)
-	// rq = rq.WithContext(ctx)
-
-	// // set the request header
-	// rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	// // create our response recorder, which satisfies the requirements
-	// // for http.ResponseWriter
-	// responseRecorder = httptest.NewRecorder()
-
-	// // make our handler a http.HandlerFunc
-	// handler = http.HandlerFunc(Repo.PostCheckAvailabilityPage)
-
-	// // make the request to our handler
-	// handler.ServeHTTP(responseRecorder, rq)
-
-	// // since we have rooms available, we expect to get status http.StatusTemporaryRedirect
-	// if responseRecorder.Code != http.StatusOK {
-	// 	t.Errorf("Post availability with invalid start date gave wrong status code: got %d, wanted %d", responseRecorder.Code, http.StatusOK)
-	// }
-
-	// //Wrong date format for check-out date
-	// PostRqData.Add("check-in", "2022-09-09")
-	// PostRqData.Add("check-out", "invalid")
-	// rq, _ = http.NewRequest("POST", "/search-availability", strings.NewReader(PostRqData.Encode()))
-
-	// // get the context with session
-	// ctx = getContext(rq)
-	// rq = rq.WithContext(ctx)
-
-	// // set the request header
-	// rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	// // create our response recorder, which satisfies the requirements
-	// // for http.ResponseWriter
-	// responseRecorder = httptest.NewRecorder()
-
-	// // make our handler a http.HandlerFunc
-	// handler = http.HandlerFunc(Repo.PostCheckAvailabilityPage)
-
-	// // make the request to our handler
-	// handler.ServeHTTP(responseRecorder, rq)
-
-	// // since we have rooms available, we expect to get status http.StatusTemporaryRedirect
-	// if responseRecorder.Code != http.StatusOK {
-	// 	t.Errorf("Post availability with invalid end date gave wrong status code: got %d, wanted %d", responseRecorder.Code, http.StatusOK)
-	// }
-
-	// // database Error fails
-	// PostRqData.Add("check-in", "2029-09-09")
-	// PostRqData.Add("check-out", "2029-09-10")
-	// rq, _ = http.NewRequest("POST", "/search-availability", strings.NewReader(PostRqData.Encode()))
-
-	// ctx = getContext(rq)
-	// rq = rq.WithContext(ctx)
-	// rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	// responseRecorder = httptest.NewRecorder()
-	// handler = http.HandlerFunc(Repo.PostCheckAvailabilityPage)
-
-	// handler.ServeHTTP(responseRecorder, rq)
-
-	// // since we have rooms available, we expect to get status http.StatusTemporaryRedirect
-	// if responseRecorder.Code != http.StatusOK {
-	// 	t.Errorf("Post availability when database query fails gave wrong status code: got %d, wanted %d", responseRecorder.Code, http.StatusOK)
-	// }
+var AvailTest = []struct {
+	testName      string
+	message       string
+	postRqData    url.Values
+	correctResult bool
+}{
+	{
+		//Valid data but no message
+		testName: "available rooms",
+		postRqData: url.Values{
+			"check-in":  {"2022-09-09"},
+			"check-out": {"2022-09-10"},
+			"room_id":   {"1"},
+		},
+		correctResult: true,
+	},
+	{
+		//Valid data but no message
+		testName: "not available rooms",
+		postRqData: url.Values{
+			"check-in":  {"2030-09-09"},
+			"check-out": {"2030-09-10"},
+			"room_id":   {"1"},
+		},
+		correctResult: false,
+	},
+	{
+		testName:      "no data posted",
+		message:       "internal server error",
+		postRqData:    nil,
+		correctResult: false,
+	},
+	{
+		testName: "Invalid database query",
+		message:  "error querying database",
+		postRqData: url.Values{
+			"check-in":  {"2060-09-09"},
+			"check-out": {"2060-09-10"},
+			"room_id":   {"1"},
+		},
+		correctResult: false,
+	},
 }
 
 func TestRepository_AvailabilityJSON(t *testing.T) {
 	//No available rooms
-	PostRqData := url.Values{}
-	PostRqData.Add("check-in", "2050-09-09")
-	PostRqData.Add("check-out", "2050-09-10")
-	PostRqData.Add("room_id", "1")
+	var rq *http.Request
+	for _, m := range AvailTest {
+		if m.postRqData != nil {
+			rq, _ = http.NewRequest("POST", "/json-availability", strings.NewReader(m.postRqData.Encode()))
+		} else {
+			rq, _ = http.NewRequest("POST", "/json-availability", nil)
+		}
+		ctx := getContext(rq)
+		rq = rq.WithContext(ctx)
 
-	rq, _ := http.NewRequest("POST", "/json-availability", strings.NewReader(PostRqData.Encode()))
-	ctx := getContext(rq)
-	rq = rq.WithContext(ctx)
+		rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		responseRecorder := httptest.NewRecorder()
 
-	responseRecorder := httptest.NewRecorder()
+		handler := http.HandlerFunc(Repo.JsonAvailabilityPage)
 
-	handler := http.HandlerFunc(Repo.JsonAvailabilityPage)
+		handler.ServeHTTP(responseRecorder, rq)
 
-	handler.ServeHTTP(responseRecorder, rq)
+		// this time we want to parse JSON and get the expected response
+		var js ResponseJSON
+		err := json.Unmarshal((responseRecorder.Body.Bytes()), &js)
+		if err != nil {
+			t.Error("failed to parse json!")
+		}
 
-	// since we have no rooms available, we expect to get status http.StatusSeeOther
-	// this time we want to parse JSON and get the expected response
-	var js ResponseJSON
-	err := json.Unmarshal([]byte(responseRecorder.Body.String()), &js)
-	if err != nil {
-		t.Error("failed to parse json!")
-	}
-
-	// since we specified a start date > 2029-09-09, we expect no availability
-	if js.Ok {
-		t.Error("Got availability when none was expected in AvailabilityJSON")
-	}
-
-	/*****************************************
-	// second case -- rooms not available
-	*****************************************/
-	// create our request body
-	PostRqData.Add("check-in", "2040-03-01")
-	PostRqData.Add("check-out", "2040-03-05")
-	PostRqData.Add("room_id", "1")
-
-	rq, _ = http.NewRequest("POST", "/json-availability", strings.NewReader(PostRqData.Encode()))
-
-	ctx = getContext(rq)
-	rq = rq.WithContext(ctx)
-	rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	responseRecorder = httptest.NewRecorder()
-
-	handler = http.HandlerFunc(Repo.JsonAvailabilityPage)
-
-	handler.ServeHTTP(responseRecorder, rq)
-
-	err = json.Unmarshal([]byte(responseRecorder.Body.String()), &js)
-	if err != nil {
-		t.Error("failed to parse json!")
-	}
-
-	// since we specified a start date < 2022-09-09, we expect availability
-	if !js.Ok {
-		t.Error("Got no availability when some was expected in AvailabilityJSON")
-	}
-
-	//No request for PostRqData
-	rq, _ = http.NewRequest("POST", "/json-availability", nil)
-
-	ctx = getContext(rq)
-	rq = rq.WithContext(ctx)
-	rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	responseRecorder = httptest.NewRecorder()
-
-	handler = http.HandlerFunc(Repo.JsonAvailabilityPage)
-
-	handler.ServeHTTP(responseRecorder, rq)
-
-	// this time we want to parse JSON and get the expected response
-	err = json.Unmarshal([]byte(responseRecorder.Body.String()), &js)
-	if err != nil {
-		t.Error("failed to parse json!")
-	}
-
-	// since we specified a start date < 2022-08-10, we expect availability
-	if js.Ok || js.Message != "server error" {
-		t.Error("Got availability when request body was empty")
-	}
-
-	// make our handler a http.HandlerFunc
-	PostRqData.Add("check-in", "2045-09-09")
-	PostRqData.Add("check-out", "2045-09-10")
-	PostRqData.Add("room_id", "1")
-
-	rq, _ = http.NewRequest("POST", "/json-availability", strings.NewReader(PostRqData.Encode()))
-
-	ctx = getContext(rq)
-	rq = rq.WithContext(ctx)
-
-	rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	responseRecorder = httptest.NewRecorder()
-
-	handler = http.HandlerFunc(Repo.JsonAvailabilityPage)
-
-	handler.ServeHTTP(responseRecorder, rq)
-
-	// this time we want to parse JSON and get the expected response
-	err = json.Unmarshal([]byte(responseRecorder.Body.String()), &js)
-	if err != nil {
-		t.Error("failed to parse json!")
-	}
-
-	// since we specified a start date < 2022-09-09, we expect availability
-	if js.Ok || js.Message != "error querying database" {
-		t.Error("Got availability when simulating database error")
+		if js.Ok != m.correctResult {
+			t.Errorf("Error for %s  got result to be %v expected %v", m.testName, js.Ok, m.correctResult)
+		}
 	}
 }
+
 
 func TestRepository_ReservationSummary(t *testing.T) {
 	//reservation data is in session
