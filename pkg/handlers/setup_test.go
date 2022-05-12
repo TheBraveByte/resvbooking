@@ -104,6 +104,7 @@ func getRoutes() http.Handler {
 	mux.Get("/json-availability", Repo.JsonAvailabilityPage)
 	mux.Post("/json-availability", Repo.JsonAvailabilityPage)
 
+	mux.Get("/login", Repo.LoginPage)
 	mux.Post("/login", Repo.PostLoginPage)
 	mux.Get("/logout", Repo.LogOutPage)
 

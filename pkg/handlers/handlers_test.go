@@ -12,9 +12,33 @@ import (
 	"strings"
 	"testing"
 
+	_ "github.com/alexedwards/scs/v2"
 	"github.com/dev-ayaa/resvbooking/pkg/driver"
 	"github.com/dev-ayaa/resvbooking/pkg/models"
 )
+
+
+//Notice
+// create our request with a nil body, so parsing form fails
+// rq, _ = http.NewRequest("POST", "/search-availability", nil)
+
+// // get the context with session
+// ctx = getContext(rq)
+// rq = rq.WithContext(ctx)
+
+// // set the request header
+// rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+// // create our response recorder, which satisfies the requirements
+// // for http.ResponseWriter
+// responseRecorder = httptest.NewRecorder()
+
+// // make our handler a http.HandlerFunc
+// handler = http.HandlerFunc(Repo.PostCheckAvailabilityPage)
+
+// // make the request to our handler
+// handler.ServeHTTP(responseRecorder, rq)
+
 
 type postFormData struct {
 	formKey   string
@@ -56,26 +80,6 @@ var hTests = []struct {
 	//{"PostResvCalendar", "/admin/admin-reservation-calendar", "POST", http.StatusSeeOther},
 }
 
-//Notice
-// create our request with a nil body, so parsing form fails
-// rq, _ = http.NewRequest("POST", "/search-availability", nil)
-
-// // get the context with session
-// ctx = getContext(rq)
-// rq = rq.WithContext(ctx)
-
-// // set the request header
-// rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-// // create our response recorder, which satisfies the requirements
-// // for http.ResponseWriter
-// responseRecorder = httptest.NewRecorder()
-
-// // make our handler a http.HandlerFunc
-// handler = http.HandlerFunc(Repo.PostCheckAvailabilityPage)
-
-// // make the request to our handler
-// handler.ServeHTTP(responseRecorder, rq)
 
 func TestHandlers(t *testing.T) {
 	routes := getRoutes()
@@ -86,34 +90,16 @@ func TestHandlers(t *testing.T) {
 	defer sth.Close()
 
 	for _, h := range hTests {
-		//if h.pageMethod == "GET" {
 		//	//this is when the client is requesting to view a page
-		//	//server.URL == localhost
 		//	//h.pagesUrls is the page the client is requesting for
 		response, err := sth.Client().Get(sth.URL + h.pagesUrl)
 		if err != nil {
 			t.Log(err)
-			t.Fatal(fmt.Sprintf("Error Testing the handler of %s......%s", h.pageName, err))
+			t.Fatalf(fmt.Sprintf("Error Testing the handler of %s......%s", h.pageName, err))
 		}
 		if response.StatusCode != h.pageStatusCode {
 			t.Errorf("Error statusCode for %s : get %v statusCode instead of %v", h.pageName, response.StatusCode, h.pageStatusCode)
 		}
-		//} else {
-		//	//i.e if it is a POST request
-		//	formData := url.Values{}
-		//	for _, v := range h.pageFormData {
-		//		//formData[v.formKey] = []string{v.formValue}
-		//		formData.Add(v.formKey, v.formValue)
-		//	}
-		//	response, err := sth.Client().PostForm(sth.URL+h.pagesUrl, formData)
-		//	if err != nil {
-		//		t.Log(err)
-		//		t.Fatal(fmt.Sprintf("Error Testing the handler of %s......%s", h.pageName, err))
-		//	}
-		//	if response.StatusCode != h.pageStatusCode {
-		//		t.Errorf("Error statusCode for %s : get %v statusCode instead of %v", h.pageName, response.StatusCode, h.pageStatusCode)
-		//	}
-		//}
 	}
 
 }
@@ -366,12 +352,14 @@ var AvailTest = []struct {
 		correctResult: false,
 	},
 	{
+		//No posted data
 		testName:      "no data posted",
 		message:       "internal server error",
 		postRqData:    nil,
 		correctResult: false,
 	},
 	{
+		//error from the database
 		testName: "Invalid database query",
 		message:  "error querying database",
 		postRqData: url.Values{
@@ -410,155 +398,175 @@ func TestRepository_AvailabilityJSON(t *testing.T) {
 			t.Error("failed to parse json!")
 		}
 
+		//checking for the correct message
 		if js.Ok != m.correctResult {
 			t.Errorf("Error for %s  got result to be %v expected %v", m.testName, js.Ok, m.correctResult)
 		}
 	}
 }
 
+var ResvSummTest = []struct {
+	testName          string
+	correctStatusCode int
+	resv              models.Reservation
+}{
+	{
+		testName:          "Reservation summary",
+		correctStatusCode: http.StatusOK,
+		resv: models.Reservation{
+			RoomID: 1,
+			Room: models.Room{
+				ID:       1,
+				RoomName: "Deluxe suite",
+			},
+		},
+	},
+	{
+		testName:          "Invalid Reservation summary",
+		correctStatusCode: http.StatusOK,
+		resv:              models.Reservation{},
+	},
+}
 
 func TestRepository_ReservationSummary(t *testing.T) {
 	//reservation data is in session
-	resvTest := models.Reservation{
-		RoomID: 1,
-		Room: models.Room{
-			ID:       1,
-			RoomName: "Deluxe suite",
+	for _, m := range ResvSummTest {
+		rq, _ := http.NewRequest("GET", "/reservation-summary", nil)
+		ctx := getContext(rq)
+		rq = rq.WithContext(ctx)
+		responseRecorder := httptest.NewRecorder()
+		session.Put(ctx, "reservation", m.resv)
+
+		handler := http.HandlerFunc(Repo.MakeReservationSummary)
+
+		handler.ServeHTTP(responseRecorder, rq)
+
+		if responseRecorder.Code != m.correctStatusCode {
+			t.Errorf("ReservationSummary handler %s  returned wrong response code: got %d, wanted %d", m.testName, responseRecorder.Code, m.correctStatusCode)
+		}
+	}
+
+}
+
+var SelectRoomTest = []struct {
+	testName          string
+	resv              models.Reservation
+	id                string
+	correctStatusCode int
+}{
+	{
+		testName: "valid Test",
+		resv: models.Reservation{
+			RoomID: 1,
+			Room: models.Room{
+				ID:       1,
+				RoomName: "Deluxe suite",
+			},
 		},
-	}
-
-	rq, _ := http.NewRequest("GET", "/reservation-summary", nil)
-	ctx := getContext(rq)
-	rq = rq.WithContext(ctx)
-
-	responseRecorder := httptest.NewRecorder()
-	session.Put(ctx, "reservation", resvTest)
-
-	handler := http.HandlerFunc(Repo.MakeReservationSummary)
-
-	handler.ServeHTTP(responseRecorder, rq)
-
-	if responseRecorder.Code != http.StatusOK {
-		t.Errorf("ReservationSummary handler returned wrong response code: got %d, wanted %d", responseRecorder.Code, http.StatusOK)
-	}
-
-	//PostData not in Session
-	rq, _ = http.NewRequest("GET", "/reservation-summary", nil)
-	ctx = getContext(rq)
-	rq = rq.WithContext(ctx)
-
-	responseRecorder = httptest.NewRecorder()
-
-	handler = http.HandlerFunc(Repo.MakeReservationSummary)
-
-	handler.ServeHTTP(responseRecorder, rq)
-
-	if responseRecorder.Code != http.StatusTemporaryRedirect {
-		t.Errorf("ReservationSummary handler returned wrong response code: got %d, wanted %d", responseRecorder.Code, http.StatusOK)
-	}
+		id:                "1",
+		correctStatusCode: http.StatusOK,
+	},
+	{
+		testName:          "no reservation",
+		id:                "5",
+		correctStatusCode: http.StatusOK,
+	},
+	{
+		testName: "invalid details",
+		resv: models.Reservation{
+			RoomID: 1,
+			Room: models.Room{
+				ID:       1,
+				RoomName: "Deluxe suite",
+			},
+		},
+		id:                "slim",
+		correctStatusCode: http.StatusOK,
+	},
 }
 
 func TestRepository_SelectAvailableRoom(t *testing.T) {
 	//Reservation data  in Session
-	resvTest := models.Reservation{
-		RoomID: 1,
-		Room: models.Room{
-			ID:       1,
-			RoomName: "Deluxe suite",
-		},
-	}
+	for _, m := range SelectRoomTest {
+		rq, _ := http.NewRequest("GET", fmt.Sprintf("/select-available-room/%s", m.id), nil)
+		ctx := getContext(rq)
+		rq = rq.WithContext(ctx)
+		// set the RequestURI on the request so that we can grab the ID from the URL
+		rq.RequestURI = fmt.Sprintf("/select-available-room/%s", m.id)
 
-	rq, _ := http.NewRequest("GET", "/select-available-room/1", nil)
-	ctx := getContext(rq)
-	rq = rq.WithContext(ctx)
-	// set the RequestURI on the request so that we can grab the ID
-	// from the URL
-	rq.RequestURI = "/select-available-room/1"
+		responseRecorder := httptest.NewRecorder()
+		session.Put(ctx, "reservation", m.resv)
 
-	responseRecorder := httptest.NewRecorder()
-	session.Put(ctx, "reservation", resvTest)
+		handler := http.HandlerFunc(Repo.BookRoomNow)
 
-	handler := http.HandlerFunc(Repo.BookRoomNow)
+		handler.ServeHTTP(responseRecorder, rq)
 
-	handler.ServeHTTP(responseRecorder, rq)
-
-	if responseRecorder.Code != http.StatusOK {
-		t.Errorf("ChooseRoom handler returned wrong response code: got %d, wanted %d", responseRecorder.Code, http.StatusInternalServerError)
-	}
-
-	///*****************************************
-	//// second case -- reservation not in session
-	//*****************************************/
-	rq, _ = http.NewRequest("GET", "/select-available-room/1", nil)
-	ctx = getContext(rq)
-	rq = rq.WithContext(ctx)
-	rq.RequestURI = "/select-available-room/1"
-
-	responseRecorder = httptest.NewRecorder()
-
-	handler = http.HandlerFunc(Repo.BookRoomNow)
-
-	handler.ServeHTTP(responseRecorder, rq)
-
-	if responseRecorder.Code != http.StatusOK {
-		t.Errorf("ChooseRoom handler returned wrong response code: got %d, wanted %d", responseRecorder.Code, http.StatusOK)
-	}
-
-	//Wrong url parameters
-	rq, _ = http.NewRequest("GET", "/select-available-room/slim", nil)
-	ctx = getContext(rq)
-	rq = rq.WithContext(ctx)
-	rq.RequestURI = "/select-available-room/slim"
-
-	responseRecorder = httptest.NewRecorder()
-
-	handler = http.HandlerFunc(Repo.SelectAvailableRoom)
-
-	handler.ServeHTTP(responseRecorder, rq)
-
-	if responseRecorder.Code != http.StatusOK {
-		t.Errorf("ChooseRoom handler returned wrong response code: got %d, wanted %d", responseRecorder.Code, http.StatusOK)
+		if responseRecorder.Code != m.correctStatusCode {
+			t.Errorf("ChooseRoom handler returned wrong response code: got %d, wanted %d", responseRecorder.Code, m.correctStatusCode)
+		}
 	}
 }
 
-func TestRepository_BookRoom(t *testing.T) {
-	//Working perfect
-	resvTest := models.Reservation{
-		RoomID: 1,
-		Room: models.Room{
-			ID:       1,
-			RoomName: "Deluxe suite",
+var BookRoomTest = []struct {
+	testName          string
+	resv              models.Reservation
+	correctStatusCode int
+	query             string
+	postRqData        url.Values
+}{
+	{
+		testName: "valid bookings",
+		resv: models.Reservation{
+			RoomID: 1,
+			Room: models.Room{
+				ID:       1,
+				RoomName: "Deluxe suite",
+			},
 		},
-	}
+		correctStatusCode: http.StatusOK,
+		query:             "?s=2022-09-09&e=2022-09-10&id=1",
+		postRqData: url.Values{
+			"check_in_date":  {"2022-09-09"},
+			"check_out_date": {"2022-09-10"},
+			"room_id":        {"1"},
+		},
+	},
+	{
+		testName: "invalid bookings",
+		resv: models.Reservation{
+			RoomID: 1,
+			Room: models.Room{
+				ID:       1,
+				RoomName: "Deluxe suite",
+			},
+		},
+		correctStatusCode: http.StatusOK,
+		query:             "?s=2044-09-09&e=2044-09-10&id=4",
+		postRqData:        nil,
+	},
+}
 
-	rq, _ := http.NewRequest("GET", "/book-room-now?s=2022-09-09&e=2022-09-10&id=1", nil)
-	ctx := getContext(rq)
-	rq = rq.WithContext(ctx)
+func TestRepository_BookRoom(t *testing.T) {
+	var rq *http.Request
+	for _, m := range BookRoomTest {
+		if m.postRqData != nil {
+			rq, _ = http.NewRequest("GET", fmt.Sprintf("/book-room-now%s", m.query), strings.NewReader(m.postRqData.Encode()))
+		} else {
+			rq, _ = http.NewRequest("GET", fmt.Sprintf("/book-room-now%s", m.query), nil)
+		}
+		ctx := getContext(rq)
+		rq = rq.WithContext(ctx)
 
-	responseRecorder := httptest.NewRecorder()
-	session.Put(ctx, "reservation", resvTest)
+		responseRecorder := httptest.NewRecorder()
+		session.Put(ctx, "reservation", m.resv)
 
-	handler := http.HandlerFunc(Repo.BookRoomNow)
+		handler := http.HandlerFunc(Repo.BookRoomNow)
 
-	handler.ServeHTTP(responseRecorder, rq)
+		handler.ServeHTTP(responseRecorder, rq)
 
-	if responseRecorder.Code != http.StatusOK {
-		t.Errorf("BookRoom handler returned wrong response code: got %d, wanted %d", responseRecorder.Code, http.StatusOK)
-	}
-
-	//Error in the database
-	rq, _ = http.NewRequest("GET", "/book-room-now?s=2040-01-01&e=2040-01-02&id=4", nil)
-	ctx = getContext(rq)
-	rq = rq.WithContext(ctx)
-
-	responseRecorder = httptest.NewRecorder()
-
-	handler = http.HandlerFunc(Repo.BookRoomNow)
-
-	handler.ServeHTTP(responseRecorder, rq)
-
-	if responseRecorder.Code != http.StatusOK {
-		t.Errorf("BookRoom handler returned wrong response code: got %d, wanted %d", responseRecorder.Code, http.StatusInternalServerError)
+		if responseRecorder.Code != m.correctStatusCode {
+			t.Errorf("BookRoom handler : %s returned wrong response code: got %d, wanted %d", m.testName, responseRecorder.Code, m.correctStatusCode)
+		}
 	}
 }
 
@@ -724,98 +732,63 @@ func TestRepository_PostAdminShowReservation(t *testing.T) {
 
 var ProcessResv = []struct {
 	testName           string
-	correctURL         string
+	query              string
 	correctHTML        string
 	correctUrlLocation string
-	postRqData         url.Values
 	correctStatusCode  int
 }{
 	{
-		"valid-testing",
-		"",
-		"",
-		"",
-		url.Values{
-			"month": {"05"},
-			"year":  {"2022"},
-		},
-		http.StatusSeeOther,
+		testName:           "valid-testing",
+		query:              "?y=2022&m=05",
+		correctHTML:        "",
+		correctUrlLocation: "",
+		correctStatusCode:  http.StatusSeeOther,
 	},
-
-	//{
-	//	"valid-testing",
-	//	"/admin/admin-new-reservation/new/1/show",
-	//	"",
-	//	"/admin/admin-new-reservation",
-	//	url.Values{
-	//		"month": {"05"},
-	//		"year":  {"2022"},
-	//	},
-	//	http.StatusSeeOther,
-	//},
-	//{
-	//	"valid-testing",
-	//	"/admin/admin-all-reservation/all/1/show",
-	//	"",
-	//	"/admin/admin-all-reservation",
-	//	url.Values{
-	//		"month": {"05"},
-	//		"year":  {"2022"},
-	//	},
-	//	http.StatusSeeOther,
-	//},
 	{
-		"valid-testing",
-		"?y=2022&m=05",
-		"",
-		"",
-		url.Values{
-			"month": {"05"},
-			"year":  {"2022"},
-		},
-		http.StatusSeeOther,
+		testName:           "invalid-testing",
+		query:              "",
+		correctHTML:        "",
+		correctUrlLocation: "",
+		correctStatusCode:  http.StatusSeeOther,
 	},
 }
 
 func TestRepository_AdminProcessReservation(t *testing.T) {
 	for _, s := range ProcessResv {
-		var rq *http.Request
-		if s.postRqData != nil {
-			rq, _ = http.NewRequest("POST", fmt.Sprintf("/admin/admin-process-reservation/calendar/1/done%s", s.correctURL), strings.NewReader(s.postRqData.Encode()))
-		} else {
-			rq, _ = http.NewRequest("POST", fmt.Sprintf("/admin/admin-process-reservation/calendar/1/done%s", s.correctURL), nil)
-
-		}
+		rq, _ := http.NewRequest("GET", fmt.Sprintf("/admin/admin-process-reservation/calendar/1/done/%s", s.query), nil)
 
 		ctx := getContext(rq)
 		rq = rq.WithContext(ctx)
-		//rq.RequestURI = s.correctURL
+		// rq.RequestURI = s.correctURL
 		responseRecorder := httptest.NewRecorder()
 
 		rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		handler := http.HandlerFunc(Repo.PostAdminShowReservation)
+		handler := http.HandlerFunc(Repo.AdminProcessReservation)
 
 		handler.ServeHTTP(responseRecorder, rq)
 		if responseRecorder.Code != s.correctStatusCode {
-			t.Errorf("Error Testing for postAdminShowReservation expected %v but get %v", s.correctStatusCode, responseRecorder.Code)
+			t.Errorf("Error Testing for process reservation expected %v but get %v", s.correctStatusCode, responseRecorder.Code)
 		}
-		//if s.correctUrlLocation != "" {
-		//	urlLocation, _ := responseRecorder.Result().Location()
-		//	if urlLocation.String() != s.correctUrlLocation {
-		//		t.Errorf("Error Testing for invalid url")
-		//	}
-		//}
-		//
-		//if s.correctHTML != "" {
-		//	html := responseRecorder.Body.String()
-		//	if !strings.Contains(html, s.correctHTML) {
-		//		t.Errorf("Error Testing for invalid html template")
-		//	}
-		//}
+		if s.correctUrlLocation != "" {
+			urlLocation, _ := responseRecorder.Result().Location()
+			if urlLocation.String() != s.correctUrlLocation {
+				t.Errorf("Error Testing for invalid url")
+			}
+		}
 
+		if s.correctHTML != "" {
+			html := responseRecorder.Body.String()
+			if !strings.Contains(html, s.correctHTML) {
+				t.Errorf("Error Testing for invalid html template")
+			}
+		}
 	}
 
 }
+
+
+func TestRepository_AdminDeleteR
+
 func getContext(rq *http.Request) context.Context {
 	ctx, err := session.Load(rq.Context(), rq.Header.Get("X-Session"))
 	if err != nil {

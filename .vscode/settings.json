@@ -22,9 +22,11 @@
         }
     ],
     "diffEditor.codeLens": true,
-    "editor.fontSize": 16,
+    "editor.fontSize": 13,
     "editor.cursorStyle": "line",
     "prettier.enable": false,
     "prettier.useTabs": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "html-css-class-completion.enableEmmetSupport": true,
+    "diffEditor.wordWrap": "on"
 }

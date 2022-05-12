@@ -142,7 +142,6 @@ func (rp *Repository) PostCheckAvailabilityPage(wr http.ResponseWriter, rq *http
 		Data: data,
 	}, rq)
 
-	//wr.Write([]byte(fmt.Sprintf("Check-in date is %s\nCheck-out date is %s", checkIn, checkOut)))
 }
 
 //create a json struct interfaces
@@ -463,7 +462,7 @@ func (rp *Repository) MakeReservationSummary(wr http.ResponseWriter, rq *http.Re
 	if !ok {
 		fmt.Println(ok)
 		rp.App.Session.Put(rq.Context(), "error", "session has not reservation")
-		http.Redirect(wr, rq, "/", http.StatusTemporaryRedirect)
+		http.Redirect(wr, rq, "/", http.StatusSeeOther)
 		log.Println("Error transferring Data")
 		return
 	}
@@ -750,7 +749,7 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 		reservationMap := make(map[string]int)
 		blockMap := make(map[string]int)
 
-		for d := firstDay; d.After(lastDay) == false; d = d.AddDate(0, 0, 1) {
+		for d := firstDay; !d.After(lastDay) ; d = d.AddDate(0, 0, 1) {
 			reservationMap[d.Format("2006-01-2")] = 0
 			blockMap[d.Format("2006-01-2")] = 0
 		}
@@ -765,7 +764,7 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 		for _, y := range restrictions {
 			if y.ReservationID > 0 {
 				// it's a reservation with respect to the date
-				for d := y.CheckInDate; d.After(y.CheckOutDate) == false; d = d.AddDate(0, 0, 1) {
+				for d := y.CheckInDate; !d.After(y.CheckOutDate); d = d.AddDate(0, 0, 1) {
 					reservationMap[d.Format("2006-01-2")] = y.ReservationID
 				}
 			} else {
