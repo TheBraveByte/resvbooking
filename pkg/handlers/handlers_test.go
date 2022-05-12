@@ -787,8 +787,6 @@ func TestRepository_AdminProcessReservation(t *testing.T) {
 }
 
 
-func TestRepository_AdminDeleteR
-
 func getContext(rq *http.Request) context.Context {
 	ctx, err := session.Load(rq.Context(), rq.Header.Get("X-Session"))
 	if err != nil {

@@ -28,5 +28,8 @@
     "prettier.useTabs": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "html-css-class-completion.enableEmmetSupport": true,
-    "diffEditor.wordWrap": "on"
+    "diffEditor.wordWrap": "on",
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    }
 }

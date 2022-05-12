@@ -98,7 +98,7 @@ func run() (*driver.DB, error) {
 
 	//connection the database to the Application
 	log.Println(".........Connecting to the database.........")
-	dataSourceName = "host=localhost port=5432  dbname=Resvbooking user=postgres password=dev-ayaa"
+	dataSourceName = "host=localhost port=5432  dbname=postgres user=postgres password=dev-ayaa"
 	db, err := driver.ConnectSqlDb(dataSourceName)
 
 	if err != nil {
