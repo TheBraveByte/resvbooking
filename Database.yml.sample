@@ -1,6 +1,6 @@
 development:
   dialect: postgres
-  database: Resvbooking
+  database: postgres
   user: postgres
   password: dev-ayaa
   host: 127.0.0.1

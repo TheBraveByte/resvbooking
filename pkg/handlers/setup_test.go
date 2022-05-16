@@ -3,20 +3,22 @@ package handlers
 import (
 	"encoding/gob"
 	"fmt"
-	"github.com/alexedwards/scs/v2"
-	"github.com/dev-ayaa/resvbooking/pkg/config"
-	"github.com/dev-ayaa/resvbooking/pkg/helpers"
-	"github.com/dev-ayaa/resvbooking/pkg/models"
-	"github.com/dev-ayaa/resvbooking/pkg/render"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
-	"github.com/justinas/nosurf"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/alexedwards/scs/v2"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/justinas/nosurf"
+
+	"github.com/dev-ayaa/resvbooking/pkg/config"
+	"github.com/dev-ayaa/resvbooking/pkg/helpers"
+	"github.com/dev-ayaa/resvbooking/pkg/models"
+	"github.com/dev-ayaa/resvbooking/pkg/render"
 )
 
 var session *scs.SessionManager

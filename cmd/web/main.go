@@ -2,18 +2,21 @@ package main
 
 import (
 	"encoding/gob"
+	"flag"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"time"
+
 	"github.com/alexedwards/scs/v2"
+
 	"github.com/dev-ayaa/resvbooking/pkg/config"
 	"github.com/dev-ayaa/resvbooking/pkg/driver"
 	"github.com/dev-ayaa/resvbooking/pkg/handlers"
 	"github.com/dev-ayaa/resvbooking/pkg/helpers"
 	"github.com/dev-ayaa/resvbooking/pkg/models"
 	"github.com/dev-ayaa/resvbooking/pkg/render"
-	"log"
-	"net/http"
-	"os"
-	"time"
 )
 
 const portNumber = ":8080"
@@ -63,11 +66,24 @@ func run() (*driver.DB, error) {
 	gob.Register(models.RoomRestriction{})
 	gob.Register(map[string]int{})
 
+	//defining flags for the database and binding them to database connection variables
+	inProduction := flag.Bool("inproduction", true, "connecting to the database")
+	useCache := flag.Bool("usecache", true, "using application cache")
+	dbName := flag.String("dbname", "postgres", "database name")
+	dbHost := flag.String("dbhost", "localhost", "database host")
+	dbUser := flag.String("dbuser", "postgres", "database user")
+	dbPassword := flag.String("dbpassword", "dev-ayaa", "database password")
+	dbPort := flag.String("dbport", "5432", "database port number")
+	dbSSL := flag.String("dbssl", "disable", "ssl database settings (disable, prefer, require)")
+
+	//Parse flags
+	flag.Parse()
+
 	mailChannel := make(chan models.MailData)
 	app.MailChannel = mailChannel
 	mailRoutes()
 
-	app.InProduction = false
+	app.InProduction = *inProduction
 
 	infoLogger = log.New(os.Stdout, "INFO ::\t", log.LstdFlags)
 	app.InfoLog = infoLogger
@@ -94,11 +110,13 @@ func run() (*driver.DB, error) {
 	app.Session = session
 
 	//authorize using cache
-	app.UseCache = false
+	app.UseCache = *useCache
 
 	//connection the database to the Application
 	log.Println(".........Connecting to the database.........")
-	dataSourceName = "host=localhost port=5432  dbname=postgres user=postgres password=dev-ayaa"
+
+	// dataSourceName = "host=localhost port=5432  dbname=postgres user=postgres password=dev-ayaa"
+	dataSourceName = fmt.Sprintf("host=%s port=%s  dbname=%s user=%s password=%s sslmode=%s", *dbHost, *dbPort, *dbName, *dbUser, *dbPassword, *dbSSL)
 	db, err := driver.ConnectSqlDb(dataSourceName)
 
 	if err != nil {

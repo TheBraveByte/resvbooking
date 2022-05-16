@@ -6,7 +6,7 @@
             "port": 5432,
             "driver": "PostgreSQL",
             "name": "postgres",
-            "database": "Resvbooking",
+            "database": "postgres",
             "username": "postgres",
             "password": "dev-ayaa"
         },
@@ -15,21 +15,20 @@
             "server": "localhost",
             "port": 5432,
             "driver": "PostgreSQL",
-            "name": "Resvbooking",
+            "name": "postgres",
+            "database": "postgres",
             "username": "postgres",
-            "password": "dev-ayaa",
-            "database": "Resvbooking"
+            "password": "dev-ayaa"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "postgres",
+            "database": "postgres",
+            "username": "postgres"
         }
-    ],
-    "diffEditor.codeLens": true,
-    "editor.fontSize": 13,
-    "editor.cursorStyle": "line",
-    "prettier.enable": false,
-    "prettier.useTabs": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "html-css-class-completion.enableEmmetSupport": true,
-    "diffEditor.wordWrap": "on",
-    "[jsonc]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
-    }
+    ]
 }
