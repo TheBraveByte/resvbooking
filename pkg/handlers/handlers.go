@@ -3,6 +3,14 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/go-chi/chi"
+
 	"github.com/dev-ayaa/resvbooking/pkg/config"
 	"github.com/dev-ayaa/resvbooking/pkg/driver"
 	"github.com/dev-ayaa/resvbooking/pkg/forms"
@@ -11,12 +19,6 @@ import (
 	"github.com/dev-ayaa/resvbooking/pkg/render"
 	"github.com/dev-ayaa/resvbooking/repository"
 	"github.com/dev-ayaa/resvbooking/repository/dbRepository"
-	"github.com/go-chi/chi"
-	"log"
-	"net/http"
-	"strconv"
-	"strings"
-	"time"
 )
 
 // Repository struct to store the app Config
@@ -580,7 +582,8 @@ func (rp *Repository) AdminShowReservation(wr http.ResponseWriter, rq *http.Requ
 	var id int
 
 	userInfo := strings.Split(rq.RequestURI, "/")
-	id, err := strconv.Atoi(userInfo[len(userInfo)-2])
+	// id, err := strconv.Atoi(userInfo[len(userInfo)-2])
+	id, err := strconv.Atoi(userInfo[4])
 	if err != nil {
 		log.Println("invalid id conversion")
 		return
