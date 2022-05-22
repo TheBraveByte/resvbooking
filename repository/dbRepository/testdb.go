@@ -156,10 +156,10 @@ func (tpg *TestPostgresDBRepository) ShowUserReservation(id int) (models.Reserva
 func (tpg TestPostgresDBRepository) UpdateUserReservation(resv models.Reservation) error {
 	var userResv models.Reservation
 	userResv.ID = 10
-	if  userResv.ID == 10 {
+	if userResv.ID == 10 {
 		return nil
 	}
-	return  errors.New("Error updating user reservation")
+	return errors.New("Error updating user reservation")
 }
 
 func (tpg *TestPostgresDBRepository) ProcessedUpdateReservation(id int, processed int) error {

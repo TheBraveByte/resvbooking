@@ -17,7 +17,6 @@ import (
 	"github.com/dev-ayaa/resvbooking/pkg/models"
 )
 
-
 //Notice
 // create our request with a nil body, so parsing form fails
 // rq, _ = http.NewRequest("POST", "/search-availability", nil)
@@ -38,7 +37,6 @@ import (
 
 // // make the request to our handler
 // handler.ServeHTTP(responseRecorder, rq)
-
 
 type postFormData struct {
 	formKey   string
@@ -79,7 +77,6 @@ var hTests = []struct {
 	//{"PostLoginPage", "/login", "POST", http.StatusSeeOther},
 	//{"PostResvCalendar", "/admin/admin-reservation-calendar", "POST", http.StatusSeeOther},
 }
-
 
 func TestHandlers(t *testing.T) {
 	routes := getRoutes()
@@ -785,7 +782,6 @@ func TestRepository_AdminProcessReservation(t *testing.T) {
 	}
 
 }
-
 
 func getContext(rq *http.Request) context.Context {
 	ctx, err := session.Load(rq.Context(), rq.Header.Get("X-Session"))
