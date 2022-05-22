@@ -9,8 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-chi/chi"
-
 	"github.com/dev-ayaa/resvbooking/pkg/config"
 	"github.com/dev-ayaa/resvbooking/pkg/driver"
 	"github.com/dev-ayaa/resvbooking/pkg/forms"
@@ -19,6 +17,7 @@ import (
 	"github.com/dev-ayaa/resvbooking/pkg/render"
 	"github.com/dev-ayaa/resvbooking/repository"
 	"github.com/dev-ayaa/resvbooking/repository/dbRepository"
+	"github.com/go-chi/chi"
 )
 
 // Repository struct to store the app Config
@@ -180,7 +179,7 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 
 	CheckInDate, _ := time.Parse(layout, cid)
 	CheckOutDate, _ := time.Parse(layout, cod)
-	
+
 	roomID, _ := strconv.Atoi(rq.Form.Get("room_id"))
 
 	isRoomAvailable, err := rp.DB.SearchRoomAvailabileByRoomID(roomID, CheckInDate, CheckOutDate)
@@ -204,8 +203,8 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 	//For the database
 	if err != nil {
 		myResp := ResponseJSON{
-			RoomID: "",
-			Ok:     false,
+			RoomID:  "",
+			Ok:      false,
 			Message: "error querying database",
 		}
 		output, _ := json.MarshalIndent(myResp, "", "   ")
@@ -215,7 +214,6 @@ func (rp *Repository) JsonAvailabilityPage(wr http.ResponseWriter, rq *http.Requ
 		return
 	}
 
-	
 }
 
 //SelectAvailableRoom : This allow the user to check for all available rooms by RoomID and
@@ -582,8 +580,10 @@ func (rp *Repository) AdminShowReservation(wr http.ResponseWriter, rq *http.Requ
 	var id int
 
 	userInfo := strings.Split(rq.RequestURI, "/")
+	fmt.Println(userInfo)
 	// id, err := strconv.Atoi(userInfo[len(userInfo)-2])
 	id, err := strconv.Atoi(userInfo[4])
+	fmt.Println(id)
 	if err != nil {
 		log.Println("invalid id conversion")
 		return
@@ -596,6 +596,7 @@ func (rp *Repository) AdminShowReservation(wr http.ResponseWriter, rq *http.Requ
 
 	userResv, err := rp.DB.ShowUserReservation(id)
 	if err != nil {
+		log.Println("ErrMismatchedHashAndPassword")
 		helpers.ServerSideError(wr, err)
 		return
 	}
@@ -752,9 +753,9 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 		reservationMap := make(map[string]int)
 		blockMap := make(map[string]int)
 
-		for d := firstDay; !d.After(lastDay) ; d = d.AddDate(0, 0, 1) {
-			reservationMap[d.Format("2006-01-2")] = 0
-			blockMap[d.Format("2006-01-2")] = 0
+		for d := firstDay; !d.After(lastDay); d = d.AddDate(0, 0, 1) {
+			reservationMap[d.Format("2006-01-02")] = 0
+			blockMap[d.Format("2006-01-02")] = 0
 		}
 
 		// get all the restrictions for the current room
@@ -768,11 +769,11 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 			if y.ReservationID > 0 {
 				// it's a reservation with respect to the date
 				for d := y.CheckInDate; !d.After(y.CheckOutDate); d = d.AddDate(0, 0, 1) {
-					reservationMap[d.Format("2006-01-2")] = y.ReservationID
+					reservationMap[d.Format("2006-01-02")] = y.ReservationID
 				}
 			} else {
 				// it's a block
-				blockMap[y.CheckInDate.Format("2006-01-2")] = y.ID
+				blockMap[y.CheckInDate.Format("2006-01-02")] = y.ID
 			}
 		}
 		data[fmt.Sprintf("reservation_map_%d", room.ID)] = reservationMap
@@ -781,7 +782,8 @@ func (rp *Repository) AdminReservationCalendar(wr http.ResponseWriter, rq *http.
 			StringData["next_month_date"],
 			StringData["next_month_year_date"],
 			StringData["last_month_date"],
-			StringData["last_month_year_date"])
+			StringData["last_month_year_date"],
+			"getting the current year and month/n", StringData["current_month"], StringData["current_month_year"])
 
 		rp.App.Session.Put(rq.Context(), fmt.Sprintf("block_map_%d", room.ID), blockMap)
 	}
@@ -829,7 +831,7 @@ func (rp Repository) PostAdminReservationCalendar(wr http.ResponseWriter, rq *ht
 		if strings.HasPrefix(name, "add_block") {
 			exploded := strings.Split(name, "_")
 			roomID, _ := strconv.Atoi(exploded[2])
-			t, _ := time.Parse("2006-01-2", exploded[3])
+			t, _ := time.Parse("2006-01-02", exploded[3])
 			// insert a new block
 			err := rp.DB.InsertBlockForRoom(roomID, t)
 			if err != nil {
