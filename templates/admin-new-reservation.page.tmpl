@@ -34,10 +34,9 @@
                 <tr>
                     <td>{{.ID}}</td>
                     <td>
-                        <a href="/admin/admin-show-reservation/new/{{.ID}}/show">
-                            {{.FirstName}}</a>
+                        <a href="/admin/admin-show-reservation/new/{{.ID}}/show">{{$resv.FirstName}}</a>
                     </td>
-                    <td>{{.LastName}}</td>
+                    <td>{{$resv.LastName}}</td>
                     <td>{{.Email}}</td>
                     <td>{{dateFormat .CheckInDate}}</td>
                     <td>{{dateFormat .CheckOutDate}}</td>
