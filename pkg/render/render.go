@@ -23,6 +23,7 @@ var functions = template.FuncMap{
 	"add":        RenderAddUp,
 }
 
+// fuction that are added up before the templates files are parsed
 func RenderDateFormat(t time.Time) string {
 	formatTime := t.Format("2006-01-02")
 	return formatTime
@@ -101,7 +102,7 @@ func Template(wr http.ResponseWriter, tmpl string, td *models.TemplateData, rq *
 	td holds the default data we want to pass to a template*/
 	td = AddDefaultData(td, rq)
 	_ = t.Execute(buf, td)
-	// Getting a response
+	// Getting a response from the responseWriter
 	_, err := buf.WriteTo(wr)
 	if err != nil {
 		fmt.Println("Error writing Templates to browsers")
