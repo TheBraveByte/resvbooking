@@ -428,11 +428,16 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	}
 
 	//Sending mail notification to customer after make a reservation
+	notifyCustomer := fmt.Sprintf(`<p>warm greetings to you <em> <strong> %v  %v </strong</em></p>`+
+		"congratulations you have successfully reserve a room  %v in our Tavern from %v to %v, Looking forward to give you our utmost service",
+		resv.FirstName, resv.LastName, resv.Room.RoomName, resv.CheckInDate.Format("2006-01-02"), resv.CheckOutDate.Format("2006-01-02"))
+
 	mailMsg := models.MailData{
-		MailSubject: "Reservation At Rest Tavern Inn",
-		Receiver:    resv.Email,
-		Sender:      "ayaaakinleye@gmail.com",
-		MailContent: `Hi Yusuf <strong>Akinleye</strong>`,
+		MailSubject:  "Reservation At Rest Tavern Inn",
+		Receiver:     resv.Email,
+		Sender:       "ayaaakinleye@gmail.com",
+		MailContent:  notifyCustomer,
+		MailTemplate: "mailTemplate.html",
 	}
 
 	rp.App.MailChannel <- mailMsg
@@ -440,11 +445,13 @@ func (rp *Repository) PostMakeReservationPage(wr http.ResponseWriter, rq *http.R
 	notifyOwner := fmt.Sprintf(`<strong>Notification for Reservation at Rest Tavern</strong><br>"+
 		"%v %v have secure a reservation of %v from %v to %v`, resv.FirstName, resv.LastName, resv.Room.RoomName,
 		resv.CheckInDate.Format("2006-01-02"), resv.CheckOutDate.Format("2006-01-02"))
+
 	mailMsg = models.MailData{
-		MailSubject: "Reservation At Rest Tavern Inn",
-		Receiver:    "ayaaakinleye@gmail.com",
-		Sender:      "ayaaakinleye@gmail.com",
-		MailContent: notifyOwner,
+		MailSubject:  "Reservation At Rest Tavern Inn",
+		Receiver:     "ayaaakinleye@gmail.com",
+		Sender:       "ayaaakinleye@gmail.com",
+		MailContent:  notifyOwner,
+		MailTemplate: "mailTemplate.html",
 	}
 
 	rp.App.MailChannel <- mailMsg
