@@ -30,7 +30,7 @@ func TestForm_HasForm(t *testing.T) {
 	//formField= "Akinleye"
 	rq := httptest.NewRequest("POST", "/", nil)
 	form := NewForm(rq.PostForm)
-	hasForm := form.HasForm("firstname", rq)
+	hasForm := form.HasForm("firstname")
 	if hasForm {
 		t.Error("Error Check for Entry form data @Has_form testing")
 	}
