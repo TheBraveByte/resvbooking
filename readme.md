@@ -1,8 +1,19 @@
-# Reservation and Booking
+# Reservation and Booking Project
 
-This is the repository for my bookings and Reservation project.
+This repository contains the source code for a reservation and booking project.
 
-- Built in Go version 1.17
-- Uses the [chi router](https://github.com/go-chi/chi)
-- Uses [alex edwards SCS][scs/v2](https://github.com/alexedwards/scs/v2) session management package
-- Uses [nosurf](https://github.com/justinas/nosurf)
+- Built using Go version 1.17
+- The [chi router](https://github.com/go-chi/chi) 
+- The [SCS](https://github.com/alexedwards/scs/v2) session management package
+- [Nosurf](https://github.com/justinas/nosurf) package
+
+## Features
+
+The project has the following features:
+
+- User authentication and session management
+- User registration and login
+- Ability to search and filter available reservations
+- Ability to make a reservation
+- Ability to view and manage reservations
+- Protection against CSRF attacks using  [Nosurf](https://github.com/justinas/nosurf) package
